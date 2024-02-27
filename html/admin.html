@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!--Trash icon-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .navbar {
+            background-color: #333;
+            padding: 15px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+            .navbar a {
+                color: white;
+                text-decoration: none;
+                padding: 14px 16px;
+                display: inline-block;
+            }
+
+        .navbar-toggler {
+            display: none; /* Initially hide the hamburger icon */
+            cursor: pointer;
+        }
+
+            .navbar-toggler span {
+                display: block;
+                width: 30px;
+                height: 3px;
+                background-color: white;
+                margin: 6px 0;
+                transition: 0.4s;
+            }
+
+            .navbar-toggler.open span:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+
+            .navbar-toggler.open span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .navbar-toggler.open span:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+
+        .content {
+            margin-top: 60px;
+            padding: 20px;
+        }
+
+        .sidebar {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 20px;
+        }
+
+            .sidebar a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                font-size: 18px;
+                color: white;
+                display: block;
+            }
+
+                .sidebar a:hover {
+                    background-color: #555;
+                    color: white;
+                }
+
+        .submenu-content {
+            display: none;
+        }
+
+            .submenu-content.show {
+                display: block;
+            }
+
+        .displaybookcontainer {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 25px;
+        }
+
+        .container-card {
+            width: 98%;
+            margin: 0 60px 20px 60px;
+            height: 250px;
+            background: #dbdbdb;
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .book {
+            display: flex;
+            margin-top: 0px;
+        }
+
+        .cover-img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .info-container {
+            flex: 1;
+            padding-left: 10px;
+            height: 230px;
+            width: 700px;
+            border-right: 1px solid #000;
+            margin-right: 10px;
+        }
+
+        .title {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .description {
+            margin-top: 10px;
+            margin-right: 20px;
+            color: #000;
+            height: 140px;
+            line-height: 2.1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .delete-icon {
+            display: block;
+            font-size: 20px;
+            margin: 5px 190px;
+            padding: 10px 20px;
+            color: rgb(243, 11, 11); /* Change icon color if needed */
+        }
+
+        .genre-tags-container {
+            padding-left: 10px;
+            width: 250px;
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .genres {
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-size: 19px;
+            color: #000;
+        }
+
+        .tags {
+            font-size: 19px;
+            color: #000;
+        }
+
+        .border-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+            background-color: #000;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .user-table th, .user-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            .user-table th {
+                background-color: #333;
+                color: white;
+            }
+
+        .subscribers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .subscribers-table th, .subscribers-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            .subscribers-table th {
+                background-color: #333;
+                color: white;
+            }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1034px) {
+            .navbar a:not(.navbar-toggler) {
+                display: none;
+            }
+
+            .navbar-toggler {
+                display: block; /* Display the hamburger icon in mobile view */
+            }
+
+            .sidebar.show {
+                display: block;
+            }
+
+            .submenu-content.show {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-toggler" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <a href="#" onclick="toggleSubMenu('dashboardSubMenu')">Dashboard</a>
+        <a href="#" onclick="toggleSubMenu('booksSubMenu')">Books</a>
+        <a href="#" onclick="toggleSubMenu('usersSubMenu')">Users</a>
+        <a href="#" onclick="toggleSubMenu('subscriptionsSubMenu')">Subscriptions</a>
+        <!-- Add more links as needed -->
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <a href="#" onclick="toggleSubMenu('dashboardSubMenu')">Dashboard</a>
+        <a href="#" onclick="toggleSubMenu('booksSubMenu')">Books</a>
+        <a href="#" onclick="toggleSubMenu('usersSubMenu')">Users</a>
+        <a href="#" onclick="toggleSubMenu('subscriptionsSubMenu')">Subscriptions</a>
+        <!-- Add more links as needed -->
+    </div>
+
+    <div class="content">
+        <div class="submenu-content" id="dashboardSubMenu">
+            <!-- Display the counts of various items -->
+            <div>
+                <h2>User Counts: <span id="userCount"></span></h2>
+                <h2>Subscribed User Counts: <span id="subscribedUserCount"></span></h2>
+                <h2>Book Counts: <span id="bookCount"></span></h2>
+                <h2>Total Counts</h2>
+                <div>Total Genres: <span id="totalGenreCount">0</span></div>
+                <div>Action: <span id="actionCount">0</span></div>
+                <div>Adventure: <span id="adventureCount">0</span></div>
+                <div>Fantasy: <span id="fantasyCount">0</span></div>
+                <div>Game: <span id="gameCount">0</span></div>
+                <div>Romance: <span id="romanceCount">0</span></div>
+                <div>Urban: <span id="urbanCount">0</span></div>
+            </div>
+            </div>
+
+            <div class="submenu-content" id="booksSubMenu">
+                <div class="search-bar">
+                    <input type="text" id="search" onkeyup="searchBooks()" placeholder="Search Books...">
+                    <!-- Dropdown button -->
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="genreDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Genres
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div class="dropdown-menu" aria-labelledby="genreDropdown">
+                            <a class="dropdown-item" href="#" onclick="filterBooks('Action')">Action</a>
+                            <a class="dropdown-item" href="#" onclick="filterBooks('Adventure')">Adventure</a>
+                            <a class="dropdown-item" href="#" onclick="filterBooks('Fantasy')">Fantasy</a>
+                            <a class="dropdown-item" href="#" onclick="filterBooks('Game')">Game</a>
+                            <a class="dropdown-item" href="#" onclick="filterBooks('Romance')">Romance</a>
+                            <a class="dropdown-item" href="#" onclick="filterBooks('Urban')">Urban</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="displaybookcontainer" id="bookContainer">
+                    <!-- Books will be dynamically added here -->
+                </div>
+            </div>
+
+            <div class="submenu-content" id="usersSubMenu">
+                <input type="text" id="searchInput" onkeyup="searchUsers()" placeholder="Search">
+                <table class="user-table">
+                    <thead>
+                    <th>SrNo</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="submenu-content" id="subscriptionsSubMenu">
+                <input type="text" id="searching" onkeyup="searchSubscribedUsers()" placeholder="Search">
+                <table class="subscribers-table">
+                    <thead>
+                    <th>SrNo</th>
+                    <th>Card Holder</th>
+                    <th>Email</th>
+                    <th>Country</th>
+
+                    <tbody id="subscriptionsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+            function toggleSidebar() {
+                var sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('show');
+
+                var navbarToggler = document.querySelector('.navbar-toggler');
+                navbarToggler.classList.toggle('open');
+            }
+
+            function toggleSubMenu(submenuId) {
+                var allSubmenus = document.querySelectorAll('.submenu-content');
+                allSubmenus.forEach(function (submenu) {
+                    if (submenu.id === submenuId) {
+                        submenu.classList.toggle('show');
+                    } else {
+                        submenu.classList.remove('show');
+                    }
+                });
+            }
+
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', event => {
+                    document.getElementById('genreDropdown').innerText = event.target.innerText;
+                });
+            });
+
+            function hideAllContent() {
+                var contentElements = document.querySelectorAll('.submenu-content');
+                contentElements.forEach(function (element) {
+                    element.classList.remove('show');
+                });
+            }
+        </script>
+        <script type="module" src="/js/adminpanel.js"></script>
+</body>
+</html>

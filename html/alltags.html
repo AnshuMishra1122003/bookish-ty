@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tag List</title>
+    <style>
+        /* CSS for tag list */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #tagList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: left;
+        }
+
+        ul {
+            list-style-type: circle;
+            padding: 0;
+            margin-left: 50px;
+        }
+
+        li {
+            margin: 15px;
+        }
+
+        a {
+            
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+            margin: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Tag List</h1>
+    <div id="tagList"></div>
+
+    <script src="/js/alltags.js" type="module"></script>
+</body>
+
+</html>

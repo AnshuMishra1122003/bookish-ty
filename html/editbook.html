@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Books (Admin)</title>
+    <link href="/style.css" rel="stylesheet">
+    <style>
+        /* **********Add Books************ */
+        body {
+            font-family: "Times New Roman", Times, serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .add_books {
+            width: 50%;
+            height: auto;
+            margin: 2% auto;
+            padding: 1.5%;
+            border-radius: 8px;
+            background-color: #27ae60;
+        }
+
+        #editImageContainer {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-left: 230px;
+            margin-top: 50px;
+            background: #fff;
+            border: 2px dashed #000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #edituploadedImage {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        #editplaceholder {
+            font-size: 100px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        #editbrowseButton {
+            margin-top: 10px;
+            margin-left: 270px;
+            cursor: pointer;
+            padding: 8px 16px;
+            background: #fff;
+            border: none;
+            height: 45px;
+            outline: none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        #editbrowseButton:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        #editfileInput {
+            display: none;
+        }
+
+        /* For the genres and tags input, you can use a container to allow multiple inputs */
+
+        .addbook_label {
+            display: block;
+            margin-bottom: 0px;
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        .multiple-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+            width: 100%;
+            height: 20px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .multiple-input-container input {
+            flex-grow: 1;
+            margin-right: 8px;
+            width: 100%;
+            height: 5px;
+            background: white;
+            border: none;
+            outline: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 16px;
+            color: black;
+            padding: 20px 45px 20px 20px;
+        }
+
+        .description-textarea {
+            resize: none;
+            min-height: 70px;
+            max-height: 200px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 18px;
+            color: black;
+            padding: 20px 45px 20px 20px;
+        }
+
+        .add_books_btn {
+            width: 100%;
+            height: 45px;
+            background: #fff;
+            margin-top: 20px;
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            padding: 10px;
+        }
+
+        .add_books_btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .add_books {
+                width: 80%;
+            }
+
+            #editImageContainer {
+                margin: 20px auto;
+            }
+
+            #editbrowseButton {
+                margin-left: 38%;
+            }
+        }
+
+        .genre-chkbx {
+            display: flex;
+            flex-wrap: wrap;
+            font-size: large;
+        }
+
+        .genre-chkbx label {
+            margin-right: 20px;
+            /* Adjust as needed */
+            margin-bottom: 10px;
+            /* Adjust as needed */
+        }
+
+        .genre-chkbx input[type="checkbox"] {
+            margin-right: 5px;
+            /* Adjust as needed */
+        }
+    </style>
+</head>
+
+<body>
+    <!-------------header starts------------------->
+    <header id="header" class="header">
+
+        <div class="header-1">
+
+            <a href="/index.html" class="logo">BOOKISH</a>
+
+            <form id="searchbar" action="#" class="search-form">
+
+                <input type="search" id="search-box" placeholder="Search Here..." />
+                <label for="search-box" class="bx bx-search"></label>
+            </form>
+            <div class="icons">
+                <div id="user-login-btn" class="user-login-btn" onclick="toggleIcon()">
+                    <i class='bx bxs-user-circle'></i>
+                </div>
+                <div id="subMenu" class="sub-menu-wrap">
+                    <div class="sub-icon">
+                        <div class="user-info">
+                            <i class='bx bxs-user-circle'></i>
+                            <span>Anshu Mishra</span>
+                        </div>
+                        <hr>
+                        <a href="/html/Login.html" class="sub-icon-link">
+                            <i class='bx bxs-user-circle'></i>
+                            <p>Profile</p>
+                            <span><i class='bx bx-chevron-right'></i></span>
+                        </a>
+                        <a href="#" class="sub-icon-link">
+                            <i class='bx bxs-cog'></i>
+                            <p>Settings</p>
+                            <span><i class='bx bx-chevron-right'></i></span>
+                        </a>
+                        <a href="#" class="sub-icon-link">
+                            <i class="bi bi-question-circle-fill"></i>
+                            <p>Helps & Services</p>
+                            <span><i class='bx bx-chevron-right'></i></span>
+                        </a>
+                        <a href="#" class="sub-icon-link">
+                            <i class='bx bx-log-out'></i>
+                            <p>Logout</p>
+                            <span><i class='bx bx-chevron-right'></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-2">
+
+            <nav id="navbar" class="navbar">
+                <input class="menu-btn" type="checkbox" id="menu-btn" />
+                <label class="menu-icon" for="menu-btn">
+                    <span class="nav-icon"></span>
+                </label>
+                <div class="menu">
+                    <a href="/index.html" class="nav-link" onclick="showMenu(0)">Home</a>
+                    <a href="#" onclick="showMenu(1)">Genres</a>
+                    <a href="/html/addbook.html" onclick="showMenu(2)">Create</a>
+                    <a href="#" onclick="showMenu(3)">History</a>
+                    <a href="#" onclick="showMenu(4)">User Settings</a>
+                    <a href="#" onclick="showMenu(5)">About Us</a>
+                </div>
+            </nav>
+        </div>
+        <script>
+            let subIcon = document.getElementById("subMenu");
+            function toggleIcon() {
+                subIcon.classList.toggle("open-icon");
+            }
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const menuLinks = document.querySelectorAll("menu a");
+
+                menuLinks.forEach(function (link, index) {
+                    link.addEventListener("click", function () {
+                        // Remove 'active' class from all links
+                        menuLinks.forEach(function (menuLink) {
+                            menuLink.classList.remove("active");
+                        });
+                        // Add 'active' class to the clicked link
+                        link.classList.add("active")
+
+                        // Show the selected link
+                        showMenu(index);
+                    });
+                });
+            });
+        </script>
+        <!------------------navigation bar scroll--------------------->
+        <!-- <script>
+            var prevScrollpos = window.pageYOffset;
+            window.onscroll = function () {
+                var currentScrollPos = window.pageYOffset;
+                if (prevScrollpos > currentScrollPos) {
+                    document.getElementById("header").style.top = "0";
+                } else {
+                    document.getElementById("header").style.top = "200px";
+                }
+                prevScrollpos = currentScrollPos;
+            }
+        </script> -->
+    </header>
+    <!---------------------Header close---------------------->
+    <!-------------------main code------------------------------------>
+    <!-- edit books -->
+    <div class="submenu-content" id="edit-books-container">
+        <form id="editBookForm" class="add_books" method="post">
+            <div id="editImageContainer">
+                <div id="editplaceholder">+</div>
+                <img id="edituploadedImage" src="#" alt="" />
+            </div>
+            <input type="file" id="editfileInput" accept=".png, .jpg" onchange="previewImage(event)" />
+            <button id="editbrowseButton" onclick="document.getElementById('editfileInput').click()">
+                Browse Image
+            </button>
+
+            <label class="addbook_label" for="bookTitle">Book Title:</label>
+            <div class="multiple-input-container">
+                <input type="text" id="editbookTitle" name="bookTitle" placeholder="Enter Title" required />
+            </div>
+
+            <label class="addbook_label" for="genre">Genres:</label>
+            <!-- Add checkboxes for genres -->
+            <div class="genre-chkbx">
+                <label><input type="checkbox" name="genre" value="action"> Action</label>
+                <label><input type="checkbox" name="genre" value="adventure"> Adventure</label>
+                <label><input type="checkbox" name="genre" value="fantasy"> Fantasy</label>
+                <label><input type="checkbox" name="genre" value="romance"> Romance</label>
+                <label><input type="checkbox" name="genre" value="game"> Game</label>
+                <label><input type="checkbox" name="genre" value="urban"> Urban</label>
+            </div>
+
+            <label class="addbook_label" for="tags">Tags (comma-separated, maximum 5):</label>
+            <div class="multiple-input-container">
+                <input type="text" id="edittags" name="tags" placeholder="Enter up to 5 tags (comma-separated)" />
+            </div>
+
+            <label class="addbook_label" for="description">Book Description:</label>
+            <div class="description-textarea">
+                <textarea id="editdescription" name="description" rows="10" cols="80" required></textarea>
+            </div>
+            <button id="saveChangesBookBtn" type="submit" class="add_books_btn">
+                Save Changes
+            </button>
+        </form>
+
+    </div>
+
+    <!------------------------Add footer--------------------------------------->
+
+    <section class="footer">
+
+        <div class="footer-container">
+
+            <div class="row">
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="#"></i>All Tags</a>
+                    </li>
+                    <li>
+                        <a href="#"></i>Account Info</a>
+                    </li>
+                    <li>
+                        <a href="#"></i>Terms and Condition</a>
+                    </li>
+                    <li style="border-right: none">
+                        <a href="#"></i>Contact Us</a>
+                    </li>
+                </ul>
+                <div class="credit"> <span> Bookish </span>copyright ©2023 all rights reserved! </div>
+
+            </div>
+        </div>
+    </section>
+    <!-------------------Script Code--------------------------------------->
+    <script type="module" src="/js/editbooks.js"></script>
+    <script>
+        // Function to preview the selected image
+        function previewImage(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            const uploadedImage = document.getElementById("edituploadedImage");
+            const imageContainer = document.getElementById("editImageContainer"); // Corrected ID
+            const placeholder = document.getElementById("editplaceholder");
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imageContainer.style.background = "none";
+                    placeholder.style.display = "none";
+                    uploadedImage.style.display = "block";
+                    uploadedImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                imageContainer.style.background = "#fff";
+                placeholder.style.display = "block";
+                uploadedImage.style.display = "none";
+                uploadedImage.src = "#"; // Reset the image source
+            }
+        }
+
+        // Event listener for file input change (image upload)
+        document
+            .getElementById("editfileInput")
+            .addEventListener("change", function (event) {
+                previewImage(event);
+            });
+
+    </script>
+
+</body>
+
+</html>

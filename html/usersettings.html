@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar Example</title>
+
+    <style>
+        /* Reset and Global Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Navbar Settings */
+        .navbar-settings {
+            width: 100%;
+            height: max-content;
+            background-color: #636363;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .navbar-settings a {
+            display: inline-block;
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .navbar-settings a i {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .navbar-settings a:hover {
+            background-color: #27ae60;
+            color: black;
+        }
+
+        /* Public Profile Section */
+        #publicProfile {
+            padding: 20px;
+        }
+
+        /* Corrected CSS */
+        #editProflileImageContainer {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 50px auto;
+            /* Center the container */
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #editProflileImageContainer img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        #editprofileplaceholder {
+            font-size: 310px;
+            align-items: center;
+            border-radius: 50%;
+        }
+
+        #editprofileuploadedImage {
+            display: none;
+        }
+
+        /* Form Elements */
+        input[type="text"],
+        textarea {
+            width: calc(100% - 36px);
+            /* Adjust according to container padding */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* Edit Button */
+        .edit-button {
+            background-color: #27ae60;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .edit-button:hover {
+            background-color: #218c54;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar-settings">
+        <!-- Navbar buttons -->
+        <a id="publicProfileBtn"><i class="bi bi-person-fill-gear"></i>Public Profile</a>
+        <a id="managepasswordBtn"><i class="bi bi-person-fill-lock"></i>Password</a>
+        <a id="manageBookmarksBtn"><i class="bi bi-bookmark-fill"></i>Manage Bookmarks</a>
+    </div>
+    <div id="publicProfile" class="content" display="block">
+        <div id="editProflileImageContainer">
+            <div id="editprofileplaceholder"></div>
+            <img id="editprofileuploadedImage" src="#" alt="" />
+        </div>
+        <input type="file" id="editprofileInput" accept=".png, .jpg, .svg" onchange="previewImage(event)"
+            style="display: none; align-items: center;" />
+        <label for="editprofileInput" class="edit-button">Edit Image</label>
+        <!-- Change button to a label with a for attribute -->
+        <p>Username: <span id="username"></span></p>
+        <p>Email: <span id="email"></span></p>
+        <p>Public Name:</p>
+        <input type="text" id="publicName" readonly>
+        <button id="editPublicName">Edit Public Name</button>
+        <p>Bio:</p>
+        <textarea id="bio" readonly></textarea>
+        <button id="editBio">Edit Bio</button>
+        <button id="saveChanges">Save Changes</button> <!-- New button to save changes -->
+    </div>
+
+    <!-- Password Section -->
+    <div id="managepassword" class="content" style="display: none;">
+        <h2>Password</h2>
+        <p>Current Password: <span id="currentPassword"></span></p>
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword">
+        <button id="savePassword">Save Password</button>
+    </div>
+
+    <div id="manageBookmarks" class="content">
+        <h2>Manage Bookmarks Content</h2>
+        <p>This is the content for Manage Bookmarks.</p>
+    </div> 
+
+    <script src="/js/settings.js" type="module"></script>
+    <script>
+        function previewImage(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            const uploadedImage = document.getElementById("editprofileuploadedImage");
+            const imageContainer = document.getElementById("editProflileImageContainer");
+            const placeholder = document.getElementById("editprofileplaceholder");
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imageContainer.style.background = "none";
+                    placeholder.style.display = "none";
+                    uploadedImage.style.display = "block";
+                    uploadedImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                imageContainer.style.background = "#fff";
+                placeholder.style.display = "block";
+                uploadedImage.style.display = "none";
+                uploadedImage.src = "#"; // Reset the image source
+            }
+        }
+    </script>
+</body>
+
+</html>

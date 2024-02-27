@@ -1,0 +1,1252 @@
+﻿@import url("https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+/***************universal selector********************/
+* {
+  font-family: "Times New Roman", Times, serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  transition: all 0.2s linear;
+}
+
+/****************global CSS variable*******************/
+
+:root {
+  --green: #27ae60;
+  --dark-color: #219150;
+  --black: #444;
+  --light-color: #666;
+  --border: 1px solid rgba(0, 0, 0, 0.1);
+  --border-hover: 1.5px solid var(--black);
+  --box-shadow: 0 5px 1px rgba(0, 0, 0, 0.1);
+}
+
+/****************HTML********************/
+
+html {
+  font-size: 62.5%;
+  overflow-x: hidden;
+  scroll-padding-top: 50px;
+  scroll-behavior: smooth;
+}
+
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--black);
+}
+
+/****************All Sections************************/
+
+section {
+  padding: 100px 9%;
+}
+
+/*******************All headings************************/
+.heading {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.heading::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 1px;
+  /* Use a small value for the line height */
+  background: rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+
+.heading span {
+  font-size: 30px;
+  padding: 5px 20px;
+  color: var(--black);
+  background: #fff;
+  border: var(--border);
+}
+
+/*******************All Buttons********************/
+
+.btn {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 9px 30px;
+  border-radius: 5px;
+  color: #fff;
+  background: var(--green);
+  font-size: 17px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn:hover {
+  background: var(--dark-color);
+}
+
+/******************Header Starts**********************/
+
+.header {
+  top: 0px;
+}
+
+.header .header-1 {
+  background: white;
+  padding: 15px 9%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/*LOGO*/
+.header .header-1 .logo {
+  font-size: 35px;
+  margin-left: -40px;
+  font-weight: bolder;
+  color: var(--black);
+}
+
+/* .header .header-1 .logo:hover {
+  color: var(--green);
+} */
+
+/*searchbar*/
+.header .header-1 .search-form {
+  width: 450px;
+  height: 50px;
+  margin-top: -15px;
+  border: var(--border-hover);
+  overflow: hidden;
+  background: white;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+}
+
+.header .header-1 .search-form input {
+  font-size: 17px;
+  padding: 0 12px;
+  height: 100%;
+  width: 100%;
+  text-transform: none;
+  color: var(--black);
+}
+
+.header .header-1 .search-form label {
+  font-size: 25px;
+  padding-right: 15px;
+  color: var(--black);
+  cursor: pointer;
+}
+
+.header .header-1 .search-form label:hover {
+  color: var(--green);
+}
+
+/*Icons*/
+
+.header .header-1 .icons div,
+.header .header-1 .icons a {
+  font-size: 50px;
+  /* Adjusted font size for better readability */
+  margin-left: 15px;
+  color: var(--black);
+  cursor: pointer;
+}
+
+.header .header-1 .icons i:hover {
+  color: var(--green);
+}
+
+#search-btn {
+  display: none;
+}
+
+.sub-menu-wrap {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  width: 320px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+  z-index: 1000;
+}
+
+.sub-menu-wrap.open-icon {
+  max-height: 400px;
+}
+
+.sub-icon {
+  background: #dbdbdb;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info img {
+height: 40px;
+width: 40px;
+border-radius: 50%;
+}
+
+.user-info span {
+  margin-left: 40px;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.sub-icon hr {
+  border: 0;
+  height: 1px;
+  width: 100%;
+  background: #fff;
+  margin: 15px 0 10px;
+}
+
+.sub-icon-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+.sub-icon-link i {
+  font-size: 40px;
+  color: var(--black);
+  cursor: pointer;
+}
+
+.sub-icon-link p {
+  font-size: 20px;
+  margin-left: 20px;
+  white-space: nowrap;
+}
+
+.sub-icon-link span i {
+  font-size: 25px;
+  transition: transform 0.5s;
+  align-self:last self-end;
+}
+
+.sub-icon-link:hover span {
+  transform: translateX(5px);
+}
+
+.sub-icon-link:hover i,
+.sub-icon-link:hover p {
+  color: var(--green);
+}
+
+
+/****************second header****************/
+.header .header-2 {
+  background: var(--black);
+}
+
+/*navbar*/
+.header .header-2 .navbar {
+  text-align: center;
+  /* justify-content: center; */
+  height: 50px;
+}
+
+.header .header-2 .navbar a {
+  color: #fff;
+  display: inline-block;
+  padding: 12px;
+  font-size: 22px;
+}
+
+.header .header-2 .navbar a:hover {
+  background: var(--green);
+  border-radius: 2px;
+  box-shadow: 2px 2px 20px rgba(1, 141, 83, 0.514);
+}
+
+.header .header-2 .navbar .menu-btn {
+  display: none;
+}
+
+/* .header .header-2 .active {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  color: var(--green);
+  background-color: var(--green);
+  box-shadow: 2px 2px 20px rgba(1, 141, 83, 0.514);
+} */
+.header .header-2 .nav-link.active {
+  color: white;
+  /* Text color when active */
+  background-color: var(--green);
+  /* Background color when active */
+  box-shadow: 2px 2px 20px rgba(1, 141, 83, 0.514);
+  /* Box shadow when active */
+}
+
+/*********************Responsive Navbar****************************/
+
+/* @media (max-width: 768px) {
+  .navbar {
+    justify-content: space-between;
+    height: 47px;
+  } */
+
+/* .navbar .menu {
+    display: none;
+    position: absolute;
+    left: 0px;
+    background-color: var(--black);
+    width: 100%;
+    z-index: 10;
+  } */
+
+/* .navbar .menu a {
+    width: 100%;
+    height: 47px;
+    justify-content: center; */
+/* align-items: center; */
+/* margin-bottom: 5px; */
+/* padding: 0px; */
+/* border: hidden; */
+/* } */
+
+/* .navbar .menu-icon {
+    cursor: pointer;
+    float: right;
+    padding: 25px 25px;
+    position: relative;
+    
+  }
+
+  .navbar .menu-icon .nav-icon { 
+    display: flex;
+    height: 2px;
+    position: relative;
+    transition: background 0.2s ease-out;
+    width: 17px;
+    margin-right: 10px;
+  }
+
+  .navbar .menu-icon .nav-icon:before,
+  .navbar .menu-icon .nav-icon:after {
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    content: "";
+    display: block;
+    position: absolute;
+    transition: all ease-out 0.3s;
+  }
+
+  .navbar .menu-icon .nav-icon:before {
+    top: 5px;
+  }
+
+  .navbar .menu-icon .nav-icon:after {
+    top: -5px;
+  }
+
+  .navbar .menu-btn:checked ~ .menu-icon .nav-icon {
+    background: transparent;
+  }
+
+  .navbar .menu-btn:checked ~ .menu-icon .nav-icon:before {
+    transform: rotate(-45deg);
+    top: 0px;
+  }
+
+  .navbar .menu-btn:checked ~ .menu-icon .nav-icon:after {
+    transform: rotate(45deg);
+    top: 0;
+  }
+
+  .navbar .menu-btn {
+    display: none;
+  }
+
+   .navbar .menu-btn:checked ~ .menu {
+    display: block;
+    margin-top: 50px;
+  }
+
+  .header-text {
+    text-align: center;
+  }
+
+  .header-text a {
+    margin-left: 100px;
+  }
+}
+ */
+
+/****************Register form*********************/
+
+.reg_Form_Box {
+  width: 500px;
+  background: var(--green);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: black;
+  border-radius: 10px;
+  padding: 30px 40px;
+  margin-left: 300px;
+}
+
+.reg_Form_Box h1 {
+  font-size: 36px;
+  text-align: center;
+}
+
+/***************textbox******************/
+
+.reg_Form_Box .Input_Textbox {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 30px 0;
+}
+
+.Input_Textbox input {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: black;
+  padding: 20px 45px 20px 20px;
+}
+
+.Input_Textbox input::placeholder {
+  color: black;
+}
+
+.Input_Textbox i {
+  position: absolute;
+  right: 20px;
+  top: 30px;
+  transform: translateY(-50%);
+  font-size: 20px;
+}
+
+/****************terms and condition***************/
+
+.reg_Form_Box .TandC {
+  font-size: 14.5px;
+  margin: -15px 0 15px;
+  text-align: center;
+}
+
+.TandC label input {
+  accent-color: black;
+  margin-right: 3px;
+}
+
+.TandC a {
+  color: blue;
+  text-decoration: none;
+}
+
+.TandC a:hover {
+  text-decoration: underline;
+}
+
+/****************form button*********************/
+
+.reg_Form_Box .form_Button {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  padding: 10px;
+}
+
+.Form_Box .form_Button a {
+  text-decoration: none;
+}
+
+/***************form link***************/
+
+.reg_Form_Box .Form_link {
+  font-size: 15px;
+  text-align: center;
+  margin: 20px 0 15px;
+}
+
+.Form_link p a {
+  color: blue;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.Form_link p a:hover {
+  text-decoration: underline;
+}
+
+/******************Login form************************************/
+
+.login_Form_Box {
+  width: 500px;
+  background: var(--green);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: black;
+  border-radius: 10px;
+  padding: 30px 40px;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  margin-left: 400px;
+}
+
+.login_Form_Box h1 {
+  font-size: 36px;
+  text-align: center;
+}
+
+/***************textbox******************/
+
+.login_Form_Box .Input_Textbox {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 30px 0;
+}
+
+.Input_Textbox input {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: black;
+  padding: 20px 45px 20px 20px;
+}
+
+.Input_Textbox input::placeholder {
+  color: black;
+}
+
+.Input_Textbox i {
+  position: absolute;
+  right: 20px;
+  top: 30px;
+  transform: translateY(-50%);
+  font-size: 20px;
+}
+
+/*********************remember me and forgot password button*******************/
+
+.login_Form_Box .remember_forgot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14.5px;
+  margin: -15px 0 15px;
+}
+
+.remember_forgot label input {
+  accent-color: black;
+  margin-right: 3px;
+}
+
+.remember_forgot a {
+  color: blue;
+  text-decoration: none;
+}
+
+.remember_forgot a:hover {
+  text-decoration: none;
+}
+
+/****************terms and condition***************/
+
+.login_Form_Box .TandC {
+  font-size: 14.5px;
+  margin: -15px 0 15px;
+  text-align: center;
+}
+
+.TandC label input {
+  accent-color: black;
+  margin-right: 3px;
+}
+
+.TandC a {
+  color: blue;
+  text-decoration: none;
+}
+
+.TandC a:hover {
+  text-decoration: underline;
+}
+
+/****************form button*********************/
+
+.login_Form_Box .form_Button {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  padding: 10px;
+}
+
+.Form_Box .form_Button a {
+  text-decoration: none;
+}
+
+/***************form link***************/
+
+.login_Form_Box .Form_link {
+  font-size: 15px;
+  text-align: center;
+  margin: 20px 0 15px;
+}
+
+.Form_link p a {
+  color: blue;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.Form_link p a:hover {
+  text-decoration: underline;
+}
+
+/*****************google and facebook authentication****************/
+
+.social_media {
+  margin: 30px auto;
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.social_media img {
+  width: 30px;
+  margin: 0 12px;
+  box-shadow: 0 0 20px 0 #000;
+  cursor: pointer;
+  border-radius: 40%;
+}
+
+.social_media .google_btn {
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px;
+  margin-right: 50px;
+  background-color: White;
+}
+
+.social_media .google_btn i {
+  display: block;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  font-size: 33px;
+}
+
+.social_media .facebook_btn {
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px;
+  background-color: white;
+}
+
+.social_media .facebook_btn i {
+  display: block;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  font-size: 33px;
+}
+
+/*********************Forgot password form***************/
+
+.forgot-password-form {
+  width: 420px;
+  height: 420px;
+  margin: 100px auto 20px;
+  background: var(--green);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: black;
+  border-radius: 10px;
+  padding: 30px 40px;
+  margin-top: 100px;
+  margin-left: 500px;
+  margin-bottom: 100px;
+}
+
+.forgot-password-form h1 {
+  font-size: 36px;
+  text-align: center;
+}
+
+.forgot-password-form i {
+  display: block;
+  margin: 0 140px;
+  /* Center the lock icon horizontally */
+  font-size: 50px;
+}
+
+.forgot-password-form .forgotpassword_label {
+  font-size: 20px;
+  text-align: center;
+  margin: 20px 0 15px;
+}
+
+.forgot-password-form .forgotpassword_Textbox {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+
+.forgotpassword_Textbox input {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: black;
+  padding: 20px 45px 20px 20px;
+}
+
+.forgotpassword_Textbox input::placeholder {
+  color: black;
+}
+
+.forgot-password-form .forgotpassword_button {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  padding: 10px;
+}
+
+/* .forgotpassword_button:hover{
+  background-color: var(--green)
+} */
+/*************************Footer************************************/
+
+.footer {
+  width: 100%;
+  background: var(--black);
+  font-size: 15px;
+}
+
+.footer-container {
+  max-width: 1300px;
+  margin: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+
+.footer-links {
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 6px 0;
+}
+
+.footer-links li {
+  text-decoration: none;
+  font-weight: 300;
+  border-right: 1px solid var(--light-color);
+  line-height: 1.1;
+  padding: 0 23px;
+}
+
+.footer-links li a {
+  font-weight: 700;
+  color: white;
+  padding: 12px 30px;
+  font-size: 22px;
+}
+
+.footer-links li a:hover {
+  color: var(--green);
+}
+
+.footer .credit {
+  margin-top: 50px;
+  font-size: 22px;
+  color: white;
+  text-align: center;
+}
+
+.footer .credit span {
+  color: var(--green);
+}
+
+/*******************Homepage************************************/
+
+.slideshow-container {
+  width: 100%;
+  height: 450px;
+  left: 50%;
+  top: 365px;
+  position: absolute;
+  margin: auto;
+  padding: 50px;
+  background-color: transparent;
+  transform: translate(-50%, -50%);
+  /* box-shadow: 0 30px 50px #dbdbdb; */
+}
+
+.mySlides {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.content {
+  height: 290px;
+  width: 800px;
+  padding: 20px;
+  position: absolute;
+  top: 120px;
+  overflow: hidden;
+  font-size: 20px;
+  text-align: left;
+  color: black;
+  display: inline-block;
+  transform: translate(0, -50%);
+  font-family: "Times New Roman";
+}
+
+.content h3 {
+  font-size: 20px;
+  margin-top: 0px;
+  font-weight: bold;
+  animation: showcontent 1s ease-in-out 1 forwards;
+}
+
+.content h3 span {
+  color: gray;
+}
+
+.content h2 {
+  font-size: 24px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.content p {
+  font-size: 18px;
+  line-height: 1.5;
+  overflow: hidden;
+  position: relative;
+}
+
+.img-container {
+  width: 230px;
+  height: 306px;
+  background-position: 50% 0%;
+  display: block;
+  transition: 0.5s;
+  position: absolute;
+  z-index: 1;
+  top: 150px;
+  transform: translate(1000px, -50%);
+  border-radius: 20px;
+  /* box-shadow: 0 30px 50px #505050; */
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background-size: cover;
+  position: absolute;
+  z-index: 1;
+}
+
+
+.btn-slides {
+  display: flex;
+  margin-left: -99px;
+}
+
+.btn-slides a:hover {
+  background: var(--green);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.btn-slides .read-now {
+  height: 40px;
+  width: 130px;
+  background-color: black;
+  text-align: center;
+  color: white;
+  border-radius: 2px;
+  padding: 10px 20px;
+  margin: 300px 117px;
+  border: none;
+  text-decoration: none;
+  font-size: 19px;
+  animation: showcontent 1s ease-in-out 0.6s 1 forwards;
+}
+
+
+.btn-slides .carousel-bkmrk {
+  height: 40px;
+  background-color: purple;
+  border-radius: 2px;
+  padding: 10px 15px;
+  margin: 300px;
+  border: none;
+  margin-left: -100px;
+  animation: showcontent 1s ease-in-out 0.6s 1 forwards;
+}
+
+.btn-slides .carousel-bkmrk i {
+  position: center;
+  color: white;
+  font-size: 20px;
+}
+
+.slider-dots {
+  text-align: center;
+  margin-top: 330px;
+}
+
+/* Add styling for navigation dots */
+.slider-dots .dot {
+  position: relative;
+  height: 15px;
+  width: 15px;
+  margin: 0px 5px;
+  background-color: #b8b8b8;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.dot .active {
+  background-color: #353535;
+}
+
+/********************************* Recently Added Novels **********************************/
+
+/* CSS styles for the book display */
+.recently-added-title {
+  margin-top: 30px;
+  margin-left: -100px;
+  display: inline-block;
+  align-items: flex-start;
+  text-decoration: none;
+  color: var(--black);
+}
+
+.recently-added-title h1 {
+  margin-left: 30px;
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.pagination {
+  margin: -40px 300px;
+  padding: 0px 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.pagination a {
+  font-weight: 700;
+  color: #444;
+  margin-right: 1px;
+  padding: 12px 30px;
+  font-size: 22px;
+}
+
+.pagination a:hover {
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #27ae60;
+  color: white;
+}
+
+.pagination .active {
+  background-color: #27ae60;
+  border-radius: 5px;
+}
+
+.books-container-recent-added {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 40px;
+  margin-left: -90px;
+}
+
+.book {
+  display: block;
+  margin-bottom: 0px;
+}
+
+.book-image {
+  width: 230px;
+  height: 306px;
+  margin: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.book-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.book-image:hover {
+  transform: scale(1.1);
+}
+
+.book-title {
+  max-width: 230px;
+  height: 100px;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--black);
+}
+
+.book-link {
+  text-decoration: none;
+  color: var(--black);
+}
+
+/* **********Add Books************ */
+body {
+  font-family: "Times New Roman", Times, serif;
+  margin: 0;
+  padding: 0;
+}
+
+.add_books {
+  width: 50%;
+  height: auto;
+  margin: 2% auto;
+  padding: 1.5%;
+  border-radius: 8px;
+  background-color: #27ae60;
+}
+
+#imageContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin-left: 230px;
+  margin-top: 50px;
+  background: #fff;
+  border: 2px dashed #000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#uploadedImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+#placeholder {
+  font-size: 100px;
+  font-weight: 600;
+  color: #000;
+}
+
+#browseButton {
+  margin-top: 10px;
+  margin-left: 270px;
+  cursor: pointer;
+  padding: 8px 16px;
+  background: #fff;
+  border: none;
+  height: 45px;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
+}
+
+#browseButton:hover {
+  background: #000;
+  color: #fff;
+}
+
+#fileInput {
+  display: none;
+}
+
+/* For the genres and tags input, you can use a container to allow multiple inputs */
+
+.addbook_label {
+  display: block;
+  margin-bottom: 0px;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.multiple-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  width: 100%;
+  height: 20px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.multiple-input-container input {
+  flex-grow: 1;
+  margin-right: 8px;
+  width: 100%;
+  height: 20px;
+  background: white;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: black;
+  padding: 20px 45px 20px 20px;
+}
+
+.description-textarea {
+  resize: none;
+  min-height: 70px;
+  max-height: 200px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: white;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: black;
+  padding: 20px 45px 20px 20px;
+}
+
+.add_books_btn {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  margin-top: 20px;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  padding: 10px;
+}
+
+.add_books_btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .add_books {
+    width: 80%;
+  }
+
+  #imageContainer {
+    margin: 20px auto;
+  }
+
+  #browseButton {
+    margin-left: 38%;
+  }
+}

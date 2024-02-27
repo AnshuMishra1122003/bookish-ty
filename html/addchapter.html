@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Chapters</title>
+</head>
+
+<body>
+    <main>
+        <form id="addChapterForm" class="add_chapter" method="post">
+            <label class="addchapter_label" for="title">Chapter Title:</label>
+            <div class="multiple-input-container">
+                <input type="text" id="chapterTitle" name="title" placeholder="Enter Chapter Title" required />
+            </div>
+
+            <label class="addchapter_label" for="content">Chapter Content:</label>
+            <div class="description-textarea">
+                <textarea id="chapterContent" name="content" rows="10" cols="80" required></textarea>
+            </div>
+
+            <button id="addChapterBtn" type="submit" class="add_chapter_btn">
+                Add Chapter
+            </button>
+        </form>
+
+        <div id="chaptersContainer">
+            <!-- Chapter boxes will be dynamically added here -->
+          </div>
+<script src="/js/addchapters.js" type="module"></script>
+</body>
+</html>

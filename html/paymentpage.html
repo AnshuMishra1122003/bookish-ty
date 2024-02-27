@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        header {
+            background-color: #34495e;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 20px;
+        }
+
+        .left,
+        .right {
+            flex-basis: 48%;
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: blue;
+        }
+
+        #zip {
+            display: flex;
+            align-items: center;
+        }
+
+        #zip select {
+            flex-basis: 70%;
+            margin-right: 5px;
+        }
+
+        .card-images {
+            margin-top: 10px;
+        }
+
+        .card-images img {
+            height: 30px;
+            margin-right: 5px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 0 10px;
+            }
+
+            .left,
+            .right {
+                flex-basis: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Payment Page</h1>
+    </header>
+    <div class="container">
+        <div class="left">
+            <!-- No content in the left section -->
+        </div>
+        <div class="right">
+            <h3>Payment</h3>
+            <form id="paymentForm">
+                <label for="s-email">Enter Valid Email</label>
+                <input type="email" id="s-email" name="s-email" placeholder="Enter email here">
+            
+                <label for="s-country">Country or Region</label>
+                <select id="s-country" name="s-country">
+                    <option value="">Choose Country</option>
+                    <option value="India">India</option>
+                    <option value="USA">USA</option>
+                    <option value="UK">UK</option>
+                    <!-- Add more options as needed -->
+                </select>
+            
+                <label for="s-cardnumber">Card Number</label>
+                <input type="text" id="s-cardnumber" name="s-cardnumber" placeholder="Enter card number" maxlength="16">
+            
+                <label for="s-cardholder">Cardholder Name</label>
+                <input type="text" id="s-cardholder" name="s-cardholder" placeholder="Enter cardholder name">
+            
+                <div id="zip">
+                    <label for="s-expmonth">Expiry</label>
+                    <input type="text" id="s-expmonth" name="s-expmonth" placeholder="MM/YY" maxlength="5">
+                </div>
+            
+                <label for="s-cvv">CVV</label>
+                <input type="password" id="s-cvv" name="s-cvv" placeholder="CVV" maxlength="3">
+            
+                <input id="subscribe-btn" type="submit" value="Subscribe">
+            </form>
+            
+        </div>
+    </div>
+    <script src="/js/payment.js" type="module"></script>
+</body>
+
+</html>

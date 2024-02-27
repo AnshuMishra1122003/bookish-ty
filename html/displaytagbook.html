@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books with Tag</title>
+    <style>
+        #alltagscontainer{
+            width: 100%;
+            height: auto;
+        }
+
+        .tagName-heading {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .book-container {
+            width: 98%;
+            display: flex;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .book-image-container {
+            width: 300px;
+            height: 406px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        /* Styling for book image */
+        .book-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        /* Container for book details (title, description, author) */
+        .book-details-container {
+            padding: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        /* Title of the book */
+        .book-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Author of the book */
+        .book-author {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="alltagscontainer">
+        <div id="tagname"></div>
+        <div id="bookList" class="book-container"></div>
+    </div>
+    <script src="/js/displaytagbook.js" type="module"></script> <!-- Script for fetching and displaying books -->
+</body>
+
+</html>

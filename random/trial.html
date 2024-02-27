@@ -1,0 +1,225 @@
+  <!-- <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+        import { getDatabase, push, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+
+        //config code...........
+        const firebaseConfig = {
+            apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
+            authDomain: "bookish-proj.firebaseapp.com",
+            databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
+            projectId: "bookish-proj",
+            storageBucket: "bookish-proj.appspot.com",
+            messagingSenderId: "351432216616",
+            appId: "1:351432216616:web:59c46450f373a82ad9251d",
+            measurementId: "G-DH4RJ9TML1",
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+
+        // Function to display the dashboard
+        function showDashboard() {
+            const content = document.querySelector('.content');
+            // Clear existing content
+            content.innerHTML = '<h2>Dashboard</h2>';
+
+            // Assuming your books are stored in a "books" node
+            const booksRef = ref(db, 'books');
+            const user = auth.currentUser;
+
+            if (user) {
+                // Query to fetch books by the logged-in user
+                const userBooksQuery = query(booksRef, orderByChild("email").equalTo(user.email));
+
+                // Fetch user's books
+                get(userBooksQuery).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const books = snapshot.val();
+
+                        Object.keys(books).forEach((key) => {
+                            const book = books[key];
+
+                            const bookItem = document.createElement("div");
+                            bookItem.classList.add("book-item");
+                            bookItem.innerHTML = `
+                    <img src="${book.coverImg}" alt="Book Cover">
+                    <p>Title: ${book.title}</p>
+                    <p>Genres: ${book.genres.join(", ")}</p>
+                    <p>Tags: ${book.tags.join(", ")}</p>
+                    <p>Description: ${book.description}</p>
+                    <hr>
+                `;
+
+                            content.appendChild(bookItem);
+                        });
+                        console.log("Books displayed on the dashboard");
+                    } else {
+                        // No books found
+                        content.innerHTML += "<p>No books found.</p>";
+                    }
+                }).catch((error) => {
+                    console.error("An unexpected error occurred while fetching books:", error);
+                });
+            } else {
+                // User not signed in, handle accordingly
+                content.innerHTML += "<p>User not signed in.</p>";
+            }
+        }
+
+
+        // Function to handle form submission
+        async function submitForm(event) {
+            event.preventDefault();
+            console.log(db);
+
+            try {
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        console.log(user?.email);
+                        const authUid = user?.uid;
+                        const email = user?.email;
+
+                        // Get form values
+                        const bookTitle = document.getElementById("bookTitle").value;
+                        const genresInput = document.getElementById("genres");
+                        const genres = genresInput.value
+                            .split(",")
+                            .map((genre) => genre.trim());
+                        const tagsInput = document.getElementById("tags");
+                        const tags = tagsInput.value.split(",").map((tag) => tag.trim());
+                        const description = document.getElementById("description").value;
+                        const imageUrl =
+                            document.getElementById("uploadedImage").src || "/assets/slid2.jpg";
+
+                        const newBook = {
+                            email: email,
+                            title: bookTitle,
+                            genres: genres,
+                            tags: tags,
+                            description: description,
+                            imageUrl: imageUrl.toString(),
+                        };
+
+                        console.log(newBook);
+
+                        await set(ref(db, `books/${bookTitle.trim()}`), newBook);
+                        // Clear form fields after successful submission
+                        document.getElementById("bookTitle").value = "";
+                        genresInput.value = "";
+                        tagsInput.value = "";
+                        document.getElementById("description").value = "";
+                        document.getElementById("uploadedImage").src = "";
+
+                        // Display success message or redirect if needed
+                        alert("Book added successfully!");
+                        window.location.replace("/html/addchapter.html");
+
+                        // Clear form fields after submission
+                        document.getElementById("bookTitle").value = "";
+                        document.getElementById("genres").value = "";
+                        document.getElementById("tags").value = "";
+                        document.getElementById("description").value = "";
+                        document.getElementById("uploadedImage").src = "#";
+
+                        // Reset the image container
+                        const imageContainer = document.getElementById("imageContainer");
+                        imageContainer.style.background = "#fff";
+                        imageContainer.querySelector("#placeholder").style.display = "block";
+                        imageContainer.querySelector("#uploadedImage").style.display = "none";
+                    }
+                });
+            } catch (error) {
+                console.error("An unexpected error occurred:", error);
+                alert("An unexpected error occurred. Please try again.");
+            }
+        }
+
+        // Attach the submitForm function to the form submit event
+        document.getElementById("createBooksForm").addEventListener("submit", submitForm);
+
+        // Function to open the popup
+        function openPopup() {
+            const popup = document.getElementById("addBookPopup");
+            popup.style.display = "block";
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            const popup = document.getElementById("addBookPopup");
+            popup.style.display = "none";
+        }
+
+        // Attach the openPopup function to the button click event
+        document.getElementById("openPopup").addEventListener("click", openPopup);
+
+        // Attach the closePopup function to close the popup when the form is submitted
+        document.getElementById("addbooks_btn").addEventListener("click", function (event) {
+            submitForm(event);
+            closePopup();
+        });
+
+
+        function previewImage(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            const uploadedImage = document.getElementById("uploadedImage");
+
+            const imageContainer = document.getElementById("imageContainer");
+            const placeholder = document.getElementById("placeholder");
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imageContainer.style.background = "none";
+                    placeholder.style.display = "none";
+                    uploadedImage.style.display = "block";
+                    uploadedImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                imageContainer.style.background = "#fff";
+                placeholder.style.display = "block";
+                uploadedImage.style.display = "none";
+                uploadedImage.src = "#";
+            }
+        }
+
+        window.addEventListener("click", function (event) {
+            const popup = document.getElementById("addBookPopup");
+            if (event.target === popup) {
+                closePopup();
+            }
+        });
+
+        // Function to display the create books section
+        function showCreateBooks() {
+            const content = document.querySelector('.content');
+            content.innerHTML = '<h2>Create Books</h2>';
+            // You can add a form or other elements for creating books here
+        }
+
+        // Function to display the income section
+        function showIncome() {
+            const content = document.querySelector('.content');
+            content.innerHTML = '<h2>Income</h2>';
+            // You can display income-related information here
+        }
+
+        // Function to display the profile section
+        function showProfile() {
+            const content = document.querySelector('.content');
+            content.innerHTML = '<h2>Profile</h2>';
+            // You can display user profile information here
+        }
+
+        // Your existing code...
+
+    </script> -->

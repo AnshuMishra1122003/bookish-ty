@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Books</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .displaybookcontainer {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 25px;
+    }
+
+    .container-card {
+      width: 98%;
+      margin: 0 60px 20px 60px;
+      height: 200px;
+      background: #dbdbdb;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .book {
+      display: flex;
+      margin-top: 0px;
+    }
+
+    .cover-img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .info-container {
+      flex: 1;
+      padding-left: 10px;
+      height: 198px;
+      width: 700px;
+      border-right: 1px solid #000;
+      margin-right: 10px;
+    }
+
+    .title {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .description {
+      margin-top: 10px;
+      margin-right: 20px;
+      color: #000;
+      height: 90px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .genre-tags-container {
+      padding-left: 10px;
+      width: 250px;
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .genres {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      font-size: 19px;
+      color: #000;
+    }
+
+    .tags {
+      font-size: 19px;
+      color: #000;
+    }
+
+    .border-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 1px;
+      background-color: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="displaybookcontainer" id="bookContainer">
+    <!-- Books will be dynamically added here -->
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+
+    // Firebase configuration (Replace with your Firebase config)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
+      authDomain: "bookish-proj.firebaseapp.com",
+      databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
+      projectId: "bookish-proj",
+      storageBucket: "bookish-proj.appspot.com",
+      messagingSenderId: "351432216616",
+      appId: "1:351432216616:web:59c46450f373a82ad9251d",
+      measurementId: "G-DH4RJ9TML1"
+    };
+
+    // Initialize Firebase
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getDatabase(firebaseApp);
+
+    // Function to fetch and display books
+    function displayBooks() {
+      const bookContainer = document.getElementById('bookContainer');
+
+      // Assume 'books' is the node where your books are stored in Firebase
+      const booksRef = ref(db, 'books/');
+
+      onValue(booksRef, (snapshot) => {
+        bookContainer.innerHTML = ''; // Clear previous content
+
+        snapshot.forEach((childSnapshot) => {
+          const bookData = childSnapshot.val();
+          const bookId = childSnapshot.key;
+
+          // Create book element
+          const bookElement = createBookElement(bookData, bookId);
+
+          // Add click event to open preview.html
+          bookElement.addEventListener('click', () => {
+            openPreview(bookId);
+          });
+
+          bookContainer.appendChild(bookElement);
+        });
+      });
+    }
+
+    // Function to create a book element
+    function createBookElement(bookData, bookId) {
+      const containerCard = document.createElement('div');
+      containerCard.classList.add('container-card');
+
+      const bookElement = document.createElement('div');
+      bookElement.classList.add('book');
+
+      // Left side - Cover image
+      const coverImg = document.createElement('img');
+      coverImg.src = bookData.imageUrl;
+      coverImg.alt = 'Cover';
+      coverImg.classList.add('cover-img');
+      bookElement.appendChild(coverImg);
+
+      // Center part - Title and Description
+      const infoContainer = document.createElement('div');
+      infoContainer.classList.add('info-container');
+
+      const title = document.createElement('div');
+      title.classList.add('title');
+      title.textContent = bookData.title;
+      infoContainer.appendChild(title);
+
+      const description = document.createElement('div');
+      description.classList.add('description');
+      description.textContent = bookData.description;
+      infoContainer.appendChild(description);
+
+      // Border line
+      const borderLine = document.createElement('div');
+      borderLine.classList.add('border-line');
+      infoContainer.appendChild(borderLine);
+
+      bookElement.appendChild(infoContainer);
+
+      // Right side - Genres and Tags
+      const genreTagsContainer = document.createElement('div');
+      genreTagsContainer.classList.add('genre-tags-container');
+
+      const genres = document.createElement('div');
+      genres.classList.add('genres');
+      genres.textContent = 'Genres: ' + bookData.genres.join(', ');
+      genreTagsContainer.appendChild(genres);
+
+      const tags = document.createElement('div');
+      tags.classList.add('tags');
+      tags.textContent = 'Tags: ' + bookData.tags.join(', ');
+      genreTagsContainer.appendChild(tags);
+
+      bookElement.appendChild(genreTagsContainer);
+
+      containerCard.appendChild(bookElement);
+      return containerCard;
+    }
+
+    // Function to open preview.html
+    function openPreview(bookId) {
+      // Construct the URL with bookId as a URL parameter
+      const previewUrl = `/html/previewpage.html?bookId=${bookId}`;
+      // Redirect to the preview page
+      window.location.href = previewUrl;
+    }
+
+    // Call the displayBooks function when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      displayBooks();
+    });
+  </script>
+</body>
+
+</html>
