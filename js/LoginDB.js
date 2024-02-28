@@ -73,6 +73,8 @@ const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
   login_hint: "user@example.com",
 });
+
+
 async function loginOAuth() {
   signInWithPopup(auth, provider)
     .then(async (authData) => {

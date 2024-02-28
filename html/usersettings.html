@@ -5,9 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Navbar Example</title>
-
+    <!-- Bootstrap CSS -->
     <style>
-        /* Reset and Global Styles */
+        @import url("https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css");
+        @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -33,16 +35,36 @@
         .navbar-settings a i {
             display: block;
             margin-bottom: 5px;
+            font-size: 20px;
         }
 
         .navbar-settings a:hover {
             background-color: #27ae60;
-            color: black;
+            color: rgb(0, 0, 0);
         }
 
         /* Public Profile Section */
         #publicProfile {
             padding: 20px;
+        }
+
+        #publicProfile button {
+            background-color: #3c3c3c;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #publicProfile button i {
+            font-size: 15px;
+            padding: 5px;
+        }
+
+        #publicProfile button:hover {
+            background-color: #27ae60;
+            color: #000;
         }
 
         /* Corrected CSS */
@@ -94,7 +116,7 @@
 
         /* Edit Button */
         .edit-button {
-            background-color: #27ae60;
+            background-color: #414141;
             color: #fff;
             padding: 8px 16px;
             border: none;
@@ -102,8 +124,79 @@
             cursor: pointer;
         }
 
+        .edit-button i {
+            font-size: large;
+        }
+
         .edit-button:hover {
-            background-color: #218c54;
+            background-color: #27ae60;
+            color: #000;
+        }
+
+
+        #manageBookmarks{
+            display: inline-block;
+        }
+        .bookmarks-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 4%;
+        }
+
+        .bookmark {
+            margin: 10px;
+            padding: 10px;
+            width: 250px;
+            /* Adjust width as needed */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .bookmark:hover {
+            transform: translateY(-5px);
+        }
+
+        .bookmark img {
+            width: 100%;
+            /* Ensure image fills the container */
+            height: auto;
+            /* Maintain aspect ratio */
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .bookmark h2 {
+            font-size: 18px;
+            margin: 10px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .bookmark a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .bookmark button {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            margin-top: 10px;
+            background-color: #dc3545;
+            /* Red color for delete button */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .bookmark button:hover {
+            background-color: #c82333;
+            /* Darker red color on hover */
         }
     </style>
 </head>
@@ -123,16 +216,16 @@
         </div>
         <input type="file" id="editprofileInput" accept=".png, .jpg, .svg" onchange="previewImage(event)"
             style="display: none; align-items: center;" />
-        <label for="editprofileInput" class="edit-button">Edit Image</label>
+        <label for="editprofileInput" class="edit-button"><i class='bx bxs-edit'></i></label>
         <!-- Change button to a label with a for attribute -->
         <p>Username: <span id="username"></span></p>
         <p>Email: <span id="email"></span></p>
         <p>Public Name:</p>
         <input type="text" id="publicName" readonly>
-        <button id="editPublicName">Edit Public Name</button>
+        <button id="editPublicName" class="editbtn2"><i class='bx bxs-edit'></i></button>
         <p>Bio:</p>
         <textarea id="bio" readonly></textarea>
-        <button id="editBio">Edit Bio</button>
+        <button id="editBio" class="editbtn2"><i class='bx bxs-edit'></i></button>
         <button id="saveChanges">Save Changes</button> <!-- New button to save changes -->
     </div>
 
@@ -147,10 +240,9 @@
         <button id="savePassword">Save Password</button>
     </div>
 
-    <div id="manageBookmarks" class="content">
-        <h2>Manage Bookmarks Content</h2>
-        <p>This is the content for Manage Bookmarks.</p>
-    </div> 
+    <div id="manageBookmarks" class="content" style="display: none;">
+        <div id="bookmarks-container"></div>
+    </div>
 
     <script src="/js/settings.js" type="module"></script>
     <script>

@@ -3,8 +3,10 @@ import {
     ref,
     onValue,
     set,
+    get
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const editProfileImageContainer = document.getElementById('editProflileImageContainer');
@@ -173,10 +175,10 @@ document.getElementById('manageBookmarksBtn').addEventListener('click', function
 
 // Function to fetch user data from Firebase Realtime Database
 function getUserDataFromDatabase() {
-    const userId = auth().currentUser.uid;
-    const usersRef = ref('users/' + userId);
+    const userId = auth.currentUser.uid;
+    const usersRef = ref(db, 'users/' + userId);
 
-    return usersRef.once('value').then(snapshot => {
+    return get(usersRef).then(snapshot => {
         return snapshot.val();
     });
 }
@@ -187,7 +189,7 @@ function displayUserData(userData) {
     const newPasswordInput = document.getElementById("newPassword");
     const confirmPasswordInput = document.getElementById("confirmPassword");
 
-    currentPasswordElement.textContent = userData.password; // Assuming password is stored in userData
+    currentPasswordElement.textContent = userData.password; // Assuming password is stored directly in userData
 
     // Event listener for saving password
     document.getElementById("savePassword").addEventListener("click", function () {
@@ -199,32 +201,138 @@ function displayUserData(userData) {
             return;
         }
 
-        // Update the password in the database
-        const userId = auth().currentUser.uid;
-        const userRef = ref('users/' + userId);
-        set(userRef, { password: newPassword })
-            .then(() => {
-                alert("Password updated successfully.");
-            })
-            .catch(error => {
-                alert("Error updating password: " + error.message);
-            });
+        // Fetch existing user data
+        const userId = auth.currentUser.uid;
+        const userRef = ref(db, 'users/' + userId);
+        onValue(userRef, (snapshot) => {
+            const existingUserData = snapshot.val();
+            if (existingUserData) {
+                // Merge existing user data with new password
+                const updatedUserData = {
+                    ...existingUserData,
+                    password: newPassword
+                };
 
-        // Clear input fields
-        newPasswordInput.value = "";
-        confirmPasswordInput.value = "";
+                // Update user data in the database
+                set(userRef, updatedUserData)
+                    .then(() => {
+                        alert("Password and user data updated successfully.");
+                    })
+                    .catch(error => {
+                        alert("Error updating password and user data: " + error.message);
+                    });
+
+                // Clear input fields
+                newPasswordInput.value = "";
+                confirmPasswordInput.value = "";
+            } else {
+                console.error("User data not found.");
+            }
+        });
     });
 }
 
-// Call function to fetch and display user data when the page loads
-auth.onAuthStateChanged(function (user) {
-    if (user) {
-        getUserDataFromDatabase().then(userData => {
+// Fetch user data including password from the database
+function fetchUserData() {
+    const userId = auth.currentUser.uid;
+    const userRef = ref(db, 'users/' + userId);
+    onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        if (userData) {
             displayUserData(userData);
-        }).catch(error => {
-            console.error("Error fetching user data:", error);
-        });
-    } else {
-        console.log('No user signed in.');
+        } else {
+            console.error("User data not found.");
+        }
+    });
+}
+
+/// Call fetchUserData when the page loads or when the user logs in
+onAuthStateChanged(auth, user => {
+    if (user) {
+        fetchUserData();
     }
 });
+
+// Call function to fetch and display user data when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    getUserDataFromDatabase().then(userData => {
+        displayUserData(userData);
+    }).catch(error => {
+        console.error("Error fetching user data:", error);
+    });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const bookmarksContainer = document.getElementById('bookmarks-container');
+
+    try {
+        // Get the current user
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                console.log("User not logged in.");
+                return;
+            }
+
+            const userId = user.uid;
+
+            // Fetch bookmarked books for the logged-in user
+            const userBooksRef = ref(db, `users/${userId}/books`);
+            const snapshot = await get(userBooksRef);
+            const bookmarkedBooks = snapshot.val();
+
+            if (!bookmarkedBooks) {
+                console.log("No bookmarked books found.");
+                return;
+            }
+
+            // Display bookmarked books
+            for (let bookId in bookmarkedBooks) {
+                const book = bookmarkedBooks[bookId];
+                const bookmark = createBookmark(book, bookId, userId);
+                bookmarksContainer.appendChild(bookmark);
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching bookmarked books:", error);
+    }
+});
+
+function createBookmark(book, bookId, userId) {
+    const bookmark = document.createElement('div');
+    bookmark.classList.add('bookmark');
+
+    const anchor = document.createElement('a');
+    anchor.href = `/html/previewpage.html?bookId=${encodeURIComponent(bookId)}&userId=${userId}`;
+
+    const img = document.createElement('img');
+    img.src = book.imageUrl;
+    img.alt = book.title;
+
+    const title = document.createElement('h2');
+    title.textContent = book.title;
+
+    // Delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', async () => {
+        try {
+            // Remove the bookmark from the database
+            const userBookRef = ref(db, `users/${userId}/books/${bookId}`);
+            await set(userBookRef, null);
+
+            // Remove the bookmark from the UI
+            bookmark.remove();
+        } catch (error) {
+            console.error("Error deleting bookmark:", error);
+        }
+    });
+
+    anchor.appendChild(img);
+    anchor.appendChild(title);
+    bookmark.appendChild(anchor);
+    bookmark.appendChild(deleteButton); // Append the delete button
+
+    return bookmark;
+}
