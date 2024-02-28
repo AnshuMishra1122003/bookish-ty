@@ -221,40 +221,72 @@ async function writeReview(event) {
   }
   const userId = user.uid;
 
-  // Get review data from the form
-  const reviewTitle = document.getElementById("reviewTitle").value;
-  const reviewContent = document.getElementById("reviewContent").value;
-
-  // Check if review fields are empty
-  if (!reviewTitle || !reviewContent) {
-    alert("Please fill out all review fields.");
-    return;
-  }
-
-  // Get the book ID from the URL query parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const bookId = urlParams.get("bookId");
-
-  // Add review to the database
+  // Fetch user details to check subscription status and username
   try {
-    const reviewRef = ref(db, `books/${bookId}/reviews`);
-    await set(push(reviewRef), {
-      title: reviewTitle,
-      content: reviewContent,
-      userId: userId,
-    });
-    alert("Review submitted successfully!");
-    // Clear form fields after submission
-    document.getElementById("reviewTitle").value = "";
-    document.getElementById("reviewContent").value = "";
+    const userDetailsRef = ref(db, `users/${userId}`);
+    const userDetailsSnapshot = await get(userDetailsRef);
+    const userDetails = userDetailsSnapshot.val();
 
-    // Display updated reviews
-    displayReviews(bookId);
+    if (!userDetails) {
+      console.log("User details not found.");
+      return;
+    }
+
+    // Check if user is subscribed
+    const isSubscribedUser = userDetails.subscribeduser === true;
+    if (!isSubscribedUser) {
+      alert("You need to be a subscribed user to write a review.");
+      return;
+    }
+
+    // Check if user has already written a review for the book
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get("bookId");
+    const userReviewRef = ref(db, `books/${bookId}/reviews`);
+    const userReviewSnapshot = await get(userReviewRef);
+    const userReviews = userReviewSnapshot.val();
+
+    if (userReviews && Object.keys(userReviews).some(reviewId => userReviews[reviewId].userId === userId)) {
+      alert("You have already written a review for this book.");
+      return;
+    }
+
+    // Get review data from the form
+    const reviewTitle = document.getElementById("reviewTitle").value;
+    const reviewContent = document.getElementById("reviewContent").value;
+
+    // Check if review fields are empty
+    if (!reviewTitle || !reviewContent) {
+      alert("Please fill out all review fields.");
+      return;
+    }
+
+    // Add review to the database
+    try {
+      await push(ref(db, `books/${bookId}/reviews`), {
+        title: reviewTitle,
+        content: reviewContent,
+        userId: userId,
+        username: userDetails.username // Add username to the review data
+      });
+      alert("Review submitted successfully!");
+      // Clear form fields after submission
+      document.getElementById("reviewTitle").value = "";
+      document.getElementById("reviewContent").value = "";
+
+      // Display updated reviews
+      displayReviews(bookId);
+    } catch (error) {
+      console.error("Error writing review:", error);
+      alert("An error occurred while submitting the review. Please try again.");
+    }
+
   } catch (error) {
-    console.error("Error writing review:", error);
-    alert("An error occurred while submitting the review. Please try again.");
+    console.error("Error fetching user details:", error);
+    alert("An error occurred while fetching user details. Please try again.");
   }
 }
+
 
 // Function to display reviews for a book
 async function displayReviews(bookId) {
