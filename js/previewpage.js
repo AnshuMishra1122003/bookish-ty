@@ -405,3 +405,70 @@ async function bookmarkBook(bookId) {
     alert("An error occurred while bookmarking the book. Please try again.");
   }
 }
+
+
+
+// Function to display random books
+async function displayRandomBooks() {
+  try {
+    const booksRef = ref(db, "books");
+    const snapshot = await get(booksRef);
+    const allBooks = snapshot.val();
+
+    // Get 16 random book IDs
+    const randomBookIds = Object.keys(allBooks)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 20);
+
+    const randomBooksContainer = document.getElementById("randomBooksContainer");
+    randomBooksContainer.innerHTML = ""; // Clear previous content
+
+    // Display "You might also like" above the books
+    const title = document.createElement("h2");
+    title.textContent = "You might also like";
+    randomBooksContainer.appendChild(title);
+
+    const booksGrid = document.createElement("div");
+    booksGrid.classList.add("books-grid");
+    randomBooksContainer.appendChild(booksGrid);
+
+    randomBookIds.forEach((bookId) => {
+      const bookData = allBooks[bookId];
+
+      // Create book container
+      const bookContainer = document.createElement("div");
+      bookContainer.classList.add("book-container");
+
+      // Create image element
+      const image = document.createElement("img");
+      image.src = bookData.imageUrl;
+      image.alt = "Book Cover";
+      image.classList.add("book-image");
+
+      // Create title element
+      const title = document.createElement("h3");
+      title.textContent = bookData.title;
+      title.classList.add("book-title");
+
+      // Add event listener to navigate to preview page
+      bookContainer.addEventListener("click", () => {
+        window.location.href = `previewpage.html?bookId=${bookId}`;
+      });
+
+      // Append image and title to the book container
+      bookContainer.appendChild(image);
+      bookContainer.appendChild(title);
+
+      // Append book container to the grid
+      booksGrid.appendChild(bookContainer);
+    });
+  } catch (error) {
+    console.error("Error fetching random books:", error);
+    alert("An error occurred while fetching random books. Please try again.");
+  }
+}
+
+// Call displayRandomBooks function when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+  displayRandomBooks();
+});

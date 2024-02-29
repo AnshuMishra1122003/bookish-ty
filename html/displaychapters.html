@@ -120,6 +120,8 @@
             border-radius: 5px;
         }
 
+        .dropdown-content:hover {}
+
         .dropdown:hover .dropdown-content {
             display: block;
         }
@@ -143,6 +145,15 @@
 
         .dropdown button[type="submit"]:hover {
             background-color: #45a049;
+        }
+
+        .dropdown-content a {
+            color: #000;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #27ae60;
+            color: #fff;
         }
     </style>
 </head>
@@ -253,14 +264,26 @@
 
         <div class="dropdown">
             <a href="#" onclick="toggleDropdown('chaptersDropdown', 1)"><i class='bx bx-menu'></i></a>
-            <div class="dropdown-content" id="chaptersDropdown">
-                <!-- Contents of the Chapters dropdown -->
+            <div class="dropdown-content" id="chaptersDropdown" style="width: 600px; height: auto; text-align: left; max-height: 1000px;
+            overflow-y: auto;">
+                <div id="chapterContent"></div>
+                <!-- Contents of the Settings dropdown -->
             </div>
         </div>
         <div class="dropdown">
-            <a href="#" onclick="toggleDropdown('settingsDropdown',2)"><i class='bx bxs-cog'></i></a>
+            <a href="#" onclick="toggleDropdown('settingsDropdown')"><i class='bx bxs-cog'></i></a>
             <div class="dropdown-content" id="settingsDropdown">
-                <!-- Contents of the Settings dropdown -->
+                <h3>Chapter Settings</h3>
+                <button onclick="changeFont('Arial, sans-serif')">Arial</button>
+                <button onclick="changeFont('Times New Roman, serif')">Times New Roman</button>
+                <button onclick="changeFont('Verdana, sans-serif')">Verdana</button>
+                <button onclick="changeFontSize('16px')">Font Size 16</button>
+                <button onclick="changeFontSize('20px')">Font Size 20</button>
+                <button onclick="changeFontSize('24px')">Font Size 24</button>
+                <input type="color" id="fontColorPicker">
+                <button onclick="changeFontColor()">Change Font Color</button>
+                <input type="color" id="bgColorPicker">
+                <button onclick="changeBgColor()">Change Background Color</button>
             </div>
         </div>
     </div>
@@ -281,6 +304,40 @@
                     dropdown.style.display = 'none';
                 }
             });
+        }
+
+        // Function to toggle dropdown visibility
+        function toggleDropdown(elementId) {
+            const dropdown = document.getElementById(elementId);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Function to change font
+        function changeFont(fontFamily) {
+            const chapterContent = document.getElementById('chapterContent');
+            chapterContent.style.fontFamily = fontFamily;
+        }
+
+        // Function to change font size
+        function changeFontSize(fontSize) {
+            const chapterContent = document.getElementById('chapterContent');
+            chapterContent.style.fontSize = fontSize;
+        }
+
+        // Function to change font color
+        function changeFontColor() {
+            const fontColorPicker = document.getElementById('fontColorPicker');
+            const chapterContent = document.getElementById('chapterContent');
+            const color = fontColorPicker.value;
+            chapterContent.style.color = color;
+        }
+
+        // Function to change background color
+        function changeBgColor() {
+            const bgColorPicker = document.getElementById('bgColorPicker');
+            const chapterContent = document.getElementById('chapterContent');
+            const color = bgColorPicker.value;
+            chapterContent.style.backgroundColor = color;
         }
 
     </script>

@@ -264,6 +264,46 @@
         #writeReviewForm button[type="submit"]:hover {
             background-color: #27ae60;
         }
+
+        /* Basic styles */
+
+        .random-books-container {
+            width: 92%;
+            height: auto;
+            padding: 20px;
+            margin: 50px 50px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 20px;
+        }
+
+        .book-container {
+            cursor: pointer;
+        }
+
+        .book-image {
+            width: 240px;
+            height: 306px;
+            border-radius: 5px;
+        }
+
+        .book-title {
+            margin-top: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -285,6 +325,10 @@
             </form>
             <div id="reviewsContainer"></div>
         </div>
+    </div>
+
+    <div id="randomBooksContainer" class="random-books-container">
+        <!-- Random books will be displayed here -->
     </div>
     <script src="/js/previewpage.js" type="module"></script>
 </body>
