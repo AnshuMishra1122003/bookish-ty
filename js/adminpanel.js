@@ -1,29 +1,14 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js';
-import { getDatabase, ref, update, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
+import { db, auth } from "./firebaseConfig.mjs";
+import { query, orderByChild, ref, update, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
 import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
-    authDomain: "bookish-proj.firebaseapp.com",
-    databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
-    projectId: "bookish-proj",
-    storageBucket: "bookish-proj.appspot.com",
-    messagingSenderId: "351432216616",
-    appId: "1:351432216616:web:59c46450f373a82ad9251d",
-    measurementId: "G-DH4RJ9TML1"
-}
-
-// Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
-const database = getDatabase(firebaseApp);
-const auth = getAuth(firebaseApp);
 
 // Function to fetch and display books
 function displayBooks() {
     const bookContainer = document.getElementById('bookContainer');
 
     // Assume 'books' is the node where your books are stored in Firebase
-    const booksRef = ref(database, 'books/');
+    const booksRef = ref(db, 'books/');
 
     onValue(booksRef, (snapshot) => {
         bookContainer.innerHTML = ''; // Clear previous content
@@ -112,7 +97,7 @@ function searchBooks() {
     bookContainer.innerHTML = "";
 
     // Fetch books from the database
-    const booksRef = ref(database, "books/");
+    const booksRef = ref(db, "books/");
     get(booksRef)
         .then((snapshot) => {
             snapshot.forEach((childSnapshot) => {
@@ -135,51 +120,93 @@ function searchBooks() {
 // Call the searchBooks function when the page loads
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("search");
-    searchInput.addEventListener("keyup", searchBooks);
+    searchInput.addEventListener("input", searchBooks);
 });
 
+// Function to filter books based on genre
+function filterBooks(genre) {
+    const bookContainer = document.getElementById('bookContainer');
 
+    // Clear previous content
+    bookContainer.innerHTML = '';
 
-// Function to delete a book from Firebase Realtime Database
-function deleteBook(bookId) {
-    const bookRef = ref(database, `books/${bookId}`);
+    // Reference to the 'books' node in the database
+    const booksRef = ref(db, 'books');
 
-    // Fetch the book data to display in the confirmation message
-    get(bookRef)
+    // Fetch books from the database
+    get(booksRef)
         .then((snapshot) => {
-            const bookData = snapshot.val();
-            const bookName = bookData.title;
+            snapshot.forEach((childSnapshot) => {
+                const bookData = childSnapshot.val();
+                const bookId = childSnapshot.key;
 
-            // Display a confirmation alert before deleting the book
-            const confirmation = confirm(`Are you sure you want to delete the book "${bookName}"?`);
-
-            // Proceed with deletion only if the user confirms
-            if (confirmation) {
-                // Remove the book from the Firebase Realtime Database
-                remove(bookRef)
-                    .then(() => {
-                        console.log('Book deleted successfully');
-                        // Display a success message after deleting the book
-                        alert(`Book "${bookName}" deleted successfully`);
-                        // Fetch and display updated books
-                        displayBooks();
-                    })
-                    .catch((error) => {
-                        console.error('Error deleting book:', error.message);
-                        alert('Error deleting book. Please try again later.');
-                    });
-            } else {
-                // If the user cancels, display a message or perform any other action
-                console.log('Deletion cancelled by user');
-            }
+                // Check if the book has the selected genre
+                // Ensure that genres is an array in your database
+                if (bookData.genres && bookData.genres.includes(genre.toLowerCase())) {
+                    const bookElement = createBookElement(bookData, bookId);
+                    bookContainer.appendChild(bookElement);
+                }
+            });
         })
         .catch((error) => {
-            console.error('Error fetching book data:', error.message);
-            alert('Error fetching book data. Please try again later.');
+            console.error('Error filtering books by genre:', error);
+            // Handle error if needed
         });
 }
 
+// Function to handle filterBooks
+function handleFilterBooks(event) {
+    const genre = event.target.innerText;
+    filterBooks(genre);
+}
 
+// Attach event listeners to dropdown items
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', handleFilterBooks);
+    });
+});
+
+// Function to delete a book from Firebase Realtime Database
+async function deleteBook(bookId) {
+    const bookRef = ref(db, `books/${bookId}`);
+
+    try {
+        // Fetch the book data to display in the confirmation message
+        const bookSnapshot = await get(bookRef);
+        const bookData = bookSnapshot.val();
+        const bookName = bookData.title;
+
+        // Ask for confirmation before deleting the book
+        const confirmation = confirm(`Are you sure you want to delete the book "${bookName}"?`);
+
+        if (confirmation) {
+            // Remove the book from the "books" node
+            await remove(bookRef);
+            console.log(`Book "${bookName}" deleted successfully from "books" node`);
+
+            // Delete the book from the corresponding genre subnodes
+            const genres = bookData.genres || [];
+            for (const genre of genres) {
+                const genreRef = ref(db, `genres/${genre}/books/${bookId}`);
+                await remove(genreRef);
+                console.log(`Book "${bookName}" deleted successfully from "${genre}" genre node`);
+            }
+
+            // Fetch and display updated counts and UI
+            fetchCountsAndUpdateUI();
+
+            // Show success message after deletion
+            alert(`Book "${bookName}" deleted successfully.`);
+        } else {
+            // If the user cancels, log a message
+            console.log('Deletion cancelled by admin');
+        }
+    } catch (error) {
+        console.error('Error deleting book:', error.message);
+        alert('Error deleting book. Please try again later.');
+    }
+}
 
 // Call the displayBooks function when the page loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -196,7 +223,7 @@ function fetchUsers() {
     }
 
     // Assuming your users are stored in a "users" node
-    const usersRef = ref(database, 'users');
+    const usersRef = ref(db, 'users');
 
     get(usersRef).then((snapshot) => {
         let serialNumber = 1; // Initialize serial number
@@ -268,15 +295,16 @@ function fetchUsers() {
 
 fetchUsers();
 
-
+// Define the searchUsers function
 function searchUsers() {
+    // Your searchUsers implementation
     const searchInput = document.getElementById('searchInput');
     const searchTerm = searchInput.value.trim().toLowerCase();
 
-    const usersRef = ref(database, 'users');
+    const usersRef = ref(db, 'users');
     get(usersRef).then((snapshot) => {
-        // Clear previous table content
-        tableBody.innerHTML = '';
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = ''; // Clear previous table content
 
         let serialNumber = 1; // Initialize serial number
 
@@ -351,13 +379,19 @@ function searchUsers() {
     });
 }
 
-// Attach the searchUsers function to the input event
-searchInput.addEventListener('input', searchUsers);
-// Assuming your Firebase database reference is defined as `database`
+// Add an event listener after the function definition
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', searchUsers);
+    } else {
+        console.error("Search input element not found");
+    }
+});
 
 function editUser(userId) {
     // Assuming your users are stored in a "users" node
-    const userRef = ref(database, `users/${userId}`);
+    const userRef = ref(db, `users/${userId}`);
 
     // Fetch the existing user data using get
     get(userRef)
@@ -393,7 +427,7 @@ function editUser(userId) {
 
 function deleteUser(userId) {
     // Assuming your users are stored in a "users" node
-    const userRef = ref(database, `users/${userId}`);
+    const userRef = ref(db, `users/${userId}`);
 
     // Fetch user data to display in the confirmation message
     get(userRef)
@@ -428,7 +462,7 @@ function deleteUser(userId) {
 }
 
 // Function to fetch and display subscribed users
- var subscriptionsTableBody = document.getElementById('subscriptionsTableBody');
+var subscriptionsTableBody = document.getElementById('subscriptionsTableBody');
 function fetchSubscribedUsers() {
 
     while (subscriptionsTableBody.firstChild) {
@@ -436,7 +470,7 @@ function fetchSubscribedUsers() {
     }
 
     // Reference to the "subscribedusers" node in the database
-    const subscribedUsersRef = ref(database, 'subscribedusers');
+    const subscribedUsersRef = ref(db, 'subscribedusers');
 
     get(subscribedUsersRef).then((snapshot) => {
         let serialNumber = 1;
@@ -483,7 +517,7 @@ function searchSubscribedUsers() {
     const searchTerms = searching.value.trim().toLowerCase();
 
     // Reference to the "subscribedusers" node in the database
-    const subscribedUsersRef = ref(database, 'subscribedusers');
+    const subscribedUsersRef = ref(db, 'subscribedusers');
 
     get(subscribedUsersRef).then((snapshot) => {
         subscriptionsTableBody.innerHTML = ''; // Clear previous table content
@@ -527,60 +561,19 @@ function searchSubscribedUsers() {
     });
 }
 
-// Attach the searchSubscribedUsers function to the input event
-searching.addEventListener("input", searchSubscribedUsers);
-
-
+// Add an event listener after the function definition
 document.addEventListener("DOMContentLoaded", () => {
-    // Function to handle filterBooks
-    function handleFilterBooks(event) {
-        const genre = event.target.innerText;
-        filterBooks(genre);
+    const searching = document.getElementById('searching');
+    if (searching) {
+        searching.addEventListener("input", searchSubscribedUsers);
+    } else {
+        console.error("Search input element not found");
     }
-
-    // Attach event listeners to dropdown items
-    document.querySelectorAll('.dropdown-item').forEach(item => {
-        item.addEventListener('click', handleFilterBooks);
-    });
-
-    // Function to filter books based on genre
-    function filterBooks(genre) {
-        const bookContainer = document.getElementById('bookContainer');
-
-        // Clear previous content
-        bookContainer.innerHTML = '';
-
-        // Reference to the 'books' node in the database
-        const booksRef = ref(database, 'books/');
-
-        // Fetch books from the database
-        get(booksRef)
-            .then((snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    const bookData = childSnapshot.val();
-                    const bookId = childSnapshot.key;
-
-                    // Check if the book has the selected genre
-                    if (bookData.genres.includes(genre.toLowerCase())) {
-                        const bookElement = createBookElement(bookData, bookId);
-                        bookContainer.appendChild(bookElement);
-                    }
-                });
-            })
-            .catch((error) => {
-                console.error('Error filtering books by genre:', error);
-                // Handle error if needed
-            });
-    }
-
-    // Function to fetch and display books (assuming it's defined elsewhere in your code)
-     displayBooks();
 });
-
 
 // Function to enable a user account
 function enableUser(userId) {
-    const userRef = ref(database, `users/${userId}`);
+    const userRef = ref(db, `users/${userId}`);
 
     // Update the 'disabled' field to false to enable the user
     update(userRef, { disabled: false })
@@ -597,7 +590,7 @@ function enableUser(userId) {
 
 // Function to disable a user account
 function disableUser(userId) {
-    const userRef = ref(database, `users/${userId}`);
+    const userRef = ref(db, `users/${userId}`);
 
     // Update the 'disabled' field to true to disable the user
     update(userRef, { disabled: true })
@@ -614,10 +607,10 @@ function disableUser(userId) {
 
 // Function to fetch counts from Firebase and update the UI
 async function fetchCountsAndUpdateUI() {
-    const usersRef = ref(database, 'users/');
-    const subscribedUsersRef = ref(database, 'subscribedusers/');
-    const booksRef = ref(database, 'books/');
-    const genresRef = ref(database, 'genres/');
+    const usersRef = ref(db, 'users/');
+    const subscribedUsersRef = ref(db, 'subscribedusers/');
+    const booksRef = ref(db, 'books/');
+    const genresRef = ref(db, 'genres/');
 
     const usersSnapshot = await get(usersRef);
     const subscribedUsersSnapshot = await get(subscribedUsersRef);

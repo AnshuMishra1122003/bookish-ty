@@ -1,15 +1,14 @@
-import { db, auth } from "./firebaseConfig.mjs";
+import { auth, db } from "./firebaseConfig.mjs";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 import {
-  query,
-  orderByChild,
-  equalTo,
   ref,
+  get,
   onValue,
   set,
   push,
-  get,
+  remove
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+
 // Function to fetch and display book details
 function displayBookDetails(bookId) {
   const bookDetailsContainer = document.getElementById("bookDetailsContainer");
@@ -27,7 +26,7 @@ function displayBookDetails(bookId) {
     coverImg.alt = "Cover";
     coverImg.classList.add("cover-img");
     // Set coverImg source dynamically from localhost
-    coverImg.src = bookData.imageUrl;
+    coverImg.src = bookData.imageUrl; 
 
     // Create title container
     const titleContainer = document.createElement("div");
@@ -69,8 +68,8 @@ function displayBookDetails(bookId) {
     const bookmarkButton = document.createElement("button");
     bookmarkButton.innerHTML = '<i class="bx bxs-bookmark"></i>';
     bookmarkButton.addEventListener("click", () => {
-      // Call the bookmarkBook function when the button is clicked
-      bookmarkBook(bookId);
+      // Navigate to bookmark.html
+      window.location.href = "bookmark.html?bookId=" + bookId;
     });
 
     buttonContainer.appendChild(readNowButton);
@@ -142,10 +141,19 @@ function displayBookDetails(bookId) {
 
             // Create a link to display the chapter details
             const chapterLink = document.createElement("a");
-            chapterLink.href = `displaychapters.html?bookId=${encodeURIComponent(bookId)}&chapterId=${encodeURIComponent(chapterId)}`;
+            chapterLink.href = `displaychapters.html?bookId=${bookId}&chapterId=${chapterId}`; // Link to displaychapters.html with bookId and chapterId as URL parameters
             chapterLink.textContent = `${serialNumber}. ${chapter.title}`;
-
             chapterListItem.appendChild(chapterLink);
+
+            // Trash icon for deleting the chapter
+            // const trashIcon = document.createElement('i');
+            // trashIcon.classList.add('fas', 'fa-trash', 'delete-icon');
+            // trashIcon.setAttribute('title', 'Delete');
+            // trashIcon.addEventListener('click', () => {
+            //   deleteChapter(bookId, chapterId, chapter.title, displayChapters);
+            // });
+            // chapterListItem.appendChild(trashIcon);
+
             chaptersContainer.appendChild(chapterListItem);
             serialNumber++;
           }
@@ -161,26 +169,6 @@ function displayBookDetails(bookId) {
         alert("An error occurred while fetching chapters. Please try again.");
       }
     }
-
-
-    // Function to display chapter content
-    async function displayChapterContent(bookId, chapterId) {
-      try {
-        const chapterContentRef = ref(db, `books/${bookId}/chapters/${chapterId}/content`);
-        const snapshot = await get(chapterContentRef);
-        const chapterContent = snapshot.val();
-
-        // Display the chapter content as needed
-        console.log("Chapter Content:", chapterContent);
-        // Here you can update the UI to display the chapter content in a modal, separate page, or any other desired way
-      } catch (error) {
-        console.error("Error fetching chapter content:", error);
-        alert("An error occurred while fetching chapter content. Please try again.");
-      }
-    }
-
-
-
     // Add event listeners to toggle buttons
     descriptTextContainer.addEventListener(
       "click",
@@ -206,6 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Book ID not found in URL parameters");
   }
 });
+
 ////////////////////////////////////////////////////
 ////////////Review page
 /////////////////////////////////////////////////////
@@ -221,72 +210,40 @@ async function writeReview(event) {
   }
   const userId = user.uid;
 
-  // Fetch user details to check subscription status and username
+  // Get review data from the form
+  const reviewTitle = document.getElementById("reviewTitle").value;
+  const reviewContent = document.getElementById("reviewContent").value;
+
+  // Check if review fields are empty
+  if (!reviewTitle || !reviewContent) {
+    alert("Please fill out all review fields.");
+    return;
+  }
+
+  // Get the book ID from the URL query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const bookId = urlParams.get("bookId");
+
+  // Add review to the database
   try {
-    const userDetailsRef = ref(db, `users/${userId}`);
-    const userDetailsSnapshot = await get(userDetailsRef);
-    const userDetails = userDetailsSnapshot.val();
+    const reviewRef = ref(db, `books/${bookId}/reviews`);
+    await set(push(reviewRef), {
+      title: reviewTitle,
+      content: reviewContent,
+      userId: userId,
+    });
+    alert("Review submitted successfully!");
+    // Clear form fields after submission
+    document.getElementById("reviewTitle").value = "";
+    document.getElementById("reviewContent").value = "";
 
-    if (!userDetails) {
-      console.log("User details not found.");
-      return;
-    }
-
-    // Check if user is subscribed
-    const isSubscribedUser = userDetails.subscribeduser === true;
-    if (!isSubscribedUser) {
-      alert("You need to be a subscribed user to write a review.");
-      return;
-    }
-
-    // Check if user has already written a review for the book
-    const urlParams = new URLSearchParams(window.location.search);
-    const bookId = urlParams.get("bookId");
-    const userReviewRef = ref(db, `books/${bookId}/reviews`);
-    const userReviewSnapshot = await get(userReviewRef);
-    const userReviews = userReviewSnapshot.val();
-
-    if (userReviews && Object.keys(userReviews).some(reviewId => userReviews[reviewId].userId === userId)) {
-      alert("You have already written a review for this book.");
-      return;
-    }
-
-    // Get review data from the form
-    const reviewTitle = document.getElementById("reviewTitle").value;
-    const reviewContent = document.getElementById("reviewContent").value;
-
-    // Check if review fields are empty
-    if (!reviewTitle || !reviewContent) {
-      alert("Please fill out all review fields.");
-      return;
-    }
-
-    // Add review to the database
-    try {
-      await push(ref(db, `books/${bookId}/reviews`), {
-        title: reviewTitle,
-        content: reviewContent,
-        userId: userId,
-        username: userDetails.username // Add username to the review data
-      });
-      alert("Review submitted successfully!");
-      // Clear form fields after submission
-      document.getElementById("reviewTitle").value = "";
-      document.getElementById("reviewContent").value = "";
-
-      // Display updated reviews
-      displayReviews(bookId);
-    } catch (error) {
-      console.error("Error writing review:", error);
-      alert("An error occurred while submitting the review. Please try again.");
-    }
-
+    // Display updated reviews
+    displayReviews(bookId);
   } catch (error) {
-    console.error("Error fetching user details:", error);
-    alert("An error occurred while fetching user details. Please try again.");
+    console.error("Error writing review:", error);
+    alert("An error occurred while submitting the review. Please try again.");
   }
 }
-
 
 // Function to display reviews for a book
 async function displayReviews(bookId) {
@@ -357,118 +314,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-async function bookmarkBook(bookId) {
-  const user = auth.currentUser;
-  if (!user) {
-    console.log("User not logged in.");
-    return;
-  }
-  const userId = user.uid;
-
-  try {
-    // Fetch book details
-    const bookRef = ref(db, `books/${bookId}`);
-    const bookSnapshot = await get(bookRef);
-    const bookData = bookSnapshot.val();
-
-    if (!bookData) {
-      console.log("Book details not found.");
-      return;
+// Function to delete a chapter
+async function deleteChapter(bookId, chapterId, chapterTitle, displayChapters) {
+  if (confirm(`Are you sure you want to delete the chapter "${chapterTitle}"?`)) {
+    try {
+      await remove(ref(db, `books/${bookId}/chapters/${chapterId}`));
+      alert(`Chapter "${chapterTitle}" deleted successfully.`);
+      // Refresh chapter display
+      displayChapters();
+    } catch (error) {
+      console.error("Error deleting chapter:", error);
+      alert("An error occurred while deleting the chapter. Please try again.");
     }
-
-    // Fetch user details
-    const userRef = ref(db, `users/${userId}`);
-    const userSnapshot = await get(userRef);
-    const userData = userSnapshot.val();
-
-    if (!userData) {
-      console.log("User details not found.");
-      return;
-    }
-
-    // Merge book details with existing user data and set it under the books sub-node
-    const userBooksRef = ref(db, `users/${userId}/books/${bookId}`);
-    await set(userBooksRef, { ...bookData, userDetails: userData });
-
-    // Check if the user is subscribed
-    const isSubscribed = userData.subscribed === true;
-
-    // If user is subscribed, also add the book details to the subscribed users' node
-    if (isSubscribed) {
-      const subscribedBooksRef = ref(db, `subscribedusers/${userId}/books/${bookId}`);
-      await set(subscribedBooksRef, { ...bookData, userDetails: userData });
-    }
-
-    alert("Book bookmarked successfully!");
-  } catch (error) {
-    console.error("Error bookmarking book:", error);
-    alert("An error occurred while bookmarking the book. Please try again.");
   }
 }
 
 
 
-// Function to display random books
-async function displayRandomBooks() {
-  try {
-    const booksRef = ref(db, "books");
-    const snapshot = await get(booksRef);
-    const allBooks = snapshot.val();
-
-    // Get 16 random book IDs
-    const randomBookIds = Object.keys(allBooks)
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 20);
-
-    const randomBooksContainer = document.getElementById("randomBooksContainer");
-    randomBooksContainer.innerHTML = ""; // Clear previous content
-
-    // Display "You might also like" above the books
-    const title = document.createElement("h2");
-    title.textContent = "You might also like";
-    randomBooksContainer.appendChild(title);
-
-    const booksGrid = document.createElement("div");
-    booksGrid.classList.add("books-grid");
-    randomBooksContainer.appendChild(booksGrid);
-
-    randomBookIds.forEach((bookId) => {
-      const bookData = allBooks[bookId];
-
-      // Create book container
-      const bookContainer = document.createElement("div");
-      bookContainer.classList.add("book-container");
-
-      // Create image element
-      const image = document.createElement("img");
-      image.src = bookData.imageUrl;
-      image.alt = "Book Cover";
-      image.classList.add("book-image");
-
-      // Create title element
-      const title = document.createElement("h3");
-      title.textContent = bookData.title;
-      title.classList.add("book-title");
-
-      // Add event listener to navigate to preview page
-      bookContainer.addEventListener("click", () => {
-        window.location.href = `previewpage.html?bookId=${bookId}`;
-      });
-
-      // Append image and title to the book container
-      bookContainer.appendChild(image);
-      bookContainer.appendChild(title);
-
-      // Append book container to the grid
-      booksGrid.appendChild(bookContainer);
-    });
-  } catch (error) {
-    console.error("Error fetching random books:", error);
-    alert("An error occurred while fetching random books. Please try again.");
-  }
-}
-
-// Call displayRandomBooks function when the page loads
-document.addEventListener("DOMContentLoaded", () => {
-  displayRandomBooks();
-});

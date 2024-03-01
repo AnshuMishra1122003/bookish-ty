@@ -5,10 +5,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Books</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
   <style>
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
-      font-family: 'Times New Roman', Times, serif;
+      padding: 0;
+      background-color: #f4f4f4;
     }
 
     .displaybookcontainer {
@@ -20,7 +31,7 @@
     .container-card {
       width: 98%;
       margin: 0 60px 20px 60px;
-      height: 200px;
+      height: 250px;
       background: #dbdbdb;
       border-radius: 10px;
       padding: 10px;
@@ -36,12 +47,14 @@
       width: 200px;
       height: 200px;
       object-fit: cover;
+      cursor: pointer;
+
     }
 
     .info-container {
       flex: 1;
       padding-left: 10px;
-      height: 198px;
+      height: 230px;
       width: 700px;
       border-right: 1px solid #000;
       margin-right: 10px;
@@ -50,15 +63,26 @@
     .title {
       font-size: 25px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     .description {
       margin-top: 10px;
       margin-right: 20px;
       color: #000;
-      height: 90px;
+      height: 140px;
+      line-height: 2.1;
       overflow: hidden;
       position: relative;
+    }
+
+    .delete-icon {
+      display: block;
+      font-size: 20px;
+      margin: 5px 190px;
+      padding: 10px 20px;
+      color: rgb(243, 11, 11);
+      /* Change icon color if needed */
     }
 
     .genre-tags-container {
@@ -70,8 +94,8 @@
     }
 
     .genres {
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin-top: 10px;
+      margin-bottom: 5px;
       font-size: 19px;
       color: #000;
     }
@@ -93,126 +117,38 @@
 </head>
 
 <body>
-  <div class="displaybookcontainer" id="bookContainer">
-    <!-- Books will be dynamically added here -->
+
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search Books...">
+    <!-- Dropdown button -->
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="genreDropdown" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Genres
+      </button>
+      <!-- Dropdown menu -->
+      <div class="dropdown-menu" aria-labelledby="genreDropdown">
+          <a class="dropdown-item" href="#" data-genre="Action">Action</a>
+          <a class="dropdown-item" href="#" data-genre="Adventure">Adventure</a>
+          <a class="dropdown-item" href="#" data-genre="Fantasy">Fantasy</a>
+          <a class="dropdown-item" href="#" data-genre="Game">Game</a>
+          <a class="dropdown-item" href="#" data-genre="Romance">Romance</a>
+          <a class="dropdown-item" href="#" data-genre="Urban">Urban</a>
+      </div>
   </div>
+  <div id="bookContainer"></div>
+  
+  
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-
-    // Firebase configuration (Replace with your Firebase config)
-    const firebaseConfig = {
-      apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
-      authDomain: "bookish-proj.firebaseapp.com",
-      databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
-      projectId: "bookish-proj",
-      storageBucket: "bookish-proj.appspot.com",
-      messagingSenderId: "351432216616",
-      appId: "1:351432216616:web:59c46450f373a82ad9251d",
-      measurementId: "G-DH4RJ9TML1"
-    };
-
-    // Initialize Firebase
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getDatabase(firebaseApp);
-
-    // Function to fetch and display books
-    function displayBooks() {
-      const bookContainer = document.getElementById('bookContainer');
-
-      // Assume 'books' is the node where your books are stored in Firebase
-      const booksRef = ref(db, 'books/');
-
-      onValue(booksRef, (snapshot) => {
-        bookContainer.innerHTML = ''; // Clear previous content
-
-        snapshot.forEach((childSnapshot) => {
-          const bookData = childSnapshot.val();
-          const bookId = childSnapshot.key;
-
-          // Create book element
-          const bookElement = createBookElement(bookData, bookId);
-
-          // Add click event to open preview.html
-          bookElement.addEventListener('click', () => {
-            openPreview(bookId);
-          });
-
-          bookContainer.appendChild(bookElement);
-        });
+  <script>
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', event => {
+        document.getElementById('genreDropdown').innerText = event.target.innerText;
       });
-    }
-
-    // Function to create a book element
-    function createBookElement(bookData, bookId) {
-      const containerCard = document.createElement('div');
-      containerCard.classList.add('container-card');
-
-      const bookElement = document.createElement('div');
-      bookElement.classList.add('book');
-
-      // Left side - Cover image
-      const coverImg = document.createElement('img');
-      coverImg.src = bookData.imageUrl;
-      coverImg.alt = 'Cover';
-      coverImg.classList.add('cover-img');
-      bookElement.appendChild(coverImg);
-
-      // Center part - Title and Description
-      const infoContainer = document.createElement('div');
-      infoContainer.classList.add('info-container');
-
-      const title = document.createElement('div');
-      title.classList.add('title');
-      title.textContent = bookData.title;
-      infoContainer.appendChild(title);
-
-      const description = document.createElement('div');
-      description.classList.add('description');
-      description.textContent = bookData.description;
-      infoContainer.appendChild(description);
-
-      // Border line
-      const borderLine = document.createElement('div');
-      borderLine.classList.add('border-line');
-      infoContainer.appendChild(borderLine);
-
-      bookElement.appendChild(infoContainer);
-
-      // Right side - Genres and Tags
-      const genreTagsContainer = document.createElement('div');
-      genreTagsContainer.classList.add('genre-tags-container');
-
-      const genres = document.createElement('div');
-      genres.classList.add('genres');
-      genres.textContent = 'Genres: ' + bookData.genres.join(', ');
-      genreTagsContainer.appendChild(genres);
-
-      const tags = document.createElement('div');
-      tags.classList.add('tags');
-      tags.textContent = 'Tags: ' + bookData.tags.join(', ');
-      genreTagsContainer.appendChild(tags);
-
-      bookElement.appendChild(genreTagsContainer);
-
-      containerCard.appendChild(bookElement);
-      return containerCard;
-    }
-
-    // Function to open preview.html
-    function openPreview(bookId) {
-      // Construct the URL with bookId as a URL parameter
-      const previewUrl = `/html/previewpage.html?bookId=${bookId}`;
-      // Redirect to the preview page
-      window.location.href = previewUrl;
-    }
-
-    // Call the displayBooks function when the page loads
-    document.addEventListener('DOMContentLoaded', () => {
-      displayBooks();
     });
   </script>
+
+  <script type="module" src="/js/genres.js"></script>
 </body>
 
 </html>
