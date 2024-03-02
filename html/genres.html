@@ -123,32 +123,33 @@
     <!-- Dropdown button -->
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="genreDropdown" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          Genres
+        aria-haspopup="true" aria-expanded="false">
+        Genres
       </button>
       <!-- Dropdown menu -->
       <div class="dropdown-menu" aria-labelledby="genreDropdown">
-          <a class="dropdown-item" href="#" data-genre="Action">Action</a>
-          <a class="dropdown-item" href="#" data-genre="Adventure">Adventure</a>
-          <a class="dropdown-item" href="#" data-genre="Fantasy">Fantasy</a>
-          <a class="dropdown-item" href="#" data-genre="Game">Game</a>
-          <a class="dropdown-item" href="#" data-genre="Romance">Romance</a>
-          <a class="dropdown-item" href="#" data-genre="Urban">Urban</a>
+        <a class="dropdown-item" href="#" data-genre="all">Genres</a>
+        <a class="dropdown-item" href="#" data-genre="action">Action</a>
+        <a class="dropdown-item" href="#" data-genre="adventure">Adventure</a>
+        <a class="dropdown-item" href="#" data-genre="fantasy">Fantasy</a>
+        <a class="dropdown-item" href="#" data-genre="romance">Romance</a>
+        <a class="dropdown-item" href="#" data-genre="game">Game</a>
+        <a class="dropdown-item" href="#" data-genre="urban">Urban</a>
       </div>
-  </div>
-  <div id="bookContainer"></div>
-  
-  
+    </div>
+    <div id="bookContainer"></div>
 
-  <script>
-    document.querySelectorAll('.dropdown-item').forEach(item => {
-      item.addEventListener('click', event => {
-        document.getElementById('genreDropdown').innerText = event.target.innerText;
+
+
+    <script>
+      document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', event => {
+          document.getElementById('genreDropdown').innerText = event.target.innerText;
+        });
       });
-    });
-  </script>
+    </script>
 
-  <script type="module" src="/js/genres.js"></script>
+    <script type="module" src="/js/genres.js"></script>
 </body>
 
 </html>

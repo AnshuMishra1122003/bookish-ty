@@ -25,6 +25,76 @@ function displayBooks() {
     });
 }
 
+// Call the displayBooks function when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    displayBooks();
+});
+
+
+// Function to filter books based on selected genres
+function filterBooksBySelectedGenres() {
+    const selectedGenres = [];
+    document.querySelectorAll('.dropdown-item.selected').forEach(item => {
+        selectedGenres.push(item.getAttribute('data-genre'));
+    });
+    filterBooks(selectedGenres);
+}
+
+// Function to handle filterBooks
+function handleFilterBooks(event) {
+    event.preventDefault();
+    const dropdownItem = event.target;
+    dropdownItem.classList.toggle('selected');
+    filterBooksBySelectedGenres();
+}
+
+// Attach event listeners to dropdown items
+document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', handleFilterBooks);
+});
+
+// Function to filter books based on selected genres
+function filterBooks(genres) {
+    const bookContainer = document.getElementById('bookContainer');
+    bookContainer.innerHTML = ''; // Clear previous content
+
+    const booksRefPromises = genres.map(genre => {
+        if (genre === 'all') {
+            return get(ref(db, 'books/'));
+        } else {
+            return get(ref(db, `genres/${genre}/books`));
+        }
+    });
+
+    Promise.all(booksRefPromises)
+        .then(snapshots => {
+            const books = {};
+            snapshots.forEach(snapshot => {
+                snapshot.forEach(childSnapshot => {
+                    const bookData = childSnapshot.val();
+                    const bookId = childSnapshot.key;
+                    books[bookId] = bookData;
+                });
+            });
+            Object.keys(books).forEach(bookId => {
+                const bookData = books[bookId];
+                const bookElement = createBookElement(bookData, bookId);
+                bookContainer.appendChild(bookElement);
+            });
+        })
+        .catch(error => {
+            console.error('Error filtering books by genre:', error);
+            // Handle error if needed
+        });
+}
+
+// Call the filterBooks function when the page loads to display all books initially
+document.addEventListener('DOMContentLoaded', () => {
+    filterBooks(['all']); // Display all books initially
+});
+
+
+
 // Function to create a book element
 function createBookElement(bookData, bookId) {
     const containerCard = document.createElement('div');
@@ -40,9 +110,9 @@ function createBookElement(bookData, bookId) {
     coverImg.classList.add('cover-img');
     coverImg.onclick = function () {
         window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(
-          bookId
+            bookId
         )}`;
-      };
+    };
     bookElement.appendChild(coverImg);
 
     // Center part - Title and Description
@@ -54,9 +124,9 @@ function createBookElement(bookData, bookId) {
     title.textContent = bookData.title;
     title.onclick = function () {
         window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(
-          bookId
+            bookId
         )}`;
-      };
+    };
     infoContainer.appendChild(title);
 
     const description = document.createElement('div');
@@ -134,51 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
     searchInput.addEventListener("input", searchBooks);
 });
 
-// Function to filter books based on genre
-function filterBooks(genre) {
-    const bookContainer = document.getElementById('bookContainer');
 
-    // Clear previous content
-    bookContainer.innerHTML = '';
 
-    // Reference to the 'books' node in the database
-    const booksRef = ref(db, 'books');
 
-    // Fetch books from the database
-    get(booksRef)
-        .then((snapshot) => {
-            snapshot.forEach((childSnapshot) => {
-                const bookData = childSnapshot.val();
-                const bookId = childSnapshot.key;
-
-                // Check if the book has the selected genre
-                // Ensure that genres is an array in your database
-                if (bookData.genres && bookData.genres.includes(genre.toLowerCase())) {
-                    const bookElement = createBookElement(bookData, bookId);
-                    bookContainer.appendChild(bookElement);
-                }
-            });
-        })
-        .catch((error) => {
-            console.error('Error filtering books by genre:', error);
-            // Handle error if needed
-        });
-}
-
-// Function to handle filterBooks
-function handleFilterBooks(event) {
-    const genre = event.target.innerText;
-    filterBooks(genre);
-}
-
-// Attach event listeners to dropdown items
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.dropdown-item').forEach(item => {
-        item.addEventListener('click', handleFilterBooks);
-    });
-});
-
-// Call the displayBooks function when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    displayBooks();
-});

@@ -5,6 +5,127 @@
     <meta charset="utf-8" />
     <title>Registration Page</title>
     <link href="/style.css" rel="stylesheet" />
+    <style>
+        /****************Register form*********************/
+
+        .reg_Form_Box {
+            width: 40%;
+            height: max-content;
+            margin-top: 10%;
+            background: #cfcfcf;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            color: black;
+            border-radius: 10px;
+            padding: 30px 40px;
+            margin-left: 30%;
+        }
+
+        .reg_Form_Box h1 {
+            font-size: 36px;
+            text-align: center;
+        }
+
+        /***************textbox******************/
+
+        .reg_Form_Box .Input_Textbox {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 30px 0;
+        }
+
+        .Input_Textbox input {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border: none;
+            outline: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 16px;
+            color: black;
+            padding: 20px 45px 20px 20px;
+        }
+
+        .Input_Textbox input::placeholder {
+            color: black;
+        }
+
+        .Input_Textbox i {
+            position: absolute;
+            transform: translateY(-50%);
+            right: 20px;
+            top: 30px;
+            font-size: 20px;
+        }
+
+
+
+        /****************terms and condition***************/
+
+        .reg_Form_Box .TandC {
+            font-size: 15px;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .TandC label input {
+            accent-color: black;
+            margin-right: 3px;
+        }
+
+        .TandC a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        .TandC a:hover {
+            text-decoration: underline;
+        }
+
+        /****************form button*********************/
+
+        #Register_Button {
+            width: 100%;
+            height: 45px;
+            background: #000000;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 10px;
+        }
+
+        #Register_Button a {
+            text-decoration: none;
+        }
+
+        #Register_Button:hover {
+            background-color: var(--green);
+            color: #000000;
+        }
+
+        /***************form link***************/
+
+        .reg_Form_Box .Form_link {
+            font-size: 18px;
+            text-align: center;
+            margin: 20px 0 15px;
+        }
+
+        .Form_link p a {
+            color: blue;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .Form_link p a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
@@ -13,7 +134,7 @@
 
         <div class="header-1">
 
-            <a href="/index.html" class="logo">BOOKISH</a>
+            <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
 
             <form id="searchbar" action="#" class="search-form">
 
@@ -35,7 +156,7 @@
                             <i class='bx bxs-user-circle'></i>
                             <p>Profile</p>
                         </a>
-                        <a href="#" class="sub-icon-link" id="settings-link">
+                        <a href="/html/paymentpage.html" class="sub-icon-link" id="settings-link">
                             <i class='bx bxs-cog'></i>
                             <p>Settings</p>
                         </a>
@@ -204,17 +325,45 @@
             </div>
 
             <!--password textbox-->
-            <div class="Input_Textbox">
+            <div id="password" class="Input_Textbox">
                 <input type="password" id="Password_TextBox" name="Password" placeholder="Create Your Password">
+                <i class='bx bx-show' onclick="togglePasswordVisibility('Password_TextBox', this)"
+                    style="margin-right: 25px; font-size: 20px;"></i>
+                <i class='bx bx-hide' onclick="togglePasswordVisibility('Password_TextBox', this)"
+                    style="display: none; margin-right: 25px; font-size: 20px;"></i>
                 <i class='bx bxs-lock-alt'></i>
             </div>
 
             <!--confirm password textbox-->
-            <div class="Input_Textbox">
+            <div id="cpassword" class="Input_Textbox">
                 <input type="password" id="Confirm_Password_TextBox" name="cPassword"
                     placeholder="Confirm Your Password">
+                <i class='bx bx-show' onclick="togglePasswordVisibility('Confirm_Password_TextBox', this)"
+                    style="margin-right: 25px; font-size: 20px;"></i>
+                <i class='bx bx-hide' onclick="togglePasswordVisibility('Confirm_Password_TextBox', this)"
+                    style="display: none; margin-right: 25px; font-size: 20px;"></i>
                 <i class='bx bxs-lock-alt'></i>
             </div>
+
+            <script>
+                function togglePasswordVisibility(inputId, icon) {
+                    const input = document.getElementById(inputId);
+                    const passwordIcon = icon.parentElement.querySelector('.bx-show');
+                    const textIcon = icon.parentElement.querySelector('.bx-hide');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        passwordIcon.style.display = 'none';
+                        textIcon.style.display = 'block';
+                    } else {
+                        input.type = 'password';
+                        passwordIcon.style.display = 'block';
+                        textIcon.style.display = 'none';
+                    }
+                }
+            </script>
+
+
 
             <!--Terms and condition checkbox-->
             <div class="TandC">

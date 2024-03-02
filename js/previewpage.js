@@ -9,7 +9,6 @@ import {
   remove
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
-// Function to fetch and display book details
 function displayBookDetails(bookId) {
   const bookDetailsContainer = document.getElementById("bookDetailsContainer");
 
@@ -25,10 +24,8 @@ function displayBookDetails(bookId) {
     const coverImg = document.createElement("img");
     coverImg.alt = "Cover";
     coverImg.classList.add("cover-img");
-    // Set coverImg source dynamically from localhost
-    coverImg.src = bookData.imageUrl; 
+    coverImg.src = bookData.imageUrl;
 
-    // Create title container
     const titleContainer = document.createElement("div");
     titleContainer.classList.add("title-container");
 
@@ -36,18 +33,39 @@ function displayBookDetails(bookId) {
     title.classList.add("title");
     title.textContent = bookData.title;
 
-    // Genres and tags
-    const genres = document.createElement("div");
-    genres.classList.add("genres");
-    genres.textContent = `Genres: ${bookData.genres.join(", ")}`;
+    const genresContainer = document.createElement("div");
+    genresContainer.classList.add("genres-container");
+    const genretitle = document.createElement("h2")
+    genretitle.textContent = "Genres:"
+    genresContainer.appendChild(genretitle);
+    for (const genre of bookData.genres) {
+      const genreLink = document.createElement("a");
+      genreLink.href = `genres.html?genre=${genre}`;
+      genreLink.textContent = genre;
+      genreLink.addEventListener("click", () => {
+        filterBooks(genre);
+      });
+      genresContainer.appendChild(genreLink);
+    }
 
-    const tags = document.createElement("div");
-    tags.classList.add("tags");
-    tags.textContent = `Tags: ${bookData.tags.join(", ")}`;
+    const tagsContainer = document.createElement("div");
+    tagsContainer.classList.add("tags-container");
+    const tagtitle = document.createElement("h2")
+    tagtitle.textContent = "Tags:"
+    tagsContainer.appendChild(tagtitle);
+    for (const tag of bookData.tags) {
+      const tagLink = document.createElement("a");
+      tagLink.href = `displaytagbook.html?tag=${tag}`;
+      tagLink.textContent = tag;
+      tagLink.addEventListener("click", () => {
+        // Function to handle tag click event
+      });
+      tagsContainer.appendChild(tagLink);
+    }
 
     titleContainer.appendChild(title);
-    titleContainer.appendChild(genres);
-    titleContainer.appendChild(tags);
+    titleContainer.appendChild(genresContainer);
+    titleContainer.appendChild(tagsContainer);
 
     mainbookContainer.appendChild(coverImg);
     mainbookContainer.appendChild(titleContainer);
@@ -224,14 +242,21 @@ async function writeReview(event) {
   const urlParams = new URLSearchParams(window.location.search);
   const bookId = urlParams.get("bookId");
 
-  // Add review to the database
   try {
+    // Fetch user data from the 'users' node
+    const userSnapshot = await get(ref(db, `users/${userId}`));
+    const userData = userSnapshot.val();
+    const username = userData.username; // Assuming the username is stored under 'username' in the user data
+
+    // Add review to the database
     const reviewRef = ref(db, `books/${bookId}/reviews`);
     await set(push(reviewRef), {
       title: reviewTitle,
       content: reviewContent,
       userId: userId,
+      username: username,
     });
+
     alert("Review submitted successfully!");
     // Clear form fields after submission
     document.getElementById("reviewTitle").value = "";
@@ -244,6 +269,7 @@ async function writeReview(event) {
     alert("An error occurred while submitting the review. Please try again.");
   }
 }
+
 
 // Function to display reviews for a book
 async function displayReviews(bookId) {
