@@ -86,8 +86,8 @@ function displayBookDetails(bookId) {
     const bookmarkButton = document.createElement("button");
     bookmarkButton.innerHTML = '<i class="bx bxs-bookmark"></i>';
     bookmarkButton.addEventListener("click", () => {
-      // Navigate to bookmark.html
-      window.location.href = "bookmark.html?bookId=" + bookId;
+      // Call the bookmarkBook function when the button is clicked
+      bookmarkBook(bookId);
     });
 
     buttonContainer.appendChild(readNowButton);
@@ -355,5 +355,118 @@ async function deleteChapter(bookId, chapterId, chapterTitle, displayChapters) {
   }
 }
 
+// Function to display random books
+async function displayRandomBooks() {
+  try {
+    const booksRef = ref(db, "books");
+    const snapshot = await get(booksRef);
+    const allBooks = snapshot.val();
 
+    // Get 16 random book IDs
+    const randomBookIds = Object.keys(allBooks)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 15);
+
+    const randomBooksContainer = document.getElementById("randomBooksContainer");
+    randomBooksContainer.innerHTML = ""; // Clear previous content
+
+    // Display "You might also like" above the books
+    const title = document.createElement("h2");
+    title.textContent = "You might also like";
+    randomBooksContainer.appendChild(title);
+
+    const booksGrid = document.createElement("div");
+    booksGrid.classList.add("books-grid");
+    randomBooksContainer.appendChild(booksGrid);
+
+    randomBookIds.forEach((bookId) => {
+      const bookData = allBooks[bookId];
+
+      // Create book container
+      const bookContainer = document.createElement("div");
+      bookContainer.classList.add("book-container");
+
+      // Create image element
+      const image = document.createElement("img");
+      image.src = bookData.imageUrl;
+      image.alt = "Book Cover";
+      image.classList.add("book-image");
+
+      // Create title element
+      const title = document.createElement("h3");
+      title.textContent = bookData.title;
+      title.classList.add("book-title");
+
+      // Add event listener to navigate to preview page
+      bookContainer.addEventListener("click", () => {
+        window.location.href = `previewpage.html?bookId=${bookId}`;
+      });
+
+      // Append image and title to the book container
+      bookContainer.appendChild(image);
+      bookContainer.appendChild(title);
+
+      // Append book container to the grid
+      booksGrid.appendChild(bookContainer);
+    });
+  } catch (error) {
+    console.error("Error fetching random books:", error);
+    alert("An error occurred while fetching random books. Please try again.");
+  }
+}
+
+// Call displayRandomBooks function when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+  displayRandomBooks();
+});
+
+
+async function bookmarkBook(bookId) {
+  const user = auth.currentUser;
+  if (!user) {
+    console.log("User not logged in.");
+    return;
+  }
+  const userId = user.uid;
+
+  try {
+    // Fetch book details
+    const bookRef = ref(db, `books/${bookId}`);
+    const bookSnapshot = await get(bookRef);
+    const bookData = bookSnapshot.val();
+
+    if (!bookData) {
+      console.log("Book details not found.");
+      return;
+    }
+
+    // Fetch user details
+    const userRef = ref(db, `users/${userId}`);
+    const userSnapshot = await get(userRef);
+    const userData = userSnapshot.val();
+
+    if (!userData) {
+      console.log("User details not found.");
+      return;
+    }
+
+    // Merge book details with existing user data and set it under the books sub-node
+    const userBooksRef = ref(db, `users/${userId}/books/${bookId}`);
+    await set(userBooksRef, { ...bookData, userDetails: userData });
+
+    // Check if the user is subscribed
+    const isSubscribed = userData.subscribed === true;
+
+    // If user is subscribed, also add the book details to the subscribed users' node
+    if (isSubscribed) {
+      const subscribedBooksRef = ref(db, `subscribedusers/${userId}/books/${bookId}`);
+      await set(subscribedBooksRef, { ...bookData, userDetails: userData });
+    }
+
+    alert("Book bookmarked successfully!");
+  } catch (error) {
+    console.error("Error bookmarking book:", error);
+    alert("An error occurred while bookmarking the book. Please try again.");
+  }
+}
 

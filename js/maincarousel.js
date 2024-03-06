@@ -13,7 +13,6 @@ let slideIndex = 0;
 let timer; // Variable to store the timer for automatic pagination
 
 // Fetch book details from Firebase Realtime Database
-// Fetch book details from Firebase Realtime Database
 async function fetchBooks(userId) {
   const slideshowContainer = document.getElementById("slideshow-container");
   try {

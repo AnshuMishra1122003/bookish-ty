@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Navbar Example</title>
+    <link href="/style.css" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <style>
         @import url("https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css");
@@ -45,21 +46,36 @@
 
         /* Public Profile Section */
         #publicProfile {
-            padding: 20px;
+            padding: 2%;
+            width: 70%;
+            height: 100%;
+            margin-top: 10%;
+            margin-bottom: 10%;
+            margin-left: 15%;
+            background-color: #cfcfcf;
+            border-radius: 20px;
         }
 
-        #publicProfile button {
+        #publicname .editbtn1 {
             background-color: #3c3c3c;
             color: #fff;
-            padding: 8px 16px;
-            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #publicbio .editbtn2 {
+            background-color: #3c3c3c;
+            color: #ffffff;
+            padding: 10px 16px;
+            position: relative;
             border-radius: 5px;
             cursor: pointer;
         }
 
         #publicProfile button i {
             font-size: 15px;
-            padding: 5px;
+            padding: 0px;
         }
 
         #publicProfile button:hover {
@@ -70,17 +86,28 @@
         /* Corrected CSS */
         #editProflileImageContainer {
             position: relative;
-            width: 200px;
+            width: 20%;
             height: 200px;
-            margin: 50px auto;
-            /* Center the container */
+            margin-left: 40%;
+            margin-top: 10%;
             background: #fff;
             border: 2px solid #000;
             border-radius: 50%;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-bottom: 3%;
+        }
+
+        /* Edit Button */
+        .edit-button {
+            background-color: #414141;
+            color: #fff;
+            padding-top: 1.4%;
+            padding-bottom: 1%;
+            padding-left: 5%;
+            padding-right: 5%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 44%;
         }
 
         #editProflileImageContainer img {
@@ -99,13 +126,66 @@
             display: none;
         }
 
+        #publicProfile #displayuserdata {
+            margin-top: 3%;
+            text-align: center;
+            font-weight: 900;
+            font-size: 25px;
+        }
+
+
+        #publicProfile #displayemaildata {
+            margin-top: 1%;
+            text-align: center;
+            font-weight: 300;
+            font-size: 20px;
+        }
+
+        #publicProfile #edituserdata {
+            margin-top: 1%;
+            text-align: left;
+            font-weight: 100;
+            font-size: 20px;
+        }
+
+        #publicProfile #edituserbio {
+            margin-top: 1%;
+            text-align: left;
+            font-weight: 100;
+            font-size: 20px;
+        }
+
+        #publicname {
+            display: inline;
+        }
+
+        #publicbio {
+            display: inline;
+        }
+
+        #publicProfile {
+            font-size: 20px;
+        }
+
+        #saveChanges {
+            background-color: #3c3c3c;
+            color: #ffffff;
+            padding: 15px 20px;
+            position: relative;
+            font-size: 20px;
+            margin-left: 42%;
+            margin-top: 2%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         /* Form Elements */
-        input[type="text"],
+        #publicProfile input[type="text"],
         textarea {
-            width: calc(100% - 36px);
-            /* Adjust according to container padding */
-            padding: 10px;
-            margin-bottom: 10px;
+            width: 83%;
+            padding: 13px;
+            margin-left: 5%;
+            margin-top: 1%;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -114,15 +194,6 @@
             resize: vertical;
         }
 
-        /* Edit Button */
-        .edit-button {
-            background-color: #414141;
-            color: #fff;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
 
         .edit-button i {
             font-size: large;
@@ -133,21 +204,85 @@
             color: #000;
         }
 
-
-        #manageBookmarks{
-            display: inline-block;
+        #managepassword {
+            padding: 2%;
+            width: 70%;
+            height: 100%;
+            margin-top: 10%;
+            margin-bottom: 10%;
+            margin-left: 15%;
+            background-color: #cfcfcf;
+            border-radius: 20px;
         }
+
+        #managepassword h1 {
+            font-weight: 700;
+        }
+
+        #managepassword .Input_Textbox {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 30px 0;
+        }
+
+        #managepassword p {
+            margin-top: 1%;
+            font-size: 20px;
+        }
+
+        #managepassword label {
+            display: block;
+            font-size: 20px;
+            margin-top: 8%;
+        }
+
+        #managepassword .Input_Textbox input {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border: none;
+            outline: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 16px;
+            color: black;
+            padding: 20px 45px 20px 20px;
+        }
+
+        #managepassword .Input_Textbox i {
+            position: absolute;
+            right: 20px;
+            top: 70%;
+            font-size: 20px;
+        }
+
+        #managepassword button {
+            background-color: #3c3c3c;
+            color: #ffffff;
+            padding: 15px 20px;
+            position: relative;
+            font-size: 20px;
+            margin-left: 42%;
+            margin-top: 2%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #manageBookmarks {
+            margin-top: 10%;
+            margin-bottom: 10%;
+            margin-left: 10%;
+        }
+
         .bookmarks-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 4%;
         }
 
         .bookmark {
-            margin: 10px;
+            display: inline-block;
+            margin: 1%;
             padding: 10px;
-            width: 250px;
-            /* Adjust width as needed */
+            width: 20%;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -160,9 +295,7 @@
 
         .bookmark img {
             width: 100%;
-            /* Ensure image fills the container */
             height: auto;
-            /* Maintain aspect ratio */
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
         }
@@ -202,7 +335,181 @@
 </head>
 
 <body>
+    <!-------------header starts------------------->
+    <header id="header" class="header">
 
+        <div class="header-1">
+
+            <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
+
+            <form id="searchbar" action="#" class="search-form">
+
+                <input type="search" id="search-box" placeholder="Search Here..." />
+                <label for="search-box" class="bx bx-search"></label>
+            </form>
+            <div class="icons">
+                <div id="user-login-btn" class="user-login-btn" onclick="toggleIcon()">
+                    <i class='bx bxs-user-circle'></i>
+                </div>
+                <div id="subMenu" class="sub-menu-wrap">
+                    <div class="sub-icon" id="sub-icon">
+                        <div class="user-info" id="user-info">
+                            <img id="user-image" src="/assets/person-circle.svg" alt="">
+                            <span id="user-name">User</span>
+                        </div>
+                        <hr>
+                        <a href="#" class="sub-icon-link" id="profile-link">
+                            <i class='bx bxs-user-circle'></i>
+                            <p>Profile</p>
+                        </a>
+                        <a href="/html/paymentpage.html" class="sub-icon-link" id="settings-link">
+                            <i class='bx bxs-cog'></i>
+                            <p>Settings</p>
+                        </a>
+                        <a href="#" class="sub-icon-link" id="helps-services-link">
+                            <i class="bi bi-question-circle-fill"></i>
+                            <p>Helps & Services</p>
+                        </a>
+                        <a href="/html/Login.html" class="sub-icon-link" id="logout-link" onclick="logout()">
+                            <i class='bx bx-log-out'></i>
+                            <p id="logout-text">Logout</p>
+                        </a>
+                        <a href="/html/Login.html" class="sub-icon-link" id="login-link">
+                            <i class='bx bx-log-in'></i>
+                            <p>Login</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <script type="module">
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+                import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+                import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+
+                //config code...........
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
+                    authDomain: "bookish-proj.firebaseapp.com",
+                    databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
+                    projectId: "bookish-proj",
+                    storageBucket: "bookish-proj.appspot.com",
+                    messagingSenderId: "351432216616",
+                    appId: "1:351432216616:web:59c46450f373a82ad9251d",
+                    measurementId: "G-DH4RJ9TML1",
+                };
+
+                const app = initializeApp(firebaseConfig);
+
+                const auth = getAuth(app);
+                const db = getDatabase(app);
+
+                document.addEventListener('DOMContentLoaded', async () => {
+                    const profileLink = document.getElementById('profile-link');
+                    const settingsLink = document.getElementById('settings-link');
+                    const helpsServicesLink = document.getElementById('helps-services-link');
+                    const logoutLink = document.getElementById('logout-link');
+                    const loginLink = document.getElementById('login-link');
+                    const userImage = document.getElementById('user-image');
+                    const userName = document.getElementById('user-name');
+
+                    // Get the current user
+                    auth.onAuthStateChanged(async (user) => {
+                        if (user) {
+                            // User is logged in
+                            loginLink.style.display = 'none';
+                            logoutLink.style.display = 'flex';
+                            // Fetch user's information from database
+                            const userId = user.uid;
+                            const userRef = ref(db, `users/${userId}`);
+                            const snapshot = await get(userRef);
+                            const userData = snapshot.val();
+                            if (userData) {
+                                // Update user's image and name
+                                userImage.src = userData.imageUrl || '/assets/person-circle.svg'; // Use default user icon if no image is available
+                                userName.textContent = userData.username || 'User'; // Use 'User' if no name is available
+                            }
+                            // Show appropriate links
+                            profileLink.style.display = 'flex';
+                            settingsLink.style.display = 'flex';
+                            helpsServicesLink.style.display = 'flex';
+                        } else {
+                            // User is not logged in
+                            loginLink.style.display = 'flex';
+                            logoutLink.style.display = 'none';
+                            // Hide unnecessary links
+                            profileLink.style.display = 'none';
+                            settingsLink.style.display = 'none';
+                            helpsServicesLink.style.display = 'none';
+                        }
+                    });
+
+
+                    // Function to logout the user
+                    function logout() {
+                        sessionStorage.removeItem('user');
+
+                        auth.signOut().then(() => {
+                            window.location.href = "/html/Login.html";
+                        }).catch((error) => {
+                            console.error("Logout error:", error.message);
+                            alert("Logout failed.");
+                        });
+                    }
+
+
+                    function toggleIcon() {
+                        const subMenu = document.getElementById('subMenu');
+                        subMenu.classList.toggle('active');
+                    }
+                });
+            </script>
+
+
+        </div>
+        <div class="header-2">
+
+            <nav id="navbar" class="navbar">
+                <input class="menu-btn" type="checkbox" id="menu-btn" />
+                <label class="menu-icon" for="menu-btn">
+                    <span class="nav-icon"></span>
+                </label>
+                <div class="menu">
+                    <a href="/index.html" class="nav-link" onclick="showMenu(0)">Home</a>
+                    <a href="/html/genres.html" onclick="showMenu(1)">Genres</a>
+                    <a href="/html/authordashboard.html" onclick="showMenu(2)">Create</a>
+                    <a href="/html/library.html" onclick="showMenu(3)">Library</a>
+                    <a href="/html/usersettings.html" onclick="showMenu(4)">User Settings</a>
+                    <a href="/html/admin.html" onclick="showMenu(5)">About Us</a>
+                </div>
+            </nav>
+        </div>
+        <script>
+            let subIcon = document.getElementById("subMenu");
+            function toggleIcon() {
+                subIcon.classList.toggle("open-icon");
+            }
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const menuLinks = document.querySelectorAll(".menu a");
+
+                menuLinks.forEach(function (link, index) {
+                    link.addEventListener("click", function () {
+                        // Remove 'active' class from all links
+                        menuLinks.forEach(function (menuLink) {
+                            menuLink.classList.remove("active");
+                        });
+                        // Add 'active' class to the clicked link
+                        link.classList.add("active")
+
+                        // Show the selected link
+                        showMenu(index);
+                    });
+                });
+            });
+        </script>
+    </header>
+    <!---------------------Header close---------------------->
     <div class="navbar-settings">
         <!-- Navbar buttons -->
         <a id="publicProfileBtn"><i class="bi bi-person-fill-gear"></i>Public Profile</a>
@@ -217,27 +524,68 @@
         <input type="file" id="editprofileInput" accept=".png, .jpg, .svg" onchange="previewImage(event)"
             style="display: none; align-items: center;" />
         <label for="editprofileInput" class="edit-button"><i class='bx bxs-edit'></i></label>
+
         <!-- Change button to a label with a for attribute -->
-        <p>Username: <span id="username"></span></p>
-        <p>Email: <span id="email"></span></p>
-        <p>Public Name:</p>
-        <input type="text" id="publicName" readonly>
-        <button id="editPublicName" class="editbtn2"><i class='bx bxs-edit'></i></button>
-        <p>Bio:</p>
-        <textarea id="bio" readonly></textarea>
-        <button id="editBio" class="editbtn2"><i class='bx bxs-edit'></i></button>
+        <p id="displayuserdata"> <span id="username"></span></p>
+
+        <p id="displayemaildata"> <span id="email"></span></p>
+
+        <div id="publicname">
+            <p id="edituserdata">Public Name:</p>
+            <input type="text" id="publicName" readonly>
+            <button id="editPublicName" class="editbtn1"><i class='bx bxs-edit'></i></button>
+        </div>
+
+        <div id="publicbio">
+            <p id="edituserbio">Bio:</p>
+            <textarea id="bio" readonly></textarea>
+            <button id="editBio" class="editbtn2"><i class='bx bxs-edit'></i></button>
+        </div>
+
         <button id="saveChanges">Save Changes</button> <!-- New button to save changes -->
     </div>
 
     <!-- Password Section -->
     <div id="managepassword" class="content" style="display: none;">
-        <h2>Password</h2>
-        <p>Current Password: <span id="currentPassword"></span></p>
-        <label for="newPassword">New Password:</label>
-        <input type="password" id="newPassword">
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword">
+        <h1>Password</h1>
+        <div class="Input_Textbox">
+            <p>Current Password: <span id="currentPassword"></span></p>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newpassword" name="Password" placeholder="Create Your New Password">
+            <i class='bx bx-show' onclick="togglePasswordVisibility('newpassword', this)" style="margin-top: 15px;"></i>
+            <i class='bx bx-hide' onclick="togglePasswordVisibility('newpassword', this)"
+                style="display: none; margin-top: 15px;"></i>
+        </div>
+
+        <div class="Input_Textbox">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmpassword" name="cPassword" placeholder="Confirm Your Password">
+            <i class='bx bx-show' onclick="togglePasswordVisibility('confirmpassword', this)"
+                style="margin-top: -15px;"></i>
+            <i class='bx bx-hide' onclick="togglePasswordVisibility('confirmpassword', this)"
+                style="display: none; margin-top: -15px;"></i>
+        </div>
         <button id="savePassword">Save Password</button>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            const passwordIcon = icon.parentElement.querySelector('.bx-show');
+            const textIcon = icon.parentElement.querySelector('.bx-hide');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                passwordIcon.style.display = 'none';
+                textIcon.style.display = 'block';
+            } else {
+                input.type = 'password';
+                passwordIcon.style.display = 'block';
+                textIcon.style.display = 'none';
+            }
+        }
+    </script>
+
     </div>
 
     <div id="manageBookmarks" class="content" style="display: none;">
@@ -273,6 +621,33 @@
             }
         }
     </script>
+    <!------------------------Add footer--------------------------------------->
+
+    <section class="footer">
+
+        <div class="footer-container">
+
+            <div class="row">
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="/html/alltags.html"></i>All Tags</a>
+                    </li>
+                    <li>
+                        <a href="#"></i>Account Info</a>
+                    </li>
+                    <li>
+                        <a href="#"></i>Terms and Condition</a>
+                    </li>
+                    <li style="border-right: none">
+                        <a href="#"></i>Contact Us</a>
+                    </li>
+                </ul>
+                <div class="credit"> <span> Bookish </span>copyright ©2023 all rights reserved! </div>
+
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>

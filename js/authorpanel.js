@@ -65,7 +65,7 @@ function createBookContainer(book, bookId) {
 
   const button1 = document.createElement("button");
   button1.id = "editBookBtn";
-  button1.textContent = "Edit Book Details";
+  button1.textContent = "Edit Book";
   button1.addEventListener("click", function () {
     // Call the editBookDetails function with bookId parameter
     window.location.href = `/html/editbook.html?bookId=${encodeURIComponent(

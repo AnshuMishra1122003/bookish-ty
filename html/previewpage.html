@@ -68,11 +68,11 @@
             margin-top: 20px;
         }
 
-        .genres-container h2{
+        .genres-container h2 {
             margin-bottom: 15px;
         }
 
-        .genres-container a{
+        .genres-container a {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 50px;
             text-decoration: none;
@@ -80,17 +80,18 @@
             color: #333;
             margin-right: 10px;
         }
+
         .tags-container {
             font-size: 12px;
             color: #555;
             margin-top: 50px;
         }
 
-        .tags-container h2{
+        .tags-container h2 {
             margin-bottom: 15px;
         }
 
-        .tags-container a{
+        .tags-container a {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 50px;
             text-decoration: none;
@@ -313,6 +314,43 @@
         #writeReviewForm button[type="submit"]:hover {
             background-color: #27ae60;
         }
+
+        .random-books-container {
+            width: 99.3%;
+            margin: 4%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 20px;
+        }
+
+        .book-container {
+            cursor: pointer;
+        }
+
+        .book-image {
+            width: 95%;
+            height: 70%;
+            border-radius: 20px;
+        }
+
+        .book-title {
+            margin-top: 10px;
+            font-size: 18px;
+            text-align: center;
+            overflow: hidden;
+        }
     </style>
 </head>
 
@@ -335,6 +373,9 @@
                 <button type="submit">Submit Review</button>
             </form>
             <div id="reviewsContainer"></div>
+        </div>
+        <div id="randomBooksContainer" class="random-books-container">
+            <!-- Random books will be displayed here -->
         </div>
     </div>
     <script src="/js/previewpage.js" type="module"></script>

@@ -31,34 +31,39 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Function to filter books based on selected genres
-function filterBooksBySelectedGenres() {
+let genreMenuContainer = document.getElementById("genreMenuContainer");
+
+function toggleDropdown() {
+    genreMenuContainer.classList.toggle("show");
+}
+
+// Function to handle book search by selected genres
+function searchBooksByGenre() {
     const selectedGenres = [];
-    document.querySelectorAll('.dropdown-item.selected').forEach(item => {
-        selectedGenres.push(item.getAttribute('data-genre'));
+    const genreCheckboxes = document.querySelectorAll('.genre-item input[type="checkbox"]');
+    genreCheckboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            selectedGenres.push(checkbox.id.replace('Genre', ''));
+        }
     });
     filterBooks(selectedGenres);
 }
 
-// Function to handle filterBooks
-function handleFilterBooks(event) {
-    event.preventDefault();
-    const dropdownItem = event.target;
-    dropdownItem.classList.toggle('selected');
-    filterBooksBySelectedGenres();
-}
+document.querySelectorAll('.genre-item input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', searchBooksByGenre);
+});
 
-// Attach event listeners to dropdown items
+
 document.querySelectorAll('.dropdown-item').forEach(item => {
-    item.addEventListener('click', handleFilterBooks);
+    item.addEventListener('click', handleDropdownSelection);
 });
 
 // Function to filter books based on selected genres
 function filterBooks(genres) {
-    const bookContainer = document.getElementById('bookContainer');
+    let bookContainer = document.getElementById('bookContainer');
     bookContainer.innerHTML = ''; // Clear previous content
 
-    const booksRefPromises = genres.map(genre => {
+    let booksRefPromises = genres.map(genre => {
         if (genre === 'all') {
             return get(ref(db, 'books/'));
         } else {
@@ -68,17 +73,17 @@ function filterBooks(genres) {
 
     Promise.all(booksRefPromises)
         .then(snapshots => {
-            const books = {};
+            let books = {};
             snapshots.forEach(snapshot => {
                 snapshot.forEach(childSnapshot => {
-                    const bookData = childSnapshot.val();
-                    const bookId = childSnapshot.key;
+                    let bookData = childSnapshot.val();
+                    let bookId = childSnapshot.key;
                     books[bookId] = bookData;
                 });
             });
             Object.keys(books).forEach(bookId => {
-                const bookData = books[bookId];
-                const bookElement = createBookElement(bookData, bookId);
+                let bookData = books[bookId];
+                let bookElement = createBookElement(bookData, bookId);
                 bookContainer.appendChild(bookElement);
             });
         })
@@ -87,11 +92,6 @@ function filterBooks(genres) {
             // Handle error if needed
         });
 }
-
-// Call the filterBooks function when the page loads to display all books initially
-document.addEventListener('DOMContentLoaded', () => {
-    filterBooks(['all']); // Display all books initially
-});
 
 
 
@@ -142,16 +142,16 @@ function createBookElement(bookData, bookId) {
     bookElement.appendChild(infoContainer);
 
     // Trash icon for deleting the book
-    const trashIcon = document.createElement('i');
-    trashIcon.classList.add('fas', 'fa-trash', 'delete-icon');
-    trashIcon.setAttribute('title', 'Delete');
-    trashIcon.addEventListener('click', () => {
-        deleteBook(bookId);
-    });
+    // const trashIcon = document.createElement('i');
+    // trashIcon.classList.add('fas', 'fa-trash', 'delete-icon');
+    // trashIcon.setAttribute('title', 'Delete');
+    // trashIcon.addEventListener('click', () => {
+    //     deleteBook(bookId);
+    // });
+    // genreTagsContainer.appendChild(trashIcon);
 
     // Right side - Genres and Tags
     const genreTagsContainer = document.createElement('div');
-    genreTagsContainer.appendChild(trashIcon);
     genreTagsContainer.classList.add('genre-tags-container');
 
     const genres = document.createElement('div');
@@ -205,5 +205,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
+// Call the filterBooks function when the page loads to display all books initially
+document.addEventListener('DOMContentLoaded', () => {
+    filterBooks(['all']); // Display all books initially
+});
 
