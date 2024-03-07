@@ -5,6 +5,7 @@ import {
   ref,
   set,
   get,
+  remove,
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
 // Function to extract the book ID from the URL parameter
@@ -73,40 +74,45 @@ document
     }
   });
 
- 
+
 // Function to display chapters
 async function displayChapters(bookId) {
   try {
-    const chaptersRef = ref(db, `books/${bookId}/chapters`); // Corrected this line
-    const snapshot = await get(chaptersRef); // Changed to get() to fetch data
+    const chaptersRef = ref(db, `books/${bookId}/chapters`);
+    const snapshot = await get(chaptersRef);
     const chapters = snapshot.val();
 
     if (chapters) {
       const chaptersContainer = document.getElementById("chaptersContainer");
+      chaptersContainer.innerHTML = ""; // Clear existing content
+
+      let index = 1; // Initialize index counter
 
       for (const chapterId in chapters) {
         const chapter = chapters[chapterId];
         const chapterBox = document.createElement("div");
         chapterBox.classList.add("chapter-box");
 
-        const chapterTitle = document.createElement("div");
+        // Create a link to displaychapters.html with the chapter ID as a query parameter
+        const chapterTitle = document.createElement("a");
         chapterTitle.classList.add("chapter-title");
-        chapterTitle.textContent = chapter.title;
+        chapterTitle.textContent = `${index}. ${chapter.title}`; // Display index with chapter title
+        chapterTitle.href = `/html/displaychapters.html?bookId=${bookId}&chapterId=${chapterId}`;
 
-        const timestamp = document.createElement("div");
-        timestamp.classList.add("timestamp");
-        timestamp.textContent = chapter.timestamp;
+        // Trash icon for deleting the chapter
+        const trashIcon = document.createElement('i');
+        trashIcon.classList.add('fas', 'fa-trash-alt', 'delete-icon'); // Use the correct Font Awesome class
+        trashIcon.setAttribute('title', 'Delete');
+        trashIcon.addEventListener('click', () => {
+          deleteChapter(bookId, chapterId, chapter.title, displayChapters); // Corrected function call
+        });
 
-        // Create a link to contentpage.html with the chapter content as a query parameter
-        const contentLink = document.createElement("a");
-        contentLink.textContent = "Read";
-        contentLink.href = `/html/contentpage.html?bookId=${bookId}&chapterId=${chapterId}`;
-
+        chapterBox.appendChild(trashIcon);
         chapterBox.appendChild(chapterTitle);
-        chapterBox.appendChild(timestamp);
-        chapterBox.appendChild(contentLink);
 
         chaptersContainer.appendChild(chapterBox);
+
+        index++; // Increment index counter
       }
     } else {
       console.log("No chapters found for this book.");
@@ -116,6 +122,9 @@ async function displayChapters(bookId) {
     alert("An error occurred while fetching chapters. Please try again.");
   }
 }
+
+
+
 // Call displayChapters function when the page loads
 window.onload = function () {
   const bookId = getBookIdFromURL();
@@ -126,3 +135,19 @@ window.onload = function () {
     alert("No book ID found in URL parameter.");
   }
 };
+
+
+// Function to delete a chapter
+async function deleteChapter(bookId, chapterId, chapterTitle, displayChapters) {
+  if (confirm(`Are you sure you want to delete the chapter "${chapterTitle}"?`)) {
+    try {
+      await remove(ref(db, `books/${bookId}/chapters/${chapterId}`));
+      alert(`Chapter "${chapterTitle}" deleted successfully.`);
+      // Refresh chapter display
+      displayChapters();
+    } catch (error) {
+      console.error("Error deleting chapter:", error);
+      alert("An error occurred while deleting the chapter. Please try again.");
+    }
+  }
+}

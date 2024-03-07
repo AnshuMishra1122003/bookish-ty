@@ -4,7 +4,7 @@ import {
   set,
   ref,
   get,
-  push, 
+  push,
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
 // Function to extract the book ID from the URL parameter
@@ -28,20 +28,31 @@ async function editBookDetails() {
             const book = snapshot.val();
             console.log("Retrieved book details:", book);
 
-            // Populate the HTML elements with book details
+            // Display book details as readonly initially
             document.getElementById("editbookTitle").value = book.title;
             document.getElementById("edittags").value = book.tags.join(", ");
             document.getElementById("editdescription").value = book.description;
             document.getElementById("edituploadedImage").src = book.imageUrl;
 
-            // Populate selected genres
+            // Add event listener to make fields editable when edit icon is clicked
+            const editIcons = document.querySelectorAll('.bx.bxs-edit');
+            editIcons.forEach(icon => {
+              icon.addEventListener('click', () => {
+                const field = icon.parentElement.querySelector('input, textarea');
+                makeEditable(field);
+              });
+            });
+
+            // Check checkboxes for selected genres
+            const selectedGenres = book.genres;
             const genreCheckboxes = document.querySelectorAll('input[name="genre"]');
             genreCheckboxes.forEach((checkbox) => {
-              if (book.genres.includes(checkbox.value)) {
-                checkbox.checked = true;
-              } else {
-                checkbox.checked = false;
-              }
+              checkbox.checked = selectedGenres.includes(checkbox.value);
+            });
+
+            // Add event listener to make image editable when browse button is clicked
+            document.getElementById('editbrowseButton').addEventListener('click', () => {
+              document.getElementById('editfileInput').click();
             });
 
             // Show the form for editing
@@ -65,6 +76,18 @@ async function editBookDetails() {
     alert("An error occurred while editing book details. Please try again.");
   }
 }
+
+// Function to make field editable
+function makeEditable(field) {
+  field.removeAttribute('readonly');
+  field.focus();
+}
+
+// Call the editBookDetails function when the DOM content is loaded
+document.addEventListener("DOMContentLoaded", editBookDetails);
+
+
+
 
 
 
@@ -186,4 +209,3 @@ async function submitEditedBookDetails(bookId) {
   }
 }
 
-  

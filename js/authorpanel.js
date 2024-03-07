@@ -90,13 +90,13 @@ function createBookContainer(book, bookId) {
     // Call the function to display the edit chapters form or perform other actions
   });
 
-  const button4 = document.createElement("button");
-  button4.id = "deleteChaptersBtn";
-  button4.textContent = "Delete Chapters";
-  button4.addEventListener("click", function () {
-    toggleButton(button4);
-    // Call the function to display the delete chapters form or perform other actions
-  });
+  // const button4 = document.createElement("button");
+  // button4.id = "deleteChaptersBtn";
+  // button4.textContent = "Delete Chapters";
+  // button4.addEventListener("click", function () {
+  //   toggleButton(button4);
+  //   // Call the function to display the delete chapters form or perform other actions
+  // });
 
   const button5 = document.createElement("button");
   button5.id = "deleteBookBtn";
@@ -122,7 +122,7 @@ function createBookContainer(book, bookId) {
   buttonsContainer.append(button1);
   buttonsContainer.append(button2);
   buttonsContainer.append(button3);
-  buttonsContainer.append(button4);
+  // buttonsContainer.append(button4);
   buttonsContainer.append(button5);
 
   // Append everything to the book container
