@@ -56,33 +56,6 @@
             border-radius: 20px;
         }
 
-        #publicname .editbtn1 {
-            background-color: #3c3c3c;
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #publicbio .editbtn2 {
-            background-color: #3c3c3c;
-            color: #ffffff;
-            padding: 10px 16px;
-            position: relative;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #publicProfile button i {
-            font-size: 15px;
-            padding: 0px;
-        }
-
-        #publicProfile button:hover {
-            background-color: #27ae60;
-            color: #000;
-        }
-
         /* Corrected CSS */
         #editProflileImageContainer {
             position: relative;
@@ -93,21 +66,26 @@
             background: #fff;
             border: 2px solid #000;
             border-radius: 50%;
-            margin-bottom: 3%;
         }
 
         /* Edit Button */
-        .edit-button {
+        .edit-button {}
+
+        .edit-button i {
             background-color: #414141;
             color: #fff;
-            padding-top: 1.4%;
-            padding-bottom: 1%;
-            padding-left: 5%;
-            padding-right: 5%;
             border: none;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 50%;
             cursor: pointer;
-            margin-left: 44%;
+            margin-left: 53%;
+            font-size: 20px;
+            transform: translateY(-100%);
+        }
+
+        .edit-button i:hover {
+            background-color: #27ae60;
+            color: #000;
         }
 
         #editProflileImageContainer img {
@@ -126,6 +104,17 @@
             display: none;
         }
 
+
+        .multiple-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+            width: 100%;
+            height: 20px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
         #publicProfile #displayuserdata {
             margin-top: 3%;
             text-align: center;
@@ -140,6 +129,65 @@
             font-weight: 300;
             font-size: 20px;
         }
+
+        .multiple-input-container .editbtn1 {
+            position: absolute;
+            right: 10px;
+            top: 15px;
+            font-size: 25px;
+        }
+
+        .multiple-input-container .editbtn2 {
+            position: absolute;
+            right: 10px;
+            top: 150px;
+            font-size: 25px;
+        }
+
+        .multiple-input-container button i {
+            position: absolute;
+            right: 20px;
+            top: 30px;
+        }
+
+
+        #publicProfile button:hover {
+            background-color: #27ae60;
+            color: #000;
+        }
+
+
+
+        /* Form Elements */
+        #publicProfile input {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border: none;
+            outline: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 19px;
+            color: black;
+            padding: 20px 45px 20px 20px;
+        }
+
+        textarea {
+            resize: none;
+            width: 100%;
+            min-height: 150px;
+            max-height: 300px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 18px;
+            color: black;
+            padding: 20px 45px 20px 20px;
+        }
+
+
 
         #publicProfile #edituserdata {
             margin-top: 1%;
@@ -179,30 +227,8 @@
             cursor: pointer;
         }
 
-        /* Form Elements */
-        #publicProfile input[type="text"],
-        textarea {
-            width: 83%;
-            padding: 13px;
-            margin-left: 5%;
-            margin-top: 1%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        textarea {
-            resize: vertical;
-        }
 
 
-        .edit-button i {
-            font-size: large;
-        }
-
-        .edit-button:hover {
-            background-color: #27ae60;
-            color: #000;
-        }
 
         #managepassword {
             padding: 2%;
@@ -272,8 +298,7 @@
             margin-left: 10%;
         }
 
-        .bookmarks-container {
-        }
+        .bookmarks-container {}
 
         .bookmark {
             display: inline-block;
@@ -332,181 +357,181 @@
 </head>
 
 <body>
-        <!-------------header starts------------------->
-        <header id="header" class="header">
+    <!-------------header starts------------------->
+    <header id="header" class="header">
 
-            <div class="header-1">
-    
-                <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
-    
-                <form id="searchbar" action="#" class="search-form">
-    
-                    <input type="search" id="search-box" placeholder="Search Here..." />
-                    <label for="search-box" class="bx bx-search"></label>
-                </form>
-                <div class="icons">
-                    <div id="user-login-btn" class="user-login-btn" onclick="toggleIcon()">
-                        <i class='bx bxs-user-circle'></i>
-                    </div>
-                    <div id="subMenu" class="sub-menu-wrap">
-                        <div class="sub-icon" id="sub-icon">
-                            <div class="user-info" id="user-info">
-                                <img id="user-image" src="/assets/person-circle.svg" alt="">
-                                <span id="user-name">User</span>
-                            </div>
-                            <hr>
-                            <a href="/html/profile.html" class="sub-icon-link" id="profile-link">
-                                <i class='bx bxs-user-circle'></i>
-                                <p>Profile</p>
-                            </a>
-                            <a href="/html/paymentpage.html" class="sub-icon-link" id="settings-link">
-                                <i class='bx bxs-cog'></i>
-                                <p>Settings</p>
-                            </a>
-                            <a href="#" class="sub-icon-link" id="helps-services-link">
-                                <i class="bi bi-question-circle-fill"></i>
-                                <p>Helps & Services</p>
-                            </a>
-                            <a href="/html/Login.html" class="sub-icon-link" id="logout-link" onclick="logout()">
-                                <i class='bx bx-log-out'></i>
-                                <p id="logout-text">Logout</p>
-                            </a>
-                            <a href="/html/Login.html" class="sub-icon-link" id="login-link">
-                                <i class='bx bx-log-in'></i>
-                                <p>Login</p>
-                            </a>
+        <div class="header-1">
+
+            <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
+
+            <form id="searchbar" action="#" class="search-form">
+
+                <input type="search" id="search-box" placeholder="Search Here..." />
+                <label for="search-box" class="bx bx-search"></label>
+            </form>
+            <div class="icons">
+                <div id="user-login-btn" class="user-login-btn" onclick="toggleIcon()">
+                    <i class='bx bxs-user-circle'></i>
+                </div>
+                <div id="subMenu" class="sub-menu-wrap">
+                    <div class="sub-icon" id="sub-icon">
+                        <div class="user-info" id="user-info">
+                            <img id="user-image" src="/assets/person-circle.svg" alt="">
+                            <span id="user-name">User</span>
                         </div>
+                        <hr>
+                        <a href="/html/profile.html" class="sub-icon-link" id="profile-link">
+                            <i class='bx bxs-user-circle'></i>
+                            <p>Profile</p>
+                        </a>
+                        <a href="/html/paymentpage.html" class="sub-icon-link" id="settings-link">
+                            <i class='bx bxs-cog'></i>
+                            <p>Settings</p>
+                        </a>
+                        <a href="#" class="sub-icon-link" id="helps-services-link">
+                            <i class="bi bi-question-circle-fill"></i>
+                            <p>Helps & Services</p>
+                        </a>
+                        <a href="/html/Login.html" class="sub-icon-link" id="logout-link" onclick="logout()">
+                            <i class='bx bx-log-out'></i>
+                            <p id="logout-text">Logout</p>
+                        </a>
+                        <a href="/html/Login.html" class="sub-icon-link" id="login-link">
+                            <i class='bx bx-log-in'></i>
+                            <p>Login</p>
+                        </a>
                     </div>
                 </div>
-                <script type="module">
-                    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
-                    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-                    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
-    
-                    //config code...........
-                    const firebaseConfig = {
-                        apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
-                        authDomain: "bookish-proj.firebaseapp.com",
-                        databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
-                        projectId: "bookish-proj",
-                        storageBucket: "bookish-proj.appspot.com",
-                        messagingSenderId: "351432216616",
-                        appId: "1:351432216616:web:59c46450f373a82ad9251d",
-                        measurementId: "G-DH4RJ9TML1",
-                    };
-    
-                    const app = initializeApp(firebaseConfig);
-    
-                    const auth = getAuth(app);
-                    const db = getDatabase(app);
-    
-                    document.addEventListener('DOMContentLoaded', async () => {
-                        const profileLink = document.getElementById('profile-link');
-                        const settingsLink = document.getElementById('settings-link');
-                        const helpsServicesLink = document.getElementById('helps-services-link');
-                        const logoutLink = document.getElementById('logout-link');
-                        const loginLink = document.getElementById('login-link');
-                        const userImage = document.getElementById('user-image');
-                        const userName = document.getElementById('user-name');
-    
-                        // Get the current user
-                        auth.onAuthStateChanged(async (user) => {
-                            if (user) {
-                                // User is logged in
-                                loginLink.style.display = 'none';
-                                logoutLink.style.display = 'flex';
-                                // Fetch user's information from database
-                                const userId = user.uid;
-                                const userRef = ref(db, `users/${userId}`);
-                                const snapshot = await get(userRef);
-                                const userData = snapshot.val();
-                                if (userData) {
-                                    // Update user's image and name
-                                    userImage.src = userData.imageUrl || '/assets/person-circle.svg'; // Use default user icon if no image is available
-                                    userName.textContent = userData.username || 'User'; // Use 'User' if no name is available
-                                }
-                                // Show appropriate links
-                                profileLink.style.display = 'flex';
-                                settingsLink.style.display = 'flex';
-                                helpsServicesLink.style.display = 'flex';
-                            } else {
-                                // User is not logged in
-                                loginLink.style.display = 'flex';
-                                logoutLink.style.display = 'none';
-                                // Hide unnecessary links
-                                profileLink.style.display = 'none';
-                                settingsLink.style.display = 'none';
-                                helpsServicesLink.style.display = 'none';
+            </div>
+            <script type="module">
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+                import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+                import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+
+                //config code...........
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
+                    authDomain: "bookish-proj.firebaseapp.com",
+                    databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
+                    projectId: "bookish-proj",
+                    storageBucket: "bookish-proj.appspot.com",
+                    messagingSenderId: "351432216616",
+                    appId: "1:351432216616:web:59c46450f373a82ad9251d",
+                    measurementId: "G-DH4RJ9TML1",
+                };
+
+                const app = initializeApp(firebaseConfig);
+
+                const auth = getAuth(app);
+                const db = getDatabase(app);
+
+                document.addEventListener('DOMContentLoaded', async () => {
+                    const profileLink = document.getElementById('profile-link');
+                    const settingsLink = document.getElementById('settings-link');
+                    const helpsServicesLink = document.getElementById('helps-services-link');
+                    const logoutLink = document.getElementById('logout-link');
+                    const loginLink = document.getElementById('login-link');
+                    const userImage = document.getElementById('user-image');
+                    const userName = document.getElementById('user-name');
+
+                    // Get the current user
+                    auth.onAuthStateChanged(async (user) => {
+                        if (user) {
+                            // User is logged in
+                            loginLink.style.display = 'none';
+                            logoutLink.style.display = 'flex';
+                            // Fetch user's information from database
+                            const userId = user.uid;
+                            const userRef = ref(db, `users/${userId}`);
+                            const snapshot = await get(userRef);
+                            const userData = snapshot.val();
+                            if (userData) {
+                                // Update user's image and name
+                                userImage.src = userData.imageUrl || '/assets/person-circle.svg'; // Use default user icon if no image is available
+                                userName.textContent = userData.username || 'User'; // Use 'User' if no name is available
                             }
-                        });
-    
-    
-                        // Function to logout the user
-                        function logout() {
-                            sessionStorage.removeItem('user');
-    
-                            auth.signOut().then(() => {
-                                window.location.href = "/html/Login.html";
-                            }).catch((error) => {
-                                console.error("Logout error:", error.message);
-                                alert("Logout failed.");
-                            });
-                        }
-    
-    
-                        function toggleIcon() {
-                            const subMenu = document.getElementById('subMenu');
-                            subMenu.classList.toggle('active');
+                            // Show appropriate links
+                            profileLink.style.display = 'flex';
+                            settingsLink.style.display = 'flex';
+                            helpsServicesLink.style.display = 'flex';
+                        } else {
+                            // User is not logged in
+                            loginLink.style.display = 'flex';
+                            logoutLink.style.display = 'none';
+                            // Hide unnecessary links
+                            profileLink.style.display = 'none';
+                            settingsLink.style.display = 'none';
+                            helpsServicesLink.style.display = 'none';
                         }
                     });
-                </script>
-    
-    
-            </div>
-            <div class="header-2">
-    
-                <nav id="navbar" class="navbar">
-                    <input class="menu-btn" type="checkbox" id="menu-btn" />
-                    <label class="menu-icon" for="menu-btn">
-                        <span class="nav-icon"></span>
-                    </label>
-                    <div class="menu">
-                        <a href="/index.html" class="nav-link" onclick="showMenu(0)">Home</a>
-                        <a href="/html/genres.html" onclick="showMenu(1)">Genres</a>
-                        <a href="/html/authordashboard.html" onclick="showMenu(2)">Create</a>
-                        <a href="/html/library.html" onclick="showMenu(3)">Library</a>
-                        <a href="/html/usersettings.html" onclick="showMenu(4)">User Settings</a>
-                        <a href="/html/admin.html" onclick="showMenu(5)">About Us</a>
-                    </div>
-                </nav>
-            </div>
-            <script>
-                let subIcon = document.getElementById("subMenu");
-                function toggleIcon() {
-                    subIcon.classList.toggle("open-icon");
-                }
-            </script>
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const menuLinks = document.querySelectorAll("menu a");
-    
-                    menuLinks.forEach(function (link, index) {
-                        link.addEventListener("click", function () {
-                            // Remove 'active' class from all links
-                            menuLinks.forEach(function (menuLink) {
-                                menuLink.classList.remove("active");
-                            });
-                            // Add 'active' class to the clicked link
-                            link.classList.add("active")
-    
-                            // Show the selected link
-                            showMenu(index);
+
+
+                    // Function to logout the user
+                    function logout() {
+                        sessionStorage.removeItem('user');
+
+                        auth.signOut().then(() => {
+                            window.location.href = "/html/Login.html";
+                        }).catch((error) => {
+                            console.error("Logout error:", error.message);
+                            alert("Logout failed.");
                         });
-                    });
+                    }
+
+
+                    function toggleIcon() {
+                        const subMenu = document.getElementById('subMenu');
+                        subMenu.classList.toggle('active');
+                    }
                 });
             </script>
-        </header>
-        <!---------------------Header close---------------------->
+
+
+        </div>
+        <div class="header-2">
+
+            <nav id="navbar" class="navbar">
+                <input class="menu-btn" type="checkbox" id="menu-btn" />
+                <label class="menu-icon" for="menu-btn">
+                    <span class="nav-icon"></span>
+                </label>
+                <div class="menu">
+                    <a href="/index.html" class="nav-link" onclick="showMenu(0)">Home</a>
+                    <a href="/html/genres.html" onclick="showMenu(1)">Genres</a>
+                    <a href="/html/authordashboard.html" onclick="showMenu(2)">Create</a>
+                    <a href="/html/library.html" onclick="showMenu(3)">Library</a>
+                    <a href="/html/usersettings.html" onclick="showMenu(4)">User Settings</a>
+                    <a href="/html/admin.html" onclick="showMenu(5)">About Us</a>
+                </div>
+            </nav>
+        </div>
+        <script>
+            let subIcon = document.getElementById("subMenu");
+            function toggleIcon() {
+                subIcon.classList.toggle("open-icon");
+            }
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const menuLinks = document.querySelectorAll("menu a");
+
+                menuLinks.forEach(function (link, index) {
+                    link.addEventListener("click", function () {
+                        // Remove 'active' class from all links
+                        menuLinks.forEach(function (menuLink) {
+                            menuLink.classList.remove("active");
+                        });
+                        // Add 'active' class to the clicked link
+                        link.classList.add("active")
+
+                        // Show the selected link
+                        showMenu(index);
+                    });
+                });
+            });
+        </script>
+    </header>
+    <!---------------------Header close---------------------->
     <div class="navbar-settings">
         <!-- Navbar buttons -->
         <a id="publicProfileBtn"><i class="bi bi-person-fill-gear"></i>Public Profile</a>
@@ -527,13 +552,13 @@
 
         <p id="displayemaildata"> <span id="email"></span></p>
 
-        <div id="publicname">
+        <div id="publicname" class="multiple-input-container">
             <p id="edituserdata">Public Name:</p>
             <input type="text" id="publicName" readonly>
             <button id="editPublicName" class="editbtn1"><i class='bx bxs-edit'></i></button>
         </div>
 
-        <div id="publicbio">
+        <div id="publicbio" class="multiple-input-container">
             <p id="edituserbio">Bio:</p>
             <textarea id="bio" readonly></textarea>
             <button id="editBio" class="editbtn2"><i class='bx bxs-edit'></i></button>

@@ -4,6 +4,15 @@ import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/fi
 
 
 
+// function logout
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+  alert("Login first!");
+      return (window.location.href = "./loginPagePath.html");
+    }
+  });
+
+  
 // Function to fetch and display books
 function displayBooks() {
     const bookContainer = document.getElementById('bookContainer');

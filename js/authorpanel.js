@@ -12,6 +12,15 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
+// function logout
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+alert("Login first!");
+    return (window.location.href = "./loginPagePath.html");
+  }
+});
+
+
 let userEmail;
 // Function to create a book container for displaying on UI
 function createBookContainer(book, bookId) {

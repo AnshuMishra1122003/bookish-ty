@@ -1,9 +1,19 @@
-import { db,auth } from "./firebaseConfig.mjs";
+import { db, auth } from "./firebaseConfig.mjs";
 import {
   ref,
   get,
   set,
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+
+// function logout
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+alert("Login first!");
+    return (window.location.href = "./loginPagePath.html");
+  }
+});
+
 
 // Function to fetch and display book details
 async function displayBookDetails(bookId) {
@@ -195,64 +205,64 @@ document.getElementById("bookmarkchpbtn").addEventListener("click", function (ev
   const urlParams = new URLSearchParams(window.location.search);
   const bookId = urlParams.get("bookId"); // Extract the bookId from URL parameters
   if (bookId) {
-      bookmarkBook(bookId); // Call the bookmarkBook function with the extracted bookId
+    bookmarkBook(bookId); // Call the bookmarkBook function with the extracted bookId
   } else {
-      console.error("Book ID not found in URL parameters");
+    console.error("Book ID not found in URL parameters");
   }
 });
 
 
 async function displayChapters(bookId) {
   try {
-      const chaptersDropdown = document.getElementById('chaptersDropdown');
-      chaptersDropdown.innerHTML = ''; // Clear previous chapter links
+    const chaptersDropdown = document.getElementById('chaptersDropdown');
+    chaptersDropdown.innerHTML = ''; // Clear previous chapter links
 
-      // Reference to the chapters node for the specified bookId
-      const chaptersRef = ref(db, `books/${bookId}/chapters`);
-      const snapshot = await get(chaptersRef);
-      const chapters = snapshot.val();
+    // Reference to the chapters node for the specified bookId
+    const chaptersRef = ref(db, `books/${bookId}/chapters`);
+    const snapshot = await get(chaptersRef);
+    const chapters = snapshot.val();
 
-      if (chapters) {
-          // Iterate over each chapter and create a link for it
-          for (const chapterId in chapters) {
-              const chapter = chapters[chapterId];
-              const chapterLink = document.createElement('a');
-              chapterLink.href = `displaychapters.html?bookId=${encodeURIComponent(bookId)}&chapterId=${encodeURIComponent(chapterId)}`;
-              chapterLink.textContent = chapter.title;
-              chapterLink.addEventListener('click', (event) => {
-                  // Prevent default behavior to avoid navigating to the link
-                  event.preventDefault();
-                  // Call function to display chapter content
-                  displayChapterContent(bookId, chapterId);
-              });
-              const chapterListItem = document.createElement('div');
-              chapterListItem.appendChild(chapterLink);
-              chaptersDropdown.appendChild(chapterListItem);
-          }
-      } else {
-          const noChaptersMsg = document.createElement('p');
-          noChaptersMsg.textContent = 'No chapters available.';
-          chaptersDropdown.appendChild(noChaptersMsg);
+    if (chapters) {
+      // Iterate over each chapter and create a link for it
+      for (const chapterId in chapters) {
+        const chapter = chapters[chapterId];
+        const chapterLink = document.createElement('a');
+        chapterLink.href = `displaychapters.html?bookId=${encodeURIComponent(bookId)}&chapterId=${encodeURIComponent(chapterId)}`;
+        chapterLink.textContent = chapter.title;
+        chapterLink.addEventListener('click', (event) => {
+          // Prevent default behavior to avoid navigating to the link
+          event.preventDefault();
+          // Call function to display chapter content
+          displayChapterContent(bookId, chapterId);
+        });
+        const chapterListItem = document.createElement('div');
+        chapterListItem.appendChild(chapterLink);
+        chaptersDropdown.appendChild(chapterListItem);
       }
+    } else {
+      const noChaptersMsg = document.createElement('p');
+      noChaptersMsg.textContent = 'No chapters available.';
+      chaptersDropdown.appendChild(noChaptersMsg);
+    }
   } catch (error) {
-      console.error('Error fetching chapters:', error);
-      alert('An error occurred while fetching chapters. Please try again.');
+    console.error('Error fetching chapters:', error);
+    alert('An error occurred while fetching chapters. Please try again.');
   }
 }
 
 // Function to display chapter content
 async function displayChapterContent(bookId, chapterId) {
   try {
-      // Fetch chapter content from Firebase Realtime Database
-      const chapterContentRef = ref(db, `books/${bookId}/chapters/${chapterId}/content`);
-      const snapshot = await get(chapterContentRef);
-      const chapterContent = snapshot.val();
+    // Fetch chapter content from Firebase Realtime Database
+    const chapterContentRef = ref(db, `books/${bookId}/chapters/${chapterId}/content`);
+    const snapshot = await get(chapterContentRef);
+    const chapterContent = snapshot.val();
 
-      // Display the chapter content (replace this with your desired implementation)
-      console.log('Chapter Content:', chapterContent);
+    // Display the chapter content (replace this with your desired implementation)
+    console.log('Chapter Content:', chapterContent);
   } catch (error) {
-      console.error('Error fetching chapter content:', error);
-      alert('An error occurred while fetching chapter content. Please try again.');
+    console.error('Error fetching chapter content:', error);
+    alert('An error occurred while fetching chapter content. Please try again.');
   }
 }
 
@@ -269,8 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const bookId = urlParams.get('bookId');
 
   if (bookId) {
-      displayChapters(bookId);
+    displayChapters(bookId);
   } else {
-      console.error('Book ID not found in URL parameters');
+    console.error('Book ID not found in URL parameters');
   }
 });

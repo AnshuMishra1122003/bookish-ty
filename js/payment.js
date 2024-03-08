@@ -2,6 +2,15 @@ import { db, auth } from "./firebaseConfig.mjs";
 import { set, ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
+// function logout
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+  alert("Login first!");
+      return (window.location.href = "./loginPagePath.html");
+    }
+  });
+
+  
 // Function to retrieve user details from the users node
 async function getUserDetails(userId) {
     try {

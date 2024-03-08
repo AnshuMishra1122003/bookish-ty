@@ -9,6 +9,15 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
+// function logout
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+alert("Login first!");
+    return (window.location.href = "./loginPagePath.html");
+  }
+});
+
+
 let slideIndex = 0;
 let timer; // Variable to store the timer for automatic pagination
 

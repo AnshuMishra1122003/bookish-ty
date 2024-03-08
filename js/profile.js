@@ -2,6 +2,15 @@ import { auth, db } from "./firebaseConfig.mjs";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 import { get, ref } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
+// function logout
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+  alert("Login first!");
+      return (window.location.href = "./loginPagePath.html");
+    }
+  });
+
+  
 document.addEventListener('DOMContentLoaded', async () => {
     // Get the currently logged-in user
     onAuthStateChanged(auth, async (user) => {
@@ -16,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Update profile elements with user data
                 document.getElementById('username').textContent = `${userData.username}`;
                 document.getElementById('email').textContent = `${userData.email}`;
-                document.getElementById('bio').textContent = `Bio: ${userData.bio}`;
+                document.getElementById('bio').textContent = `${userData.bio}`;
                 document.querySelector('.user-image-container img').src = userData.imageUrl;
 
                 // Fetch and display the number of bookmarks (books) for the user
@@ -27,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         numBookmarks++;
                     });
                 }
-                document.getElementById('bookmarks').textContent = `Bookmarks: ${numBookmarks}`;
+                document.getElementById('bookmarks').textContent = `${numBookmarks}`;
             } catch (error) {
                 console.error("Error fetching user data:", error);
                 // Handle the error here, e.g., display an error message to the user

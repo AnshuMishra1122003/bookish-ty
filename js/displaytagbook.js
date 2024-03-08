@@ -1,6 +1,16 @@
-import { db } from "./firebaseConfig.mjs";
+import { db, auth } from "./firebaseConfig.mjs";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
+// function logout
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+  alert("Login first!");
+      return (window.location.href = "./loginPagePath.html");
+    }
+  });
+
+  
 // Function to extract tag name from URL parameter
 function getTagNameFromURL() {
     const urlParams = new URLSearchParams(window.location.search);

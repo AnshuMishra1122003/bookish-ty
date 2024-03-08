@@ -9,6 +9,15 @@ import {
   remove
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
+// function logout
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+alert("Login first!");
+    return (window.location.href = "./loginPagePath.html");
+  }
+});
+
+
 function displayBookDetails(bookId) {
   const bookDetailsContainer = document.getElementById("bookDetailsContainer");
 
