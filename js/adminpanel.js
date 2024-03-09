@@ -2,15 +2,7 @@ import { db, auth } from "./firebaseConfig.mjs";
 import { query, orderByChild, ref, update, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
 import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js';
 
-// function logout
-onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-  alert("Login first!");
-      return (window.location.href = "./loginPagePath.html");
-    }
-  });
 
-  
 // Function to fetch and display books
 function displayBooks() {
     const bookContainer = document.getElementById('bookContainer');

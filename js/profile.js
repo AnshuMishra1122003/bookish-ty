@@ -2,15 +2,6 @@ import { auth, db } from "./firebaseConfig.mjs";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 import { get, ref } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
-// function logout
-onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-  alert("Login first!");
-      return (window.location.href = "./loginPagePath.html");
-    }
-  });
-
-  
 document.addEventListener('DOMContentLoaded', async () => {
     // Get the currently logged-in user
     onAuthStateChanged(auth, async (user) => {

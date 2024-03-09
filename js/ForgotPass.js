@@ -1,15 +1,6 @@
 ﻿import { auth } from "./firebaseConfig.mjs";
 import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
-// function logout
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-alert("Login first!");
-    return (window.location.href = "./loginPagePath.html");
-  }
-});
-
-
 async function forget_password(e) {
   const email = document.getElementById("email").value;
   e.preventDefault();

@@ -1,155 +1,143 @@
 import { db, auth } from "./firebaseConfig.mjs";
-import {
-  ref,
-  get,
-  set,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+import { ref, get, set } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
-// function logout
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-alert("Login first!");
-    return (window.location.href = "./loginPagePath.html");
-  }
-});
-
-
-// Function to fetch and display book details
-async function displayBookDetails(bookId) {
+// Function to fetch and display chapter details
+async function displayChapterDetails(bookId, chapterId) {
   const bookDetailsContainer = document.getElementById("bookDetailsContainer");
 
   try {
-    // Fetch book details
-    const bookSnapshot = await get(ref(db, `books/${bookId}`));
+    // Fetch chapters and book details for the given book ID
+    const [chaptersSnapshot, bookSnapshot] = await Promise.all([
+      get(ref(db, `books/${bookId}/chapters`)),
+      get(ref(db, `books/${bookId}`))
+    ]);
+
+    const chaptersData = chaptersSnapshot.val();
     const bookData = bookSnapshot.val();
 
-    // Create element to display book title
-    const bookTitle = document.createElement("h2");
-    bookTitle.textContent = bookData.title;
-    bookDetailsContainer.appendChild(bookTitle);
+    if (chaptersData && bookData) {
+      // Index chapters by their IDs
+      const chapterIds = Object.keys(chaptersData);
+      const chapterIndex = chapterIds.indexOf(chapterId);
 
-    // Fetch chapters
-    const chaptersRef = ref(db, `books/${bookId}/chapters`);
-    const chaptersSnapshot = await get(chaptersRef);
-    const chapters = chaptersSnapshot.val();
+      // Clear previous chapter content
+      bookDetailsContainer.innerHTML = "";
 
-    if (chapters) {
-      const chapterIds = Object.keys(chapters);
-      let currentChapterIndex = 0;
+      const bookTitle = document.createElement("h1");
+      bookTitle.classList.add("booktitle");
+      bookTitle.textContent = bookData.title; // Accessing the book title from bookData
+      bookDetailsContainer.appendChild(bookTitle);
 
-      // Function to display current chapter content
-      function displayCurrentChapter() {
-        const currentChapterId = chapterIds[currentChapterIndex];
-        const currentChapter = chapters[currentChapterId];
+      // Add navigation buttons
+      const backButton = createButton("float-left", "Previous Chapter", () => navigateChapter(-1, bookId, chapterIds, chapterIndex));
+      bookDetailsContainer.appendChild(backButton);
 
-        // Clear previous chapter content
-        bookDetailsContainer.innerHTML = "";
+      const indexButton = createButton("float-center", "Index", redirectToIndexPage);
+      bookDetailsContainer.appendChild(indexButton);
 
-        // Display book title
-        bookDetailsContainer.appendChild(bookTitle);
+      const nextButton = createButton("float-right", "Next Chapter", () => navigateChapter(1, bookId, chapterIds, chapterIndex));
+      bookDetailsContainer.appendChild(nextButton);
 
-        // Add navigation buttons above the content
-        const backButtonTop = document.createElement("button");
-        backButtonTop.classList.add("float-left");
-        backButtonTop.textContent = "Previous Chapter";
-        backButtonTop.addEventListener("click", () => {
-          if (currentChapterIndex > 0) {
-            currentChapterIndex--;
-            displayCurrentChapter();
-          }
-        });
-        bookDetailsContainer.appendChild(backButtonTop);
+      const chapterTitle = document.createElement("h2");
+      chapterTitle.textContent = chaptersData[chapterId].title;
+      bookDetailsContainer.appendChild(chapterTitle);
 
-        const indexButtonTop = document.createElement("button");
-        indexButtonTop.classList.add("float-center");
-        indexButtonTop.textContent = "Index";
-        indexButtonTop.addEventListener("click", () => {
-          location.href = `/html/previewpage.html?bookId=${bookId}`;
-        });
-        bookDetailsContainer.appendChild(indexButtonTop);
+      // Display chapter content
+      displayChapterContent(chaptersData[chapterId].content, bookDetailsContainer);
 
-        const nextButtonTop = document.createElement("button");
-        nextButtonTop.classList.add("float-right");
-        nextButtonTop.textContent = "Next Chapter";
-        nextButtonTop.addEventListener("click", () => {
-          if (currentChapterIndex < chapterIds.length - 1) {
-            currentChapterIndex++;
-            displayCurrentChapter();
-          }
-        });
-        bookDetailsContainer.appendChild(nextButtonTop);
-
-        // Display chapter title
-        const chapterTitle = document.createElement("h3");
-        chapterTitle.textContent = currentChapter.title;
-        bookDetailsContainer.appendChild(chapterTitle);
-
-        // Display chapter content with each sentence on a new line
-        const chapterContent = document.createElement("p");
-        chapterContent.textContent = currentChapter.content.replace(
-          /(\.|\?|\!)(\s|$)/g,
-          "$1\n"
-        );
-        bookDetailsContainer.appendChild(chapterContent);
-
-        // Add navigation buttons below the content
-        const backButtonBottom = document.createElement("button");
-        backButtonBottom.classList.add("float-left");
-        backButtonBottom.textContent = "Previous Chapter";
-        backButtonBottom.addEventListener("click", () => {
-          if (currentChapterIndex > 0) {
-            currentChapterIndex--;
-            displayCurrentChapter();
-          }
-        });
-        bookDetailsContainer.appendChild(backButtonBottom);
-
-        const indexButtonBottom = document.createElement("button");
-        indexButtonBottom.classList.add("float-center");
-        indexButtonBottom.textContent = "Index";
-        indexButtonBottom.addEventListener("click", () => {
-          location.href = `/html/previewpage.html?bookId=${bookId}`;
-        });
-        bookDetailsContainer.appendChild(indexButtonBottom);
-
-        const nextButtonBottom = document.createElement("button");
-        nextButtonBottom.classList.add("float-right");
-        nextButtonBottom.textContent = "Next Chapter";
-        nextButtonBottom.addEventListener("click", () => {
-          if (currentChapterIndex < chapterIds.length - 1) {
-            currentChapterIndex++;
-            displayCurrentChapter();
-          }
-        });
-        bookDetailsContainer.appendChild(nextButtonBottom);
+      // Check if the user is subscribed
+      const user = auth.currentUser;
+      if (user) {
+        const userId = user.uid;
+        const userDetailsSnapshot = await get(ref(db, `users/${userId}`));
+        const userDetails = userDetailsSnapshot.val();
+        const isSubscribed = userDetails && userDetails.subscribeduser === true;
+        if (!isSubscribed && chapterIndex >= 2) {
+          // Blur chapters if user is not subscribed and chapter index is 2 or above
+          blurChapterContent(bookDetailsContainer);
+        } else {
+          removeBlurFromChapterContent(bookDetailsContainer);
+        }
+      } else if (chapterIndex >= 2) {
+        // Blur chapters if user is not logged in and chapter index is 2 or above
+        blurChapterContent(bookDetailsContainer);
+      } else {
+        removeBlurFromChapterContent(bookDetailsContainer);
       }
-
-      // Initial display of the first chapter
-      displayCurrentChapter();
     } else {
       console.log("No chapters found for this book.");
     }
   } catch (error) {
-    console.error("Error fetching book details:", error);
-    alert("An error occurred while fetching book details. Please try again.");
+    console.error("Error fetching chapter details:", error);
+    alert("An error occurred while fetching chapter details. Please try again.");
   }
 }
 
-// Call the displayBookDetails function when the page loads
-document.addEventListener("DOMContentLoaded", () => {
-  // Extract the book ID from the URL query parameter
+// Function to blur chapter content
+function blurChapterContent(container) {
+  const chapterContent = container.querySelector(".chaptercontentdisplay");
+  if (chapterContent) {
+    chapterContent.classList.add("blur");
+  }
+}
+
+// Function to remove blur from chapter content
+function removeBlurFromChapterContent(container) {
+  const chapterContent = container.querySelector(".chaptercontentdisplay");
+  if (chapterContent) {
+    chapterContent.classList.remove("blur");
+  }
+}
+
+// Function to create a button
+function createButton(className, text, onClick) {
+  const button = document.createElement("button");
+  button.textContent = text;
+  button.classList.add(className);
+  button.addEventListener("click", onClick);
+  return button;
+}
+
+
+// Function to redirect to index page
+function redirectToIndexPage() {
   const urlParams = new URLSearchParams(window.location.search);
   const bookId = urlParams.get("bookId");
+  location.href = `/html/previewpage.html?bookId=${bookId}`;
+}
 
-  if (bookId) {
-    displayBookDetails(bookId);
+// Function to navigate to the previous or next chapter
+function navigateChapter(step, bookId, chapterIds, chapterIndex) {
+  const newIndex = chapterIndex + step;
+  if (newIndex >= 0 && newIndex < chapterIds.length) {
+    const newChapterId = chapterIds[newIndex]; // Get the ID of the new chapter
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get("bookId");
+    location.href = `/html/displaychapters.html?bookId=${bookId}&chapterId=${newChapterId}`; // Navigate to the new chapter
+  }
+}
+
+// Function to display chapter content
+function displayChapterContent(content, container) {
+  const chapterContent = document.createElement("div");
+  chapterContent.classList.add('chaptercontentdisplay');
+  chapterContent.innerHTML = content;
+  container.appendChild(chapterContent);
+}
+
+// Call the displayChapterDetails function when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+  // Extract the book ID and chapter ID from the URL query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const bookId = urlParams.get("bookId");
+  const chapterId = urlParams.get("chapterId");
+
+  if (bookId && chapterId) {
+    displayChapterDetails(bookId, chapterId);
   } else {
-    // Handle case where book ID is not provided
-    console.error("Book ID not found in URL parameters");
+    console.error("Book ID or Chapter ID not found in URL parameters");
   }
 });
-
 
 async function bookmarkBook(bookId) {
   const user = auth.currentUser;
@@ -212,75 +200,72 @@ document.getElementById("bookmarkchpbtn").addEventListener("click", function (ev
 });
 
 
+// Function to display chapters
 async function displayChapters(bookId) {
   try {
-    const chaptersDropdown = document.getElementById('chaptersDropdown');
-    chaptersDropdown.innerHTML = ''; // Clear previous chapter links
+    // Get current user
+    const user = auth.currentUser;
+    let userData;
+    if (user) {
+      // Fetch user data using user ID
+      const userRef = ref(db, `users/${user.uid}`);
+      const userSnapshot = await get(userRef);
+      userData = userSnapshot.val();
+    }
 
-    // Reference to the chapters node for the specified bookId
     const chaptersRef = ref(db, `books/${bookId}/chapters`);
     const snapshot = await get(chaptersRef);
     const chapters = snapshot.val();
 
+    const chapterContentDiv = document.getElementById("chapterContent");
+    chapterContentDiv.innerHTML = ""; // Clear previous chapter details
+
     if (chapters) {
-      // Iterate over each chapter and create a link for it
+      let serialNumber = 1;
       for (const chapterId in chapters) {
         const chapter = chapters[chapterId];
-        const chapterLink = document.createElement('a');
-        chapterLink.href = `displaychapters.html?bookId=${encodeURIComponent(bookId)}&chapterId=${encodeURIComponent(chapterId)}`;
-        chapterLink.textContent = chapter.title;
-        chapterLink.addEventListener('click', (event) => {
-          // Prevent default behavior to avoid navigating to the link
-          event.preventDefault();
-          // Call function to display chapter content
-          displayChapterContent(bookId, chapterId);
-        });
-        const chapterListItem = document.createElement('div');
+        const chapterListItem = document.createElement("div");
+        chapterListItem.classList.add("chapter-list-item");
+
+        // Check if the user is subscribed or if the chapter index is less than or equal to 2
+        const isSubscribed = user && userData && userData.subscribeduser;
+        const isAllowedChapter = isSubscribed || serialNumber <= 2;
+
+        // Create a link to display the chapter details
+        const chapterLink = document.createElement("a");
+        chapterLink.href = `displaychapters.html?bookId=${bookId}&chapterId=${chapterId}`;
+        chapterLink.textContent = `${serialNumber}. ${chapter.title}`;
+
+        // Check if the chapter index is above 2 and the user is not subscribed, then add lock icon
+        if (!isAllowedChapter) {
+          const lockIcon = document.createElement("i");
+          lockIcon.classList.add("bx", "bxs-lock-alt", "lock-icon");
+          chapterLink.appendChild(lockIcon);
+          chapterLink.addEventListener("click", (event) => {
+            event.preventDefault(); // Prevent default link behavior
+            alert("You need to subscribe to read this chapter.");
+          });
+        }
+
         chapterListItem.appendChild(chapterLink);
-        chaptersDropdown.appendChild(chapterListItem);
+        chapterContentDiv.appendChild(chapterListItem);
+        serialNumber++;
       }
     } else {
-      const noChaptersMsg = document.createElement('p');
-      noChaptersMsg.textContent = 'No chapters available.';
-      chaptersDropdown.appendChild(noChaptersMsg);
+      const noChapterMsg = document.createElement("div");
+      noChapterMsg.classList.add("no-data");
+      noChapterMsg.textContent = "No chapters available.";
+      chapterContentDiv.appendChild(noChapterMsg);
+      console.log("No chapters.");
     }
   } catch (error) {
-    console.error('Error fetching chapters:', error);
-    alert('An error occurred while fetching chapters. Please try again.');
+    console.error("Error fetching chapters:", error);
+    alert("An error occurred while fetching chapters. Please try again.");
   }
 }
 
-// Function to display chapter content
-async function displayChapterContent(bookId, chapterId) {
-  try {
-    // Fetch chapter content from Firebase Realtime Database
-    const chapterContentRef = ref(db, `books/${bookId}/chapters/${chapterId}/content`);
-    const snapshot = await get(chapterContentRef);
-    const chapterContent = snapshot.val();
+// Call the displayChapters function with the bookId obtained from URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const bookId = urlParams.get('bookId');
+displayChapters(bookId);
 
-    // Display the chapter content (replace this with your desired implementation)
-    console.log('Chapter Content:', chapterContent);
-  } catch (error) {
-    console.error('Error fetching chapter content:', error);
-    alert('An error occurred while fetching chapter content. Please try again.');
-  }
-}
-
-// Function to toggle dropdown visibility
-function toggleDropdown(elementId, displayMode) {
-  const dropdown = document.getElementById(elementId);
-  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-}
-
-// Call the displayChapters function when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-  // Extract the book ID from the URL query parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const bookId = urlParams.get('bookId');
-
-  if (bookId) {
-    displayChapters(bookId);
-  } else {
-    console.error('Book ID not found in URL parameters');
-  }
-});

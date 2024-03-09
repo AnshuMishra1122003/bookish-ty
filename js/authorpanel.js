@@ -12,15 +12,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
-// function logout
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-alert("Login first!");
-    return (window.location.href = "./loginPagePath.html");
-  }
-});
-
-
 let userEmail;
 // Function to create a book container for displaying on UI
 function createBookContainer(book, bookId) {
@@ -365,36 +356,74 @@ document
     submitForm(event);
   });
 
-  document.addEventListener("DOMContentLoaded", function () {
-    document
-      .getElementById("addChaptersBtn")
-      .addEventListener("click", function (event) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const bookId = urlParams.get("bookId");
-        if (bookId) {
-          addChapterForm(event, bookId);
-        } else {
-          console.error("No book ID found in URL parameter.");
-          alert("No book ID found in URL parameter.");
+document.addEventListener("DOMContentLoaded", function () {
+  document
+    .getElementById("addChaptersBtn")
+    .addEventListener("click", function (event) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookId = urlParams.get("bookId");
+      if (bookId) {
+        addChapterForm(event, bookId);
+      } else {
+        console.error("No book ID found in URL parameter.");
+        alert("No book ID found in URL parameter.");
+      }
+    });
+});
+
+// // Function to add book details to genres and tags nodes
+// async function addBookDetailsToGenresAndTags(bookId, book) {
+//   // Store book details under 'tags' node
+//   await Promise.all(
+//     book.tags.map(async (tag) => {
+//       const tagBookRef = ref(db, `tags/${tag}/books/${bookId}`);
+//       await set(tagBookRef, book);
+//     })
+//   );
+
+//   // Store book details under 'genres' node
+//   await Promise.all(
+//     book.genres.map(async (genre) => {
+//       const genreBookRef = ref(db, `genres/${genre}/books/${bookId}`);
+//       await set(genreBookRef, book);
+//     })
+//   );
+// }
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Get the currently logged-in user
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        const userId = user.uid; // Get the user ID of the logged-in user
+
+        // Fetch user data from the database
+        const userDataSnapshot = await get(ref(db, `users/${userId}`));
+        const userData = userDataSnapshot.val();
+
+        // Update profile elements with user data
+        document.getElementById('username').textContent = `${userData.username}`;
+        document.getElementById('email').textContent = `${userData.email}`;
+        document.getElementById('bio').textContent = `${userData.bio}`;
+        document.querySelector('.user-image-container img').src = userData.imageUrl;
+
+        // Fetch and display the number of bookmarks (books) for the user
+        const userBooksSnapshot = await get(ref(db, `users/${userId}/books`));
+        let numBookmarks = 0;
+        if (userBooksSnapshot.exists()) {
+          userBooksSnapshot.forEach(() => {
+            numBookmarks++;
+          });
         }
-      });
+        document.getElementById('bookmarks').textContent = `${numBookmarks}`;
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        // Handle the error here, e.g., display an error message to the user
+      }
+    } else {
+      // User is not logged in
+      // Handle this case if needed
+    }
   });
-  
-  // // Function to add book details to genres and tags nodes
-  // async function addBookDetailsToGenresAndTags(bookId, book) {
-  //   // Store book details under 'tags' node
-  //   await Promise.all(
-  //     book.tags.map(async (tag) => {
-  //       const tagBookRef = ref(db, `tags/${tag}/books/${bookId}`);
-  //       await set(tagBookRef, book);
-  //     })
-  //   );
-  
-  //   // Store book details under 'genres' node
-  //   await Promise.all(
-  //     book.genres.map(async (genre) => {
-  //       const genreBookRef = ref(db, `genres/${genre}/books/${bookId}`);
-  //       await set(genreBookRef, book);
-  //     })
-  //   );
-  // }
+});

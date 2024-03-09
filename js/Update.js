@@ -5,15 +5,6 @@ import {
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
-// function logout
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-alert("Login first!");
-    return (window.location.href = "./loginPagePath.html");
-  }
-});
-
-
 const user = auth.currentUser;
 
 function updateUserProfile(user) {

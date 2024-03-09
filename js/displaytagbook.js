@@ -2,15 +2,6 @@ import { db, auth } from "./firebaseConfig.mjs";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
-// function logout
-onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-  alert("Login first!");
-      return (window.location.href = "./loginPagePath.html");
-    }
-  });
-
-  
 // Function to extract tag name from URL parameter
 function getTagNameFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -57,6 +48,11 @@ async function displayBooksByTag(tagName) {
                 const image = document.createElement('img');
                 image.src = bookDetails.imageUrl;
                 image.alt = 'Book Cover';
+                image.onclick = function () {
+                    window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(
+                        bookId
+                    )}`;
+                };
                 imageContainer.appendChild(image);
 
                 // Container for book details (title, description, author)
@@ -66,6 +62,11 @@ async function displayBooksByTag(tagName) {
                 const title = document.createElement('h2');
                 title.classList.add('book-title');
                 title.textContent = bookDetails.title;
+                title.onclick = function () {
+                    window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(
+                        bookId
+                    )}`;
+                };
 
                 const author = document.createElement('p');
                 author.classList.add('book-author');

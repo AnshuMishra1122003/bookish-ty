@@ -4,15 +4,6 @@ import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/fi
 
 
 
-// function logout
-onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-  alert("Login first!");
-      return (window.location.href = "./loginPagePath.html");
-    }
-  });
-
-  
 // Function to fetch and display books
 function displayBooks() {
     const bookContainer = document.getElementById('bookContainer');
@@ -35,9 +26,9 @@ function displayBooks() {
 }
 
 // Call the displayBooks function when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    displayBooks();
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     displayBooks();
+// });
 
 
 let genreMenuContainer = document.getElementById("genreMenuContainer");
@@ -149,15 +140,6 @@ function createBookElement(bookData, bookId) {
     infoContainer.appendChild(borderLine);
 
     bookElement.appendChild(infoContainer);
-
-    // Trash icon for deleting the book
-    // const trashIcon = document.createElement('i');
-    // trashIcon.classList.add('fas', 'fa-trash', 'delete-icon');
-    // trashIcon.setAttribute('title', 'Delete');
-    // trashIcon.addEventListener('click', () => {
-    //     deleteBook(bookId);
-    // });
-    // genreTagsContainer.appendChild(trashIcon);
 
     // Right side - Genres and Tags
     const genreTagsContainer = document.createElement('div');
