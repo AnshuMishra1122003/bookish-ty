@@ -86,8 +86,9 @@ function createBookContainer(book, bookId) {
   button3.id = "editChaptersBtn";
   button3.textContent = "Edit Chapters";
   button3.addEventListener("click", function () {
-    toggleButton(button3);
-    // Call the function to display the edit chapters form or perform other actions
+    window.location.href = `/html/editchapters.html?bookId=${encodeURIComponent(
+      bookId
+    )}`;
   });
 
   // const button4 = document.createElement("button");

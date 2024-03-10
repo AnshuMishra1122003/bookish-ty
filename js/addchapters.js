@@ -94,20 +94,30 @@ async function displayChapters(bookId) {
         const chapterBox = document.createElement("div");
         chapterBox.classList.add("chapter-box");
 
+        // Create an edit icon
+        const editIcon = document.createElement('i');
+        editIcon.classList.add('fas', 'fa-edit', 'edit-icon');
+        editIcon.setAttribute('title', 'Edit');
+        editIcon.addEventListener('click', () => {
+          // Redirect to editchapters.html with bookId and chapterId as URL parameters
+          window.location.href = `/html/editchapters.html?bookId=${bookId}&chapterId=${chapterId}`;
+        });
+
+        // Create a delete icon
+        const trashIcon = document.createElement('i');
+        trashIcon.classList.add('fas', 'fa-trash-alt', 'delete-icon');
+        trashIcon.setAttribute('title', 'Delete');
+        trashIcon.addEventListener('click', () => {
+          deleteChapter(bookId, chapterId, chapter.title, displayChapters);
+        });
+
         // Create a link to displaychapters.html with the chapter ID as a query parameter
         const chapterTitle = document.createElement("a");
         chapterTitle.classList.add("chapter-title");
         chapterTitle.textContent = `${index}. ${chapter.title}`; // Display index with chapter title
         chapterTitle.href = `/html/displaychapters.html?bookId=${bookId}&chapterId=${chapterId}`;
 
-        // Trash icon for deleting the chapter
-        const trashIcon = document.createElement('i');
-        trashIcon.classList.add('fas', 'fa-trash-alt', 'delete-icon'); // Use the correct Font Awesome class
-        trashIcon.setAttribute('title', 'Delete');
-        trashIcon.addEventListener('click', () => {
-          deleteChapter(bookId, chapterId, chapter.title, displayChapters); // Corrected function call
-        });
-
+        chapterBox.appendChild(editIcon);
         chapterBox.appendChild(trashIcon);
         chapterBox.appendChild(chapterTitle);
 

@@ -227,25 +227,13 @@ async function displayChapters(bookId) {
         const chapterListItem = document.createElement("div");
         chapterListItem.classList.add("chapter-list-item");
 
-        // Check if the user is subscribed or if the chapter index is less than or equal to 2
-        const isSubscribed = user && userData && userData.subscribeduser;
-        const isAllowedChapter = isSubscribed || serialNumber <= 2;
+        // Check if the chapter index is less than or equal to 2
+        const isAllowedChapter = serialNumber <= 2;
 
         // Create a link to display the chapter details
         const chapterLink = document.createElement("a");
         chapterLink.href = `displaychapters.html?bookId=${bookId}&chapterId=${chapterId}`;
         chapterLink.textContent = `${serialNumber}. ${chapter.title}`;
-
-        // Check if the chapter index is above 2 and the user is not subscribed, then add lock icon
-        if (!isAllowedChapter) {
-          const lockIcon = document.createElement("i");
-          lockIcon.classList.add("bx", "bxs-lock-alt", "lock-icon");
-          chapterLink.appendChild(lockIcon);
-          chapterLink.addEventListener("click", (event) => {
-            event.preventDefault(); // Prevent default link behavior
-            alert("You need to subscribe to read this chapter.");
-          });
-        }
 
         chapterListItem.appendChild(chapterLink);
         chapterContentDiv.appendChild(chapterListItem);
@@ -263,6 +251,7 @@ async function displayChapters(bookId) {
     alert("An error occurred while fetching chapters. Please try again.");
   }
 }
+
 
 // Call the displayChapters function with the bookId obtained from URL parameters
 const urlParams = new URLSearchParams(window.location.search);

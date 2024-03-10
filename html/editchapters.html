@@ -1,62 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/style.css" rel="stylesheet" />
-    <title>Bookmarked Books</title>
-    <style>
-        h1 {
-            font-size: 28px;
-            font-weight: 800;
-            margin-top: 2%;
-            margin-left: 5%;
-        }
-
-
-        .bookmarks-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 4%;
-        }
-
-        .bookmark {
-            margin: 10px;
-            padding: 10px;
-        }
-
-        .bookmark img {
-            height: 306px;
-            width: 230px;
-            border-radius: 5px;
-            transition: transform 0.2s ease-in-out;
-            cursor: pointer;
-        }
-
-        .bookmark img:hover {
-            transform: scale(1.1);
-        }
-
-        .bookmark h2 {
-            width: 230px;
-            height: max-content;
-            font-size: 18px;
-            margin-top: 20px;
-            text-align: center;
-            overflow: hidden;
-        }
-
-
-        .bookmark a {
-            display: block;
-            text-decoration: none;
-            color: #000000;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-    </style>
+    <title>Edit Chapters</title>
+    <link href="/style.css" rel="stylesheet">
 </head>
+<style>
+    /* Chapter Form Styles */
+    .add_chapter {
+        width: 80%;
+        margin: 2% auto;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #cfcfcf;
+    }
+
+    .addchapter_label {
+        font-size: 20px;
+        font-weight: 300;
+    }
+
+    .multiple-input-container,
+    .description-textarea {
+        position: relative;
+        margin-top: 10px;
+    }
+
+    .multiple-input-container input,
+    .description-textarea textarea {
+        width: 100%;
+        max-width: 100%;
+        padding: 10px;
+        border-radius: 20px;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+        color: #333;
+    }
+
+    .add_chapter_btn {
+        width: 100%;
+        margin-top: 20px;
+        border: none;
+        border-radius: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 10px;
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+    .add_chapter_btn:hover {
+        background-color: #000;
+        color: #fff;
+    }
+
+    /* Chapters Display Styles */
+    #chaptersContainer {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .chapter-box {
+        margin-bottom: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chapter-title {
+        font-size: 18px;
+        color: #333;
+        text-decoration: none;
+        flex-grow: 1;
+    }
+
+    .chapter-title:hover {
+        text-decoration: underline;
+    }
+
+    .edit-icon {
+        color: rgb(0, 0, 0);
+        font-size: 20px;
+        cursor: pointer;
+        float: right;
+        transform: translate(-100%, -150%);
+    }
+</style>
 
 <body>
     <!-------------header starts------------------->
@@ -234,13 +268,26 @@
         </script>
     </header>
     <!---------------------Header close---------------------->
-    <h1>Your Books:</h1>
-    <div id="bookmarks-container" class="bookmarks-container"></div>
+    <div id="bookDetailsContainer" class="container">
+        <form id="addChapterForm" class="add_chapter" method="post">
+            <label class="addchapter_label" for="title">Chapter Title:</label>
+            <div class="multiple-input-container">
+                <input type="text" id="chapterTitle" name="title" placeholder="Enter Chapter Title" required />
+            </div>
 
-    <script src="/js/library.js" type="module"></script>
+            <label class="addchapter_label" for="content">Chapter Content:</label>
+            <div class="description-textarea">
+                <textarea id="chapterContent" name="content" rows="10" cols="80" placeholder="Enter Chapter Content"
+                    required>
+                </textarea>
+            </div>
 
-    <!------------------------Add footer--------------------------------------->
-
+            <button id="addChapterBtn" type="submit" class="add_chapter_btn">
+                Save Changes
+            </button>
+        </form>
+    </div>
+    <script src="/js/editchapters.js" type="module"></script>
     <section class="footer">
 
         <div class="footer-container">
@@ -249,7 +296,7 @@
 
                 <ul class="footer-links">
                     <li>
-                        <a href="/html/alltags.html"></i>All Tags</a>
+                        <a href="#"></i>All Tags</a>
                     </li>
                     <li>
                         <a href="#"></i>Account Info</a>
