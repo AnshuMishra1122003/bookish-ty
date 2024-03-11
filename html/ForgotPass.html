@@ -170,6 +170,7 @@
                     const loginLink = document.getElementById('login-link');
                     const userImage = document.getElementById('user-image');
                     const userName = document.getElementById('user-name');
+                    const menu = document.querySelector('.menu');
 
                     // Get the current user
                     auth.onAuthStateChanged(async (user) => {
@@ -186,11 +187,19 @@
                                 // Update user's image and name
                                 userImage.src = userData.imageUrl || '/assets/person-circle.svg'; // Use default user icon if no image is available
                                 userName.textContent = userData.username || 'User'; // Use 'User' if no name is available
+                                // Check if user is subscribed
+                                const isSubscribed = userData.subscribeduser === true;
+                                // Show appropriate links
+                                profileLink.style.display = 'flex';
+                                settingsLink.style.display = 'flex';
+                                helpsServicesLink.style.display = 'flex';
+                                // Create menu items based on subscription status
+                                if (isSubscribed) {
+                                    createMenuLink('Create', '/html/authordashboard.html', 'showMenu(2)');
+                                } else {
+                                    createMenuLink('Subscribe', '/html/subscriptionplan.html', '');
+                                }
                             }
-                            // Show appropriate links
-                            profileLink.style.display = 'flex';
-                            settingsLink.style.display = 'flex';
-                            helpsServicesLink.style.display = 'flex';
                         } else {
                             // User is not logged in
                             loginLink.style.display = 'flex';
@@ -202,6 +211,15 @@
                         }
                     });
 
+                    // Function to create menu link
+                    function createMenuLink(text, href, onclick) {
+                        const link = document.createElement('a');
+                        link.textContent = text;
+                        link.href = href;
+                        link.setAttribute('onclick', onclick);
+                        link.classList.add('nav-link');
+                        menu.appendChild(link);
+                    }
 
                     // Function to logout the user
                     function logout() {
@@ -214,7 +232,6 @@
                             alert("Logout failed.");
                         });
                     }
-
 
                     function toggleIcon() {
                         const subMenu = document.getElementById('subMenu');
@@ -233,13 +250,30 @@
                     <span class="nav-icon"></span>
                 </label>
                 <div class="menu">
-                    <a href="/index.html" class="nav-link" onclick="showMenu(0)">Home</a>
-                    <a href="/html/genres.html" onclick="showMenu(1)">Genres</a>
-                    <a href="/html/authordashboard.html" onclick="showMenu(2)">Create</a>
-                    <a href="/html/library.html" onclick="showMenu(3)">Library</a>
-                    <a href="/html/usersettings.html" onclick="showMenu(4)">User Settings</a>
-                    <a href="/html/admin.html" onclick="showMenu(5)">About Us</a>
+
                 </div>
+                <script type="module">
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const menu = document.querySelector('.menu');
+
+                        const menuItems = [
+                            { text: 'Home', href: '/index.html', onclick: 'showMenu(0)' },
+                            { text: 'Genres', href: '/html/genres.html', onclick: 'showMenu(1)' },
+                            { text: 'Library', href: '/html/library.html', onclick: 'showMenu(3)' },
+                            { text: 'User Settings', href: '/html/usersettings.html', onclick: 'showMenu(4)' },
+                            { text: 'About Us', href: '/html/admin.html', onclick: 'showMenu(5)' }
+                        ];
+
+                        menuItems.forEach(item => {
+                            const link = document.createElement('a');
+                            link.textContent = item.text;
+                            link.href = item.href;
+                            link.setAttribute('onclick', item.onclick);
+                            link.classList.add('nav-link');
+                            menu.appendChild(link);
+                        });
+                    });
+                </script>
             </nav>
         </div>
         <script>

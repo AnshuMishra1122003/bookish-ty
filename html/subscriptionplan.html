@@ -1,256 +1,54 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width ,initial-scale=1" />
-    <title>Homepage</title>
-    <link href="/style.css" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans</title>
+    <link href="/style.css" rel="stylesheet">
     <style>
-        /*******************Homepage************************************/
-
-        .slideshow-container {
-            width: 100%;
-            height: 500px;
-            background-color: #ffffff;
-            box-shadow: 0 1px 10px #f0f0f0;
-        }
-
-        .mySlides {
+        #subscription {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            margin-left: 8.4%;
+            height: 100%;
+            width: 100%;
         }
 
-        .content {
-            height: 46.5%;
-            width: 70%;
+        .subscription-container {
+            display: block;
+            width: 40%;
+            height: auto;
+            margin: 10%;
             padding: 20px;
-            margin-top: 3%;
-            position: absolute;
-            overflow: hidden;
-            font-size: 20px;
-            text-align: left;
-            color: black;
-            display: inline-block;
-            transform: translateY(-54%);
-            font-family: "Times New Roman";
-
-        }
-
-        .content h3 {
-            font-size: 20px;
-            font-weight: bold;
-            animation: showcontent 1s ease-in-out 1 forwards;
-        }
-
-        .content h3 span {
-            color: gray;
-
-        }
-
-        .content h2 {
-            font-size: 24px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-
-        .content p {
-            font-size: 18px;
-            line-height: 1.7;
-            overflow: hidden;
-            position: relative;
-            white-space: pre-wrap;
-        }
-
-        .img-container {
-            width: 17%;
-            height: 45%;
-            background-position: 50% 0%;
-            display: block;
-            transition: 0.5s;
-            position: absolute;
-            z-index: 1;
-            transform: translate(1000px, -50%);
-            border-radius: 20px;
-            /* box-shadow: 0 30px 50px #505050; */
-        }
-
-        .img {
-            width: 100%;
-            height: 100%;
-            border-radius: 20px;
-            background-size: cover;
-            position: absolute;
-            z-index: 1;
-        }
-
-
-        .btn-slides {
-            display: flex;
-            margin-left: -7%;
-            margin-top: 8%;
-        }
-
-        .btn-slides a:hover {
-            background: var(--green);
-            border-radius: 2px;
-            cursor: pointer;
-        }
-
-        .btn-slides .read-now {
-            height: 40px;
-            width: 130px;
-            background-color: black;
+            border: 1px solid #000000;
+            border-radius: 5px;
             text-align: center;
-            color: white;
-            border-radius: 2px;
-            padding: 10px 20px;
-            margin: 300px 117px;
-            border: none;
-            text-decoration: none;
-            font-size: 19px;
-            animation: showcontent 1s ease-in-out 0.6s 1 forwards;
         }
 
-
-        .btn-slides .carousel-bkmrk {
-            height: 40px;
-            background-color: purple;
-            border-radius: 2px;
-            padding: 10px 15px;
-            margin: 300px;
-            border: none;
-            margin-left: -100px;
-            animation: showcontent 1s ease-in-out 0.6s 1 forwards;
-        }
-
-        .btn-slides .carousel-bkmrk i {
-            position: center;
-            color: white;
-            font-size: 20px;
-        }
-
-        .slider-dots {
-            display: none;
-            text-align: center;
-            margin-top: 330px;
-        }
-
-        /* Add styling for navigation dots */
-        .slider-dots .dot {
-            position: relative;
-            height: 15px;
-            width: 15px;
-            margin: 0px 5px;
-            background-color: #b8b8b8;
-            border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.6s ease;
-        }
-
-        .dot .active {
-            background-color: #353535;
-        }
-
-        /********************************* Recently Added Novels **********************************/
-
-        /* CSS styles for the book display */
-        .recently-added-title {
-            margin-top: 16.6%;
-            display: inline-block;
-            align-items: flex-start;
-            text-decoration: none;
-            color: #000;
-        }
-
-        .recently-added-title h1 {
-            margin-left: 30px;
-            font-weight: 700;
+        .subscription-container .subscribe {
+            margin-bottom: 30px;
             font-size: 30px;
+            font-weight: 800;
         }
 
-        .pagination {
-            margin-top: -3.5%;
-            margin-left: 41%;
-            padding: 0px 100px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .pagination a {
-            font-weight: 700;
-            color: #444;
-            margin-right: 1px;
-            padding: 12px 30px;
-            font-size: 22px;
-        }
-
-        .pagination a:hover {
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            background-color: #27ae60;
-            color: white;
-        }
-
-        .pagination .active {
-            background-color: #27ae60;
-            border-radius: 5px;
-        }
-
-        .books-container-recent-added {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 40px;
-        }
-
-        .book {
-            display: block;
-            margin-bottom: 0px;
-        }
-
-        .book-image {
-            width: 230px;
-            height: 306px;
-            margin: 10px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 20px;
-            transition: transform 0.2s ease-in-out;
-            cursor: pointer;
-        }
-
-        .book-image img {
-            width: 100%;
-            height: 100%;
-            border-radius: 20px;
-        }
-
-        .book-image:hover {
-            transform: scale(1.1);
-        }
-
-        .book-title {
-            max-width: 230px;
-            height: 100px;
+        .subscription-container p{
+            margin-bottom: 20px;
             font-size: 20px;
-            position: relative;
-            text-align: center;
-            overflow: hidden;
-            text-decoration: none;
-            color: var(--black);
+
         }
 
-        .book-link {
-            text-decoration: none;
-            color: var(--black);
+        .subscribe-btn {
+            width: 80%;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            font-size: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .subscribe-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -465,70 +263,26 @@
         </script>
     </header>
     <!---------------------Header close---------------------->
-    <!-- Main carousel -->
-    <section>
-        <div class="slideshow-container" id="slideshow-container">
-            <!-- Slides will be dynamically added here -->
+    <div id="subscription">
+        <div class="subscription-container">
+            <div class="subscribe">Monthly Plan</div>
+            <p>Author access</p>
+            <p>Review Access</p>
+            <p>Bookmark complete access</p>
+            <p>Rs.50</p>
+            <button class="subscribe-btn" data-price="50">Subscribe</button>
         </div>
-
-        <!-- Add navigation dots here -->
-        <div class="slider-dots"></div>
-
-
-        <script src="/js/maincarousel.js" type="module">
-        </script>
-    </section>
-    <!--  Main carousel close -->
-    <!-- ------------------Recently Added Novels------------------- -->
-    <section>
-        <div class="recently-added-title">
-            <h1>Recently Added Novels</h1>
-
-            <div class="pagination">
-                <a id="genre-all" class="active" onclick="showGenre('all')">All</a>
-                <a id="genre-action" onclick="showGenre('action')">Action</a>
-                <a id="genre-adventure" onclick="showGenre('adventure')">Adventure</a>
-                <a id="genre-fantasy" onclick="showGenre('fantasy')">Fantasy</a>
-                <a id="genre-romance" onclick="showGenre('romance')">Romance</a>
-                <a id="genre-game" onclick="showGenre('game')">Game</a>
-                <a id="genre-urban" onclick="showGenre('urban')">Urban</a>
-            </div>
+        <div class="subscription-container">
+            <div class="subscribe">Annual Plan</div>
+            <p>Author access</p>
+            <p>Review Access</p>
+            <p>Bookmark complete access</p>
+            <p>Rs.200</p>
+            <button class="subscribe-btn" data-price="200">Subscribe</button>
         </div>
-        <br><br>
-        <div id="books-container" class="books-container-recent-added"></div>
+    </div>
 
-        <script src="/js/maincarousel.js" type="module"></script>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const paginationLinks = document.querySelectorAll(".pagination a");
-
-                paginationLinks.forEach(function (link) {
-                    link.addEventListener("click", function () {
-                        // Remove 'active' class from all links
-                        paginationLinks.forEach(function (paginationLink) {
-                            paginationLink.classList.remove("active");
-                        });
-
-                        // Add 'active' class to the clicked link
-                        link.classList.add("active");
-
-                        // Show the selected genre
-                        showGenre(link.dataset.genre);
-                    });
-                });
-
-                // Trigger click event on the "All" link to display it by default
-                const genreAllLink = document.getElementById("genre-all");
-                genreAllLink.click();
-            });
-
-
-        </script>
-    </section>
-    <!-- -------------------Recently Added Novels close------------------------------ -->
-    <!-- Slider -->
-
+    <script src="/js/subscription.js" type="module"></script>
     <!------------------------Add footer--------------------------------------->
 
     <section class="footer">

@@ -12,7 +12,7 @@ import {
 function updateUserDisplayName(user) {
   const userNameElement = document.getElementById("user-name");
   if (userNameElement) {
-      userNameElement.textContent = user.displayName ?? "User Name";
+    userNameElement.textContent = user.displayName ?? "User Name";
   }
 }
 
@@ -22,19 +22,19 @@ async function login(event) {
   const password = document.getElementById("Password_TextBox").value;
 
   if (!email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) {
-      alert("Invalid email format");
-      return;
+    alert("Invalid email format");
+    return;
   }
 
   try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-      sessionStorage.setItem('user', JSON.stringify(user));
-      window.location.href = `/index.html?userId=${user.uid}`; // Pass user ID as URL parameter
+    sessionStorage.setItem('user', JSON.stringify(user));
+    window.location.href = `/index.html?userId=${user.uid}`; // Pass user ID as URL parameter
   } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed. Please check your email and password.");
+    console.error("Login error:", error);
+    alert("Login failed. Please check your email and password.");
   }
 }
 document.getElementById("Login_Btn").addEventListener("click", function (event) {
@@ -44,11 +44,11 @@ document.getElementById("Login_Btn").addEventListener("click", function (event) 
 
 
 function logout() {
- 
+
   sessionStorage.removeItem('user');
-  
+
   auth.signOut().then(() => {
-   
+
     window.location.href = "/login.html";
   }).catch((error) => {
     console.error("Logout error:", error);
@@ -61,8 +61,8 @@ document.querySelector(".sub-icon-link").addEventListener("click", logout);
 
 const currentUser = sessionStorage.getItem('user');
 if (currentUser) {
-    const user = JSON.parse(currentUser);
-    updateUserDisplayName(user);
+  const user = JSON.parse(currentUser);
+  updateUserDisplayName(user);
 }
 
 document.getElementById("Login_Btn").addEventListener("click", function (event) {
@@ -85,7 +85,7 @@ async function loginOAuth() {
       // The signed-in user info.
       const user = authData.user;
 
-      await set(ref(db,`users/${user.uid}`), {
+      await set(ref(db, `users/${user.uid}`), {
         username: user?.displayName ?? "google",
         email: user?.email,
         password: "bookish@123",
@@ -103,3 +103,41 @@ async function loginOAuth() {
 document
   .getElementById("google-login-btn")
   .addEventListener("click", loginOAuth);
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const userToggleBtn = document.getElementById("user-toggle-btn");
+  const adminToggleBtn = document.getElementById("admin-toggle-btn");
+  const userLoginForm = document.querySelector(".user-login-form");
+  const adminLoginForm = document.querySelector(".admin-login-form");
+
+  // Add event listeners for toggle buttons
+  userToggleBtn.addEventListener("click", function () {
+    userLoginForm.style.display = "block";
+    adminLoginForm.style.display = "none";
+  });
+
+  adminToggleBtn.addEventListener("click", function () {
+    userLoginForm.style.display = "none";
+    adminLoginForm.style.display = "block";
+  });
+
+  // Add event listener for admin login button
+  document.getElementById("AdminLogin_Btn").addEventListener("click", function (event) {
+    event.preventDefault();
+    const secretKey = document.getElementById("AdminSecretKey_TextBox").value;
+
+    // Check if the entered secret key matches the predefined admin secret key
+    if (secretKey === "adminkey") {
+      // If matched, set user role to "admin" and proceed with login
+      const currentUser = JSON.parse(sessionStorage.getItem('user'));
+      currentUser.role = "admin";
+      sessionStorage.setItem('user', JSON.stringify(currentUser));
+      window.location.href = `/index.html?userId=${currentUser.uid}`; // Redirect to homepage
+    } else {
+      // If not matched, display an error message
+      alert("Invalid secret key. Please try again.");
+    }
+  });
+});
+
