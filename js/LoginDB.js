@@ -2,6 +2,8 @@
 import {
   set,
   ref,
+  update,
+  getDatabase,
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 import {
   signInWithEmailAndPassword,
@@ -104,7 +106,6 @@ document
   .getElementById("google-login-btn")
   .addEventListener("click", loginOAuth);
 
-
 document.addEventListener("DOMContentLoaded", function () {
   const userToggleBtn = document.getElementById("user-toggle-btn");
   const adminToggleBtn = document.getElementById("admin-toggle-btn");
@@ -123,21 +124,36 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Add event listener for admin login button
-  document.getElementById("AdminLogin_Btn").addEventListener("click", function (event) {
+  document.getElementById("AdminLogin_Btn").addEventListener("click", async function (event) {
     event.preventDefault();
     const secretKey = document.getElementById("AdminSecretKey_TextBox").value;
 
     // Check if the entered secret key matches the predefined admin secret key
     if (secretKey === "adminkey") {
-      // If matched, set user role to "admin" and proceed with login
       const currentUser = JSON.parse(sessionStorage.getItem('user'));
       currentUser.role = "admin";
+
+      // Update user's role to "admin" in the database
+      try {
+        await update(ref(getDatabase(), `users/${currentUser.uid}`), {
+          role: "admin"
+        });
+      } catch (error) {
+        console.error("Error updating user role:", error);
+        alert("Failed to update user role. Please try again.");
+        return;
+      }
+
+      // Update the session storage
       sessionStorage.setItem('user', JSON.stringify(currentUser));
-      window.location.href = `/index.html?userId=${currentUser.uid}`; // Redirect to homepage
+
+      // Redirect to homepage with user ID as URL parameter
+      window.location.href = `/index.html?userId=${currentUser.uid}&role=admin`;
     } else {
       // If not matched, display an error message
       alert("Invalid secret key. Please try again.");
     }
   });
 });
+
 

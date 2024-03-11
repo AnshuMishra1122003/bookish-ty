@@ -8,16 +8,19 @@
     <style>
         /******************Login form************************************/
 
+        #login {
+            margin-top: 10%;
+            margin-left: 32%;
+        }
+
         .login_Form_Box {
-            width: 40%;
+            width: 50%;
             background: #cfcfcf;
             border: 2px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             color: black;
             border-radius: 10px;
             padding: 30px 40px;
-            margin-top: 10%;
-            margin-left: 30%;
         }
 
         .login_Form_Box h1 {
@@ -150,75 +153,66 @@
 
         /*****************google and facebook authentication****************/
 
-        .social_media {
-            margin: 30px auto;
-            text-align: center;
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-        }
-
-        .social_media .google_btn:hover {
-            background-color: var(--green);
-            color: #000000;
-        }
-
-        .social_media .facebook_btn:hover {
-            background-color: var(--green);
-            color: #000000;
-        }
-
-        .social_media img {
-            width: 30px;
-            margin: 0 12px;
-            box-shadow: 0 0 20px 0 #000;
-            cursor: pointer;
-            border-radius: 40%;
-        }
-
         .social_media .google_btn {
+            width: 100%;
             height: 45px;
-            background-color: #000000;
-            color: #fff;
+            background: #000000;
             border: none;
             outline: none;
             border-radius: 40px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             cursor: pointer;
-            font-size: 16px;
+            font-size: 20px;
+            color: #ffffff;
             font-weight: 600;
             padding: 10px;
-            margin-right: 50px;
         }
 
         .social_media .google_btn i {
-            display: block;
+            display: inline;
             align-items: center;
             width: 50px;
             height: 50px;
-            font-size: 33px;
+            font-size: 25px;
+            margin-right: 10px;
         }
 
-        .social_media .facebook_btn {
-            height: 45px;
-            border: none;
+
+        .toggle-buttons {
+            display: inline-flex;
+            width: 50%;
+            margin-bottom: 10px;
+        }
+
+        #user-toggle-btn {
+            width: 49%;
+            padding: 20px;
+            border-radius: 20px;
+            font-size: 20px;
+            margin-right: 2%;
             color: #fff;
-            outline: none;
-            border-radius: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 10px;
-            background-color: rgb(0, 0, 0);
+            background-color: #000;
         }
 
-        .social_media .facebook_btn i {
-            display: block;
-            align-items: center;
-            width: 50px;
-            height: 50px;
-            font-size: 33px;
+        #user-toggle-btn:hover {
+            background-color: var(--green);
+            color: #000;
+        }
+
+        #admin-toggle-btn {
+            width: 49%;
+            padding: 20px;
+            border-radius: 20px;
+            font-size: 20px;
+            margin-right: 2%;
+            color: #fff;
+            background-color: #000;
+
+        }
+
+        #admin-toggle-btn:hover {
+            background-color: var(--green);
+            color: #000;
         }
     </style>
 </head>
@@ -226,13 +220,9 @@
 <body>
     <!-------------header starts------------------->
     <header id="header" class="header">
-
         <div class="header-1">
-
             <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
-
             <form id="searchbar" action="#" class="search-form">
-
                 <input type="search" id="search-box" placeholder="Search Here..." />
                 <label for="search-box" class="bx bx-search"></label>
             </form>
@@ -251,7 +241,7 @@
                             <i class='bx bxs-user-circle'></i>
                             <p>Profile</p>
                         </a>
-                        <a href="/html/paymentpage.html" class="sub-icon-link" id="settings-link">
+                        <a href="/html/usersettings.html" class="sub-icon-link" id="settings-link">
                             <i class='bx bxs-cog'></i>
                             <p>Settings</p>
                         </a>
@@ -329,6 +319,10 @@
                                 } else {
                                     createMenuLink('Subscribe', '/html/subscriptionplan.html', '');
                                 }
+                                // Check if user is admin and display admin link
+                                if (userData.role === 'admin') {
+                                    createMenuLink('Admin', '/html/admin.html', '');
+                                }
                             }
                         } else {
                             // User is not logged in
@@ -369,19 +363,14 @@
                     }
                 });
             </script>
-
-
         </div>
         <div class="header-2">
-
             <nav id="navbar" class="navbar">
                 <input class="menu-btn" type="checkbox" id="menu-btn" />
                 <label class="menu-icon" for="menu-btn">
                     <span class="nav-icon"></span>
                 </label>
-                <div class="menu">
-
-                </div>
+                <div class="menu"></div>
                 <script type="module">
                     document.addEventListener("DOMContentLoaded", function () {
                         const menu = document.querySelector('.menu');
@@ -391,7 +380,7 @@
                             { text: 'Genres', href: '/html/genres.html', onclick: 'showMenu(1)' },
                             { text: 'Library', href: '/html/library.html', onclick: 'showMenu(3)' },
                             { text: 'User Settings', href: '/html/usersettings.html', onclick: 'showMenu(4)' },
-                            { text: 'About Us', href: '/html/admin.html', onclick: 'showMenu(5)' }
+                            { text: 'About Us', href: '/html/aboutus.html', onclick: 'showMenu(5)' }
                         ];
 
                         menuItems.forEach(item => {
@@ -414,7 +403,7 @@
         </script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const menuLinks = document.querySelectorAll("menu a");
+                const menuLinks = document.querySelectorAll(".menu a");
 
                 menuLinks.forEach(function (link, index) {
                     link.addEventListener("click", function () {
@@ -436,99 +425,118 @@
 
     <!--login form-->
     <!-- Add the toggle buttons -->
-    <div class="toggle-buttons">
-        <button id="user-toggle-btn">User</button>
-        <button id="admin-toggle-btn">Admin</button>
-    </div>
+    <div id="login">
 
-    <div class="login_Form_Box user-login-form  ">
-        <h1>Sign In</h1>
-
-        <!--email textbox-->
-        <div class="Input_Textbox">
-            <input type="email" id="Email_TextBox" placeholder="Enter Your Email" required>
-            <i class='bx bxs-envelope'></i>
+        <div class="toggle-buttons">
+            <button id="user-toggle-btn">User</button>
+            <button id="admin-toggle-btn">Admin</button>
         </div>
 
-        <!--password textbox-->
-        <div class="Input_Textbox">
-            <input type="password" id="Password_TextBox" placeholder="Enter Your Password" required>
-            <i class='bx bx-show' onclick="togglePasswordVisibility('Password_TextBox', this)"
-                style="margin-right: 25px; font-size: 20px;"></i>
-            <i class='bx bx-hide' onclick="togglePasswordVisibility('Password_TextBox', this)"
-                style="display: none; margin-right: 25px; font-size: 20px;"></i>
-            <i class='bx bxs-lock-alt'></i>
-        </div>
-        <script>
-            function togglePasswordVisibility(inputId, icon) {
-                const input = document.getElementById(inputId);
-                const passwordIcon = icon.parentElement.querySelector('.bx-show');
-                const textIcon = icon.parentElement.querySelector('.bx-hide');
+        <div class="login_Form_Box user-login-form  ">
+            <h1>Sign In</h1>
 
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    passwordIcon.style.display = 'none';
-                    textIcon.style.display = 'block';
-                } else {
-                    input.type = 'password';
-                    passwordIcon.style.display = 'block';
-                    textIcon.style.display = 'none';
+            <!--email textbox-->
+            <div class="Input_Textbox">
+                <input type="email" id="Email_TextBox" placeholder="Enter Your Email" required>
+                <i class='bx bxs-envelope'></i>
+            </div>
+
+            <!--password textbox-->
+            <div class="Input_Textbox">
+                <input type="password" id="Password_TextBox" placeholder="Enter Your Password" required>
+                <i class='bx bx-show' onclick="togglePasswordVisibility('Password_TextBox', this)"
+                    style="margin-right: 25px; font-size: 20px;"></i>
+                <i class='bx bx-hide' onclick="togglePasswordVisibility('Password_TextBox', this)"
+                    style="display: none; margin-right: 25px; font-size: 20px;"></i>
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+            <script>
+                function togglePasswordVisibility(inputId, icon) {
+                    const input = document.getElementById(inputId);
+                    const passwordIcon = icon.parentElement.querySelector('.bx-show');
+                    const textIcon = icon.parentElement.querySelector('.bx-hide');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        passwordIcon.style.display = 'none';
+                        textIcon.style.display = 'block';
+                    } else {
+                        input.type = 'password';
+                        passwordIcon.style.display = 'block';
+                        textIcon.style.display = 'none';
+                    }
                 }
-            }
-        </script>
+            </script>
 
 
-        <div class="remember_forgot">
-            <label><input type="checkbox" />Remember me</label>
-            <a href="/html/ForgotPass.html">Forgot Password?</a>
-        </div>
+            <div class="remember_forgot">
+                <label><input type="checkbox" />Remember me</label>
+                <a href="/html/ForgotPass.html">Forgot Password?</a>
+            </div>
 
 
-        <div>
-            <button ID="Login_Btn" class="form_Button">Login</button>
-        </div>
+            <div>
+                <button ID="Login_Btn" class="form_Button">Login</button>
+            </div>
 
 
-        <div class="Form_link">
-            <p>Don't have an account? <a href="/html/register.html">Register Now</a></p>
-        </div>
+            <div class="Form_link">
+                <p>Don't have an account? <a href="/html/register.html">Register Now</a></p>
+            </div>
 
 
-        <div class="Form_link">
-            <p>Or Sign Up With</p>
-        </div>
+            <div class="Form_link">
+                <p>Or Sign Up With</p>
+            </div>
 
 
-        <!--google and facebook auth-->
+            <!--google and facebook auth-->
 
-        <div class="social_media">
-            <div class="">
-                <button id="google-login-btn" class="google_btn"><i class='bx bxl-google'></i></button>
-                <button id="facebook-login-btn" class="facebook_btn"><i class='bx bxl-facebook'></i></button>
+            <div class="social_media">
+                <div class="">
+                    <button id="google-login-btn" class="google_btn"><i class='bx bxl-google'></i>Google</button>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- Add admin login form -->
-    <div class="login_Form_Box admin-login-form" style="display: none;">
-        <h1>Sign In As Admin</h1>
-        <!-- Admin login form content -->
-        <div class="Input_Textbox">
-            <input type="email" id="AdminEmail_TextBox" placeholder="Enter Your Email" required>
-            <i class='bx bxs-envelope'></i>
+        <!-- Add admin login form -->
+        <div class="login_Form_Box admin-login-form" style="display: none;">
+            <h1>Sign In As Admin</h1>
+            <!-- Admin login form content -->
+            <div class="Input_Textbox">
+                <input type="email" id="AdminEmail_TextBox" placeholder="Enter Your Email" required>
+                <i class='bx bxs-envelope'></i>
+            </div>
+            <div class="Input_Textbox">
+                <input type="password" id="AdminPassword_TextBox" placeholder="Enter Your Password" required>
+                <i class='bx bx-show' onclick="togglePasswordVisibility('AdminPassword_TextBox', this)"
+                    style="margin-right: 25px; font-size: 20px;"></i>
+                <i class='bx bx-hide' onclick="togglePasswordVisibility('AdminPassword_TextBox', this)"
+                    style="display: none; margin-right: 25px; font-size: 20px;"></i>
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+            <script>
+                function togglePasswordVisibility(inputId, icon) {
+                    const input = document.getElementById(inputId);
+                    const passwordIcon = icon.parentElement.querySelector('.bx-show');
+                    const textIcon = icon.parentElement.querySelector('.bx-hide');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        passwordIcon.style.display = 'none';
+                        textIcon.style.display = 'block';
+                    } else {
+                        input.type = 'password';
+                        passwordIcon.style.display = 'block';
+                        textIcon.style.display = 'none';
+                    }
+                }
+            </script>
+            <div class="Input_Textbox">
+                <input type="password" id="AdminSecretKey_TextBox" placeholder="Enter Secret Key" required>
+                <i class='bx bxs-key'></i>
+            </div>
+            <button id="AdminLogin_Btn" class="form_Button">Login as Admin</button>
         </div>
-        <div class="Input_Textbox">
-            <input type="password" id="AdminPassword_TextBox" placeholder="Enter Your Password" required>
-            <i class='bx bx-show' onclick="togglePasswordVisibility('Password_TextBox', this)"
-                style="margin-right: 25px; font-size: 20px;"></i>
-            <i class='bx bx-hide' onclick="togglePasswordVisibility('Password_TextBox', this)"
-                style="display: none; margin-right: 25px; font-size: 20px;"></i>
-            <i class='bx bxs-lock-alt'></i>
-        </div>
-        <div class="Input_Textbox">
-            <input type="password" id="AdminSecretKey_TextBox" placeholder="Enter Secret Key" required>
-            <i class='bx bxs-key'></i>
-        </div>
-        <button id="AdminLogin_Btn" class="form_Button">Login as Admin</button>
     </div>
     <!---------------script file-------------------------->
     <script type="module" src="/js/LoginDB.js"></script>

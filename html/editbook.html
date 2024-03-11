@@ -184,13 +184,9 @@
 <body>
     <!-------------header starts------------------->
     <header id="header" class="header">
-
         <div class="header-1">
-
             <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
-
             <form id="searchbar" action="#" class="search-form">
-
                 <input type="search" id="search-box" placeholder="Search Here..." />
                 <label for="search-box" class="bx bx-search"></label>
             </form>
@@ -209,7 +205,7 @@
                             <i class='bx bxs-user-circle'></i>
                             <p>Profile</p>
                         </a>
-                        <a href="/html/paymentpage.html" class="sub-icon-link" id="settings-link">
+                        <a href="/html/usersettings.html" class="sub-icon-link" id="settings-link">
                             <i class='bx bxs-cog'></i>
                             <p>Settings</p>
                         </a>
@@ -287,6 +283,10 @@
                                 } else {
                                     createMenuLink('Subscribe', '/html/subscriptionplan.html', '');
                                 }
+                                // Check if user is admin and display admin link
+                                if (userData.role === 'admin') {
+                                    createMenuLink('Admin', '/html/admin.html', '');
+                                }
                             }
                         } else {
                             // User is not logged in
@@ -327,19 +327,14 @@
                     }
                 });
             </script>
-
-
         </div>
         <div class="header-2">
-
             <nav id="navbar" class="navbar">
                 <input class="menu-btn" type="checkbox" id="menu-btn" />
                 <label class="menu-icon" for="menu-btn">
                     <span class="nav-icon"></span>
                 </label>
-                <div class="menu">
-
-                </div>
+                <div class="menu"></div>
                 <script type="module">
                     document.addEventListener("DOMContentLoaded", function () {
                         const menu = document.querySelector('.menu');
@@ -349,7 +344,7 @@
                             { text: 'Genres', href: '/html/genres.html', onclick: 'showMenu(1)' },
                             { text: 'Library', href: '/html/library.html', onclick: 'showMenu(3)' },
                             { text: 'User Settings', href: '/html/usersettings.html', onclick: 'showMenu(4)' },
-                            { text: 'About Us', href: '/html/admin.html', onclick: 'showMenu(5)' }
+                            { text: 'About Us', href: '/html/aboutus.html', onclick: 'showMenu(5)' }
                         ];
 
                         menuItems.forEach(item => {
@@ -372,7 +367,7 @@
         </script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const menuLinks = document.querySelectorAll("menu a");
+                const menuLinks = document.querySelectorAll(".menu a");
 
                 menuLinks.forEach(function (link, index) {
                     link.addEventListener("click", function () {
