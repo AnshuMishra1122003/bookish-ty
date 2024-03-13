@@ -70,19 +70,6 @@
             margin-right: -20px;
         }
 
-        .header_img {
-            width: 35px;
-            height: 35px;
-            display: flex;
-            justify-content: center;
-            border-radius: 50%;
-            overflow: hidden
-        }
-
-        .header_img img {
-            width: 40px
-        }
-
         .l-navbar {
             position: fixed;
             top: 0;
@@ -164,6 +151,7 @@
 
         .submenu-content {
             display: none;
+
         }
 
         .submenu-content.show {
@@ -204,13 +192,13 @@
 
         .container-card {
             width: 92%;
-            margin-left: 4%;
-            margin-top: 2%;
+            margin-left: 2%;
+            margin-top: 4%;
             margin-bottom: 1%;
-            height: 15%;
+            height: 29%;
             background: #cfcfcf;
             border-radius: 10px;
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #ccc;
         }
 
@@ -237,7 +225,7 @@
         }
 
         .title {
-            font-size: 25px;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
         }
@@ -247,7 +235,7 @@
             margin-right: 20px;
             font-size: 18px;
             color: #000;
-            height: 71%;
+            height: 56%;
             overflow: hidden;
             position: relative;
             white-space: pre-wrap;
@@ -256,8 +244,8 @@
         .delete-icon {
             display: block;
             font-size: 20px;
-            margin: 5px 190px;
-            padding: 10px 20px;
+            margin: 6px 200px;
+            padding: 4px 20px;
             color: rgb(243, 11, 11);
             /* Change icon color if needed */
         }
@@ -268,12 +256,11 @@
             height: 180px;
             overflow: hidden;
             position: relative;
-            white-space: pre-wrap;
         }
 
         .genres {
             margin-top: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 5px;
             font-size: 19px;
             color: #000;
         }
@@ -283,7 +270,14 @@
             color: #000;
         }
 
-
+        .border-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+            background-color: #000;
+        }
 
         /* Search bar */
         .search-bar {
@@ -379,8 +373,7 @@
         }
 
         .genre-item input[type="checkbox"]:checked+label {
-            background-color: var(--green);
-            color: #000;
+            color: blue;
         }
 
         .user-table {
@@ -432,15 +425,6 @@
                 padding: 0 2rem 0 calc(var(--nav-width) + 2rem)
             }
 
-            .header_img {
-                width: 40px;
-                height: 40px
-            }
-
-            .header_img img {
-                width: 45px
-            }
-
             .l-navbar {
                 left: 0;
                 padding: 1rem 0 0;
@@ -487,153 +471,153 @@
         </nav>
     </div>
     <!--Container Main start-->
-    <div class="height-100">
-        <br /><br />
-        <div class="submenu-content" id="dashboardSubMenu">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Users</h2>
-                            <p id="userCount">0</p>
-                        </div>
+    <div class="submenu-content" id="dashboardSubMenu">
+        <br />
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Users</h2>
+                        <p id="userCount">0</p>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Subscribed Users</h2>
-                            <p id="subscribedUserCount">0</p>
-                        </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Subscribed Users</h2>
+                        <p id="subscribedUserCount">0</p>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Books</h2>
-                            <p id="bookCount">0</p>
-                        </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Books</h2>
+                        <p id="bookCount">0</p>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Total Genres</h2>
-                            <p id="totalGenreCount">0</p>
-                        </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Total Genres</h2>
+                        <p id="totalGenreCount">0</p>
                     </div>
-                    <!-- Add more count containers for each genre -->
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Action</h2>
-                            <p id="actionCount">0</p>
-                        </div>
+                </div>
+                <!-- Add more count containers for each genre -->
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Action</h2>
+                        <p id="actionCount">0</p>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Adventure</h2>
-                            <p id="adventureCount">0</p>
-                        </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Adventure</h2>
+                        <p id="adventureCount">0</p>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Fantasy</h2>
-                            <p id="fantasyCount">0</p>
-                        </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Fantasy</h2>
+                        <p id="fantasyCount">0</p>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Game</h2>
-                            <p id="gameCount">0</p>
-                        </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Game</h2>
+                        <p id="gameCount">0</p>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Romance</h2>
-                            <p id="romanceCount">0</p>
-                        </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Romance</h2>
+                        <p id="romanceCount">0</p>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="count-container">
-                            <h2>Urban</h2>
-                            <p id="urbanCount">0</p>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="count-container">
+                        <h2>Urban</h2>
+                        <p id="urbanCount">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add more submenu content as needed -->
+    <div class="submenu-content" id="booksSubMenu">
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search Books...">
+
+            <!-- Modified genre container -->
+            <div class="genre-container" id="genreContainer">
+                <div class="dropdown">
+                    <button type="button" id="genreDropdown" onclick="toggleGenreContainer()">Genres</button>
+                    <div class="genre-menu-container" id="genreMenuContainer">
+                        <div class="genre-menu">
+                            <a class="genre-item">
+                                <input type="checkbox" id="allGenre" checked>
+                                <label for="allGenre">All</label>
+                            </a>
+                            <a class="genre-item">
+                                <input type="checkbox" id="actionGenre">
+                                <label for="actionGenre">Action</label>
+                            </a>
+                            <a class="genre-item">
+                                <input type="checkbox" id="adventureGenre">
+                                <label for="adventureGenre">Adventure</label>
+                            </a>
+                            <a class="genre-item">
+                                <input type="checkbox" id="fantasyGenre">
+                                <label for="fantasyGenre">Fantasy</label>
+                            </a>
+                            <a class="genre-item">
+                                <input type="checkbox" id="romanceGenre">
+                                <label for="romanceGenre">Romance</label>
+                            </a>
+                            <a class="genre-item">
+                                <input type="checkbox" id="gameGenre">
+                                <label for="gameGenre">Game</label>
+                            </a>
+                            <a class="genre-item">
+                                <input type="checkbox" id="urbanGenre">
+                                <label for="urbanGenre">Urban</label>
+                            </a>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Add more submenu content as needed -->
-        <div class="submenu-content" id="booksSubMenu">
-            <div class="search-bar">
-                <input type="text" id="search" placeholder="Search Books...">
+        <div id="bookContainer"></div>
+    </div>
 
-                <!-- Modified genre container -->
-                <div class="genre-container" id="genreContainer">
-                    <div class="dropdown">
-                        <button type="button" id="genreDropdown" onclick="toggleGenreContainer()">Genres</button>
-                        <div class="genre-menu-container" id="genreMenuContainer">
-                            <div class="genre-menu">
-                                <a class="genre-item">
-                                    <input type="checkbox" id="allGenre" checked>
-                                    <label for="allGenre">All</label>
-                                </a>
-                                <a class="genre-item">
-                                    <input type="checkbox" id="actionGenre">
-                                    <label for="actionGenre">Action</label>
-                                </a>
-                                <a class="genre-item">
-                                    <input type="checkbox" id="adventureGenre">
-                                    <label for="adventureGenre">Adventure</label>
-                                </a>
-                                <a class="genre-item">
-                                    <input type="checkbox" id="fantasyGenre">
-                                    <label for="fantasyGenre">Fantasy</label>
-                                </a>
-                                <a class="genre-item">
-                                    <input type="checkbox" id="romanceGenre">
-                                    <label for="romanceGenre">Romance</label>
-                                </a>
-                                <a class="genre-item">
-                                    <input type="checkbox" id="gameGenre">
-                                    <label for="gameGenre">Game</label>
-                                </a>
-                                <a class="genre-item">
-                                    <input type="checkbox" id="urbanGenre">
-                                    <label for="urbanGenre">Urban</label>
-                                </a>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="bookContainer"></div>
+    <div class="submenu-content" id="usersSubMenu">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search">
         </div>
-
-        <div class="submenu-content" id="usersSubMenu">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search">
-            </div>
-            <table class="user-table">
-                <thead>
-                    <th>SrNo</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-            </table>
+        <table class="user-table">
+            <thead>
+                <th>SrNo</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+    </div>
+    <div class="submenu-content" id="subscriptionsSubMenu">
+        <div class="search-bar">
+            <input type="text" id="searching" placeholder="Search">
         </div>
-        <div class="submenu-content" id="subscriptionsSubMenu">
-            <div class="search-bar">
-                <input type="text" id="searching" placeholder="Search">
-            </div>
-            <table class="subscribers-table">
-                <thead>
-                    <th>SrNo</th>
-                    <th>Card Holder</th>
-                    <th>Email</th>
-                    <th>Country</th>
-                </thead>
-                <tbody id="subscriptionsTableBody">
-                </tbody>
-            </table>
-        </div>
+        <table class="subscribers-table">
+            <thead>
+                <th>SrNo</th>
+                <th>Card Holder</th>
+                <th>Email</th>
+                <th>Subscription Amount</th>
+                <th>Country</th>
+            </thead>
+            <tbody id="subscriptionsTableBody">
+            </tbody>
+        </table>
+    </div>
     </div>
     <!--Container Main end-->
 

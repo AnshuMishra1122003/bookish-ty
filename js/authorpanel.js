@@ -82,14 +82,14 @@ function createBookContainer(book, bookId) {
     )}`;
   });
 
-  const button3 = document.createElement("button");
-  button3.id = "editChaptersBtn";
-  button3.textContent = "Edit Chapters";
-  button3.addEventListener("click", function () {
-    window.location.href = `/html/editchapters.html?bookId=${encodeURIComponent(
-      bookId
-    )}`;
-  });
+  // const button3 = document.createElement("button");
+  // button3.id = "editChaptersBtn";
+  // button3.textContent = "Edit Chapters";
+  // button3.addEventListener("click", function () {
+  //   window.location.href = `/html/editchapters.html?bookId=${encodeURIComponent(
+  //     bookId
+  //   )}`;
+  // });
 
   // const button4 = document.createElement("button");
   // button4.id = "deleteChaptersBtn";
@@ -122,7 +122,7 @@ function createBookContainer(book, bookId) {
   // Append buttons to the container
   buttonsContainer.append(button1);
   buttonsContainer.append(button2);
-  buttonsContainer.append(button3);
+  // buttonsContainer.append(button3);
   // buttonsContainer.append(button4);
   buttonsContainer.append(button5);
 

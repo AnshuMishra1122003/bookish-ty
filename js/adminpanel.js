@@ -24,7 +24,6 @@ function displayBooks() {
     });
 }
 
-
 let genreMenuContainer = document.getElementById("genreMenuContainer");
 
 function toggleDropdown() {
@@ -135,8 +134,17 @@ function createBookElement(bookData, bookId) {
 
     bookElement.appendChild(infoContainer);
 
+    // Trash icon for deleting the book
+    const trashIcon = document.createElement('i');
+    trashIcon.classList.add('fas', 'fa-trash', 'delete-icon');
+    trashIcon.setAttribute('title', 'Delete');
+    trashIcon.addEventListener('click', () => {
+        deleteBook(bookId);
+    });
+
     // Right side - Genres and Tags
     const genreTagsContainer = document.createElement('div');
+    genreTagsContainer.appendChild(trashIcon);
     genreTagsContainer.classList.add('genre-tags-container');
 
     const genres = document.createElement('div');
@@ -195,8 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     filterBooks(['all']); // Display all books initially
 });
 
-
-// Function to delete a book from Firebase Realtime db
+// Function to delete a book from Firebase Realtime Database
 async function deleteBook(bookId) {
     const bookRef = ref(db, `books/${bookId}`);
 
@@ -229,7 +236,7 @@ async function deleteBook(bookId) {
             alert(`Book "${bookName}" deleted successfully.`);
         } else {
             // If the user cancels, log a message
-            console.log('Deletion cancelled by user');
+            console.log('Deletion cancelled by admin');
         }
     } catch (error) {
         console.error('Error deleting book:', error.message);
@@ -479,30 +486,37 @@ async function fetchSubscribedUsers() {
             get(subscribedUsersRef).then(async subscribedUserSnapshot => {
                 const subscribedUserDetails = subscribedUserSnapshot.val();
 
-                const cardHolder = subscribedUserDetails.cardholder.toLowerCase();
-                const email = subscribedUserDetails.email.toLowerCase();
-                const country = subscribedUserDetails.country.toLowerCase();
+                if (subscribedUserDetails) { // Check if subscribedUserDetails is not undefined
+                    const cardHolder = subscribedUserDetails.cardholder ? subscribedUserDetails.cardholder.toLowerCase() : '';
+                    const email = subscribedUserDetails.email ? subscribedUserDetails.email.toLowerCase() : '';
+                    const dataPrice = subscribedUserDetails.dataPrice ? subscribedUserDetails.dataPrice.toLowerCase() : '';
+                    const country = subscribedUserDetails.country ? subscribedUserDetails.country.toLowerCase() : '';
 
-                const row = document.createElement('tr');
+                    const row = document.createElement('tr');
 
-                const cellSerialNumber = document.createElement('td');
-                cellSerialNumber.textContent = serialNumber++;
+                    const cellSerialNumber = document.createElement('td');
+                    cellSerialNumber.textContent = serialNumber++;
 
-                const cellCardHolder = document.createElement('td');
-                cellCardHolder.textContent = subscribedUserDetails.cardholder;
+                    const cellCardHolder = document.createElement('td');
+                    cellCardHolder.textContent = cardHolder;
 
-                const cellEmail = document.createElement('td');
-                cellEmail.textContent = subscribedUserDetails.email;
+                    const cellEmail = document.createElement('td');
+                    cellEmail.textContent = email;
 
-                const cellCountry = document.createElement('td');
-                cellCountry.textContent = subscribedUserDetails.country;
+                    const cellSubscriptionAmount = document.createElement('td');
+                    cellSubscriptionAmount.textContent = dataPrice ? `₹${dataPrice}/-` : '';
 
-                row.appendChild(cellSerialNumber);
-                row.appendChild(cellCardHolder);
-                row.appendChild(cellEmail);
-                row.appendChild(cellCountry);
+                    const cellCountry = document.createElement('td');
+                    cellCountry.textContent = country;
 
-                subscriptionsTableBody.appendChild(row);
+                    row.appendChild(cellSerialNumber);
+                    row.appendChild(cellCardHolder);
+                    row.appendChild(cellEmail);
+                    row.appendChild(cellSubscriptionAmount);
+                    row.appendChild(cellCountry);
+
+                    subscriptionsTableBody.appendChild(row);
+                }
             }).catch(error => {
                 console.error('Error fetching subscribed user details:', error.message);
             });
@@ -511,6 +525,7 @@ async function fetchSubscribedUsers() {
 }
 
 fetchSubscribedUsers();
+
 
 // Function to fetch counts from Firebase and update the UI
 async function fetchCountsAndUpdateUI() {

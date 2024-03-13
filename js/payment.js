@@ -37,7 +37,7 @@ onAuthStateChanged(auth, (user) => {
 
 
 
-// Function to handle payment and add user details to "subscribedusers" node
+// Function to handle payment and open the receipt page in a new window
 async function handlePayment(event) {
     event.preventDefault(); // Prevent default form submission behavior
 
@@ -73,6 +73,10 @@ async function handlePayment(event) {
         const dataPrice = urlParams.get('price');
         console.log("Data Price:", dataPrice);
 
+        // Open a new window to display the receipt page
+        const receiptUrl = `/html/receipt.html?cardholder=${encodeURIComponent(cardholder)}&dataPrice=${encodeURIComponent(dataPrice)}&cardNumber=${encodeURIComponent(cardNumber)}`;
+        window.open(receiptUrl, '_blank');
+
         // Update "subscribeduser" flag inside the "users" node
         const userRef = ref(db, `users/${userId}`);
         await set(userRef, { ...userDetails, subscribeduser: true });
@@ -86,7 +90,7 @@ async function handlePayment(event) {
             cardholder,
             expMonth,
             cvv,
-            dataPrice 
+            dataPrice
         });
 
         console.log("User details added to subscribedusers node:", userDetails);
@@ -97,6 +101,7 @@ async function handlePayment(event) {
         alert("An error occurred. Please try again.");
     }
 }
+
 
 // Function to retrieve user details from the users node
 async function getUserDetails(userId) {
@@ -109,3 +114,5 @@ async function getUserDetails(userId) {
         return null;
     }
 }
+
+
