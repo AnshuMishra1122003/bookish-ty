@@ -177,10 +177,6 @@
     <header id="header" class="header">
         <div class="header-1">
             <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
-            <form id="searchbar" action="#" class="search-form">
-                <input type="search" id="search-box" placeholder="Search Here..." />
-                <label for="search-box" class="bx bx-search"></label>
-            </form>
             <div class="icons">
                 <div id="user-login-btn" class="user-login-btn" onclick="toggleIcon()">
                     <i class='bx bxs-user-circle'></i>
@@ -215,109 +211,7 @@
                     </div>
                 </div>
             </div>
-            <script type="module">
-                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
-                import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-                import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
-
-                //config code...........
-                const firebaseConfig = {
-                    apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
-                    authDomain: "bookish-proj.firebaseapp.com",
-                    databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
-                    projectId: "bookish-proj",
-                    storageBucket: "bookish-proj.appspot.com",
-                    messagingSenderId: "351432216616",
-                    appId: "1:351432216616:web:59c46450f373a82ad9251d",
-                    measurementId: "G-DH4RJ9TML1",
-                };
-
-                const app = initializeApp(firebaseConfig);
-
-                const auth = getAuth(app);
-                const db = getDatabase(app);
-
-                document.addEventListener('DOMContentLoaded', async () => {
-                    const profileLink = document.getElementById('profile-link');
-                    const settingsLink = document.getElementById('settings-link');
-                    const helpsServicesLink = document.getElementById('helps-services-link');
-                    const logoutLink = document.getElementById('logout-link');
-                    const loginLink = document.getElementById('login-link');
-                    const userImage = document.getElementById('user-image');
-                    const userName = document.getElementById('user-name');
-                    const menu = document.querySelector('.menu');
-
-                    // Get the current user
-                    auth.onAuthStateChanged(async (user) => {
-                        if (user) {
-                            // User is logged in
-                            loginLink.style.display = 'none';
-                            logoutLink.style.display = 'flex';
-                            // Fetch user's information from database
-                            const userId = user.uid;
-                            const userRef = ref(db, `users/${userId}`);
-                            const snapshot = await get(userRef);
-                            const userData = snapshot.val();
-                            if (userData) {
-                                // Update user's image and name
-                                userImage.src = userData.imageUrl || '/assets/person-circle.svg'; // Use default user icon if no image is available
-                                userName.textContent = userData.username || 'User'; // Use 'User' if no name is available
-                                // Check if user is subscribed
-                                const isSubscribed = userData.subscribeduser === true;
-                                // Show appropriate links
-                                profileLink.style.display = 'flex';
-                                settingsLink.style.display = 'flex';
-                                helpsServicesLink.style.display = 'flex';
-                                // Create menu items based on subscription status
-                                if (isSubscribed) {
-                                    createMenuLink('Create', '/html/authordashboard.html', 'showMenu(2)');
-                                } else {
-                                    createMenuLink('Subscribe', '/html/subscriptionplan.html', '');
-                                }
-                                // Check if user is admin and display admin link
-                                if (userData.role === 'admin') {
-                                    createMenuLink('Admin', '/html/admin.html', '');
-                                }
-                            }
-                        } else {
-                            // User is not logged in
-                            loginLink.style.display = 'flex';
-                            logoutLink.style.display = 'none';
-                            // Hide unnecessary links
-                            profileLink.style.display = 'none';
-                            settingsLink.style.display = 'none';
-                            helpsServicesLink.style.display = 'none';
-                        }
-                    });
-
-                    // Function to create menu link
-                    function createMenuLink(text, href, onclick) {
-                        const link = document.createElement('a');
-                        link.textContent = text;
-                        link.href = href;
-                        link.setAttribute('onclick', onclick);
-                        link.classList.add('nav-link');
-                        menu.appendChild(link);
-                    }
-
-                    // Function to logout the user
-                    function logout() {
-                        sessionStorage.removeItem('user');
-
-                        auth.signOut().then(() => {
-                            window.location.href = "/html/Login.html";
-                        }).catch((error) => {
-                            console.error("Logout error:", error.message);
-                            alert("Logout failed.");
-                        });
-                    }
-
-                    function toggleIcon() {
-                        const subMenu = document.getElementById('subMenu');
-                        subMenu.classList.toggle('active');
-                    }
-                });
-            </script>
+            <script src="/js/navbar.js" type="module"></script>
         </div>
         <div class="header-2">
             <nav id="navbar" class="navbar">

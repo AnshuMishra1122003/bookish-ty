@@ -1,23 +1,20 @@
-import { db, auth } from "./firebaseConfig.mjs";
-import { query, orderByChild, ref, update, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
-import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js';
+import { db } from "./firebaseConfig.mjs";
+import { ref, update, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
 
 
 // Function to fetch and display books
 function displayBooks() {
     const bookContainer = document.getElementById('bookContainer');
 
-    // Assume 'books' is the node where your books are stored in Firebase
     const booksRef = ref(db, 'books/');
 
     onValue(booksRef, (snapshot) => {
-        bookContainer.innerHTML = ''; // Clear previous content
+        bookContainer.innerHTML = '';
 
         snapshot.forEach((childSnapshot) => {
             const bookData = childSnapshot.val();
             const bookId = childSnapshot.key;
 
-            // Create book element
             const bookElement = createBookElement(bookData, bookId);
             bookContainer.appendChild(bookElement);
         });
@@ -46,7 +43,6 @@ document.querySelectorAll('.genre-item input[type="checkbox"]').forEach(checkbox
     checkbox.addEventListener('change', searchBooksByGenre);
 });
 
-
 document.querySelectorAll('.dropdown-item').forEach(item => {
     item.addEventListener('click', handleDropdownSelection);
 });
@@ -54,7 +50,7 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
 // Function to filter books based on selected genres
 function filterBooks(genres) {
     let bookContainer = document.getElementById('bookContainer');
-    bookContainer.innerHTML = ''; // Clear previous content
+    bookContainer.innerHTML = '';
 
     let booksRefPromises = genres.map(genre => {
         if (genre === 'all') {
@@ -82,7 +78,6 @@ function filterBooks(genres) {
         })
         .catch(error => {
             console.error('Error filtering books by genre:', error);
-            // Handle error if needed
         });
 }
 
@@ -96,7 +91,6 @@ function createBookElement(bookData, bookId) {
     const bookElement = document.createElement('div');
     bookElement.classList.add('book');
 
-    // Left side - Cover image
     const coverImg = document.createElement('img');
     coverImg.src = bookData.imageUrl;
     coverImg.alt = 'Cover';
@@ -108,7 +102,6 @@ function createBookElement(bookData, bookId) {
     };
     bookElement.appendChild(coverImg);
 
-    // Center part - Title and Description
     const infoContainer = document.createElement('div');
     infoContainer.classList.add('info-container');
 
@@ -127,14 +120,12 @@ function createBookElement(bookData, bookId) {
     description.textContent = bookData.description;
     infoContainer.appendChild(description);
 
-    // Border line
     const borderLine = document.createElement('div');
     borderLine.classList.add('border-line');
     infoContainer.appendChild(borderLine);
 
     bookElement.appendChild(infoContainer);
 
-    // Trash icon for deleting the book
     const trashIcon = document.createElement('i');
     trashIcon.classList.add('fas', 'fa-trash', 'delete-icon');
     trashIcon.setAttribute('title', 'Delete');
@@ -142,7 +133,6 @@ function createBookElement(bookData, bookId) {
         deleteBook(bookId);
     });
 
-    // Right side - Genres and Tags
     const genreTagsContainer = document.createElement('div');
     genreTagsContainer.appendChild(trashIcon);
     genreTagsContainer.classList.add('genre-tags-container');
@@ -167,10 +157,8 @@ function searchBooks() {
     const searchInput = document.getElementById("search").value.toLowerCase();
     const bookContainer = document.getElementById("bookContainer");
 
-    // Clear previous content
     bookContainer.innerHTML = "";
 
-    // Fetch books from the database
     const booksRef = ref(db, "books/");
     get(booksRef)
         .then((snapshot) => {
@@ -187,7 +175,6 @@ function searchBooks() {
         })
         .catch((error) => {
             console.error("Error searching books:", error);
-            // Handle error if needed
         });
 }
 
@@ -200,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Call the filterBooks function when the page loads to display all books initially
 document.addEventListener('DOMContentLoaded', () => {
-    filterBooks(['all']); // Display all books initially
+    filterBooks(['all']);
 });
 
 // Function to delete a book from Firebase Realtime Database
@@ -208,20 +195,16 @@ async function deleteBook(bookId) {
     const bookRef = ref(db, `books/${bookId}`);
 
     try {
-        // Fetch the book data to display in the confirmation message
         const bookSnapshot = await get(bookRef);
         const bookData = bookSnapshot.val();
         const bookName = bookData.title;
 
-        // Ask for confirmation before deleting the book
         const confirmation = confirm(`Are you sure you want to delete the book "${bookName}"?`);
 
         if (confirmation) {
-            // Remove the book from the "books" node
             await remove(bookRef);
             console.log(`Book "${bookName}" deleted successfully from "books" node`);
 
-            // Delete the book from the corresponding genre subnodes
             const genres = bookData.genres || [];
             for (const genre of genres) {
                 const genreRef = ref(db, `genres/${genre}/books/${bookId}`);
@@ -229,13 +212,10 @@ async function deleteBook(bookId) {
                 console.log(`Book "${bookName}" deleted successfully from "${genre}" genre node`);
             }
 
-            // Fetch and display updated counts and UI
             fetchCountsAndUpdateUI();
 
-            // Show success message after deletion
             alert(`Book "${bookName}" deleted successfully.`);
         } else {
-            // If the user cancels, log a message
             console.log('Deletion cancelled by admin');
         }
     } catch (error) {
@@ -248,16 +228,14 @@ async function deleteBook(bookId) {
 // Function to fetch users from Firebase Realtime Database
 var tableBody = document.getElementById('tableBody');
 function fetchUsers() {
-    // Clear existing content
     while (tableBody.firstChild) {
         tableBody.removeChild(tableBody.firstChild);
     }
 
-    // Assuming your users are stored in a "users" node
     const usersRef = ref(db, 'users');
 
     get(usersRef).then((snapshot) => {
-        let serialNumber = 1; // Initialize serial number
+        let serialNumber = 1;
 
         snapshot.forEach((userSnapshot) => {
             const userData = userSnapshot.val();
@@ -265,10 +243,8 @@ function fetchUsers() {
             const username = userData.username;
             const email = userData.email;
 
-            // Create a table row for each user
             const row = document.createElement('tr');
 
-            // Create the table cells
             const cellSerialNumber = document.createElement('td');
             cellSerialNumber.textContent = serialNumber++;
 
@@ -292,11 +268,9 @@ function fetchUsers() {
                 deleteUser(userSnapshot.key);
             });
 
-            // Insert a non-breaking space between the buttons for spacing
             const space = document.createElement('span');
             space.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
 
-            // Append buttons to cellActions
             cellActions.appendChild(editButton);
             cellActions.appendChild(space); // Add space between buttons
             cellActions.appendChild(deleteButton);
@@ -306,7 +280,6 @@ function fetchUsers() {
             row.appendChild(cellEmail);
             row.appendChild(cellActions);
 
-            // Append row to table body
             tableBody.appendChild(row);
         });
     });
@@ -316,28 +289,24 @@ fetchUsers();
 
 // Define the searchUsers function
 function searchUsers() {
-    // Your searchUsers implementation
     const searchInput = document.getElementById('searchInput');
     const searchTerm = searchInput.value.trim().toLowerCase();
 
     const usersRef = ref(db, 'users');
     get(usersRef).then((snapshot) => {
         const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = ''; // Clear previous table content
+        tableBody.innerHTML = '';
 
-        let serialNumber = 1; // Initialize serial number
+        let serialNumber = 1;
 
         snapshot.forEach((userSnapshot) => {
             const userData = userSnapshot.val();
             const username = userData.username.toLowerCase();
             const email = userData.email.toLowerCase();
 
-            // Check if search term matches username or email
             if (username.includes(searchTerm) || email.includes(searchTerm)) {
-                // Create table row
                 const row = document.createElement('tr');
 
-                // Create and append table cells
                 const cellSerialNumber = document.createElement('td');
                 cellSerialNumber.textContent = serialNumber++;
 
@@ -349,36 +318,30 @@ function searchUsers() {
 
                 const cellActions = document.createElement('td');
 
-                // Create edit button
                 const editButton = document.createElement('button');
                 editButton.textContent = 'Edit';
                 editButton.addEventListener('click', function () {
                     editUser(userSnapshot.key);
                 });
 
-                // Create delete button
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
                 deleteButton.addEventListener('click', function () {
                     deleteUser(userSnapshot.key);
                 });
 
-                // Insert a non-breaking space between the buttons for spacing
                 const space = document.createElement('span');
                 space.innerHTML = '&nbsp;&nbsp;';
 
-                // Append buttons to cellActions
                 cellActions.appendChild(editButton);
-                cellActions.appendChild(space); // Add space between buttons
+                cellActions.appendChild(space);
                 cellActions.appendChild(deleteButton);
 
-                // Append cells to row
                 row.appendChild(cellSerialNumber);
                 row.appendChild(cellUsername);
                 row.appendChild(cellEmail);
                 row.appendChild(cellActions);
 
-                // Append row to table body
                 tableBody.appendChild(row);
             }
         });
@@ -396,63 +359,47 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function editUser(userId) {
-    // Assuming your users are stored in a "users" node
     const userRef = ref(db, `users/${userId}`);
 
-    // Fetch the existing user data using get
     get(userRef)
         .then((snapshot) => {
             const userData = snapshot.val();
 
-            // Get the updated username from the admin
             const newUsername = prompt('Enter the new username:', userData.username);
 
-            // Create an object to store updated fields
             const updatedFields = {};
 
-            // Update only the username if provided
             if (newUsername !== null && newUsername !== '') {
                 updatedFields.username = newUsername;
             } else {
-                // Keep the existing username if not provided
                 updatedFields.username = userData.username;
             }
 
-            // Update the user details in the Firebase Realtime Database
             update(userRef, updatedFields);
 
-            // Fetch updated users to refresh the table
             fetchUsers();
         })
         .catch((error) => {
             console.error('Error fetching user data:', error.message);
-            // Handle the error if needed
         });
 }
 
 
 function deleteUser(userId) {
-    // Assuming your users are stored in a "users" node
     const userRef = ref(db, `users/${userId}`);
 
-    // Fetch user data to display in the confirmation message
     get(userRef)
         .then((snapshot) => {
             const userData = snapshot.val();
             const username = userData.username;
             const email = userData.email;
 
-            // Display a confirmation alert before deleting the user
             const confirmation = confirm(`Are you sure you want to delete the following user?\n\nUsername: ${username}\nEmail: ${email}`);
 
-            // If the user confirms, proceed with deletion
             if (confirmation) {
-                // Remove the user from the Firebase Realtime Database
                 remove(userRef)
                     .then(() => {
-                        // Fetch updated users to refresh the table
                         fetchUsers();
-                        // User deleted successfully
                         alert(`User deleted successfully!\n\nUsername: ${username}\nEmail: ${email}`);
                     })
                     .catch((error) => {
@@ -538,7 +485,7 @@ async function fetchCountsAndUpdateUI() {
     const genresSnapshot = await get(genresRef);
 
     let userCount = 0;
-    let subscribedUserCount = 0; // Updated to count subscribed users
+    let subscribedUserCount = 0;
     let bookCount = 0;
     let totalGenreCount = 0;
 
@@ -548,7 +495,6 @@ async function fetchCountsAndUpdateUI() {
         });
     }
 
-    // Count subscribed users properly
     usersSnapshot.forEach(userSnapshot => {
         const userData = userSnapshot.val();
         if (userData.subscribeduser) {
@@ -578,7 +524,6 @@ async function fetchCountsAndUpdateUI() {
     };
 
     if (genresSnapshot.exists()) {
-        // Loop through each genre to get their individual counts
         genresSnapshot.forEach((genreSnapshot) => {
             const genre = genreSnapshot.key;
             const books = genreSnapshot.child('books');
@@ -592,19 +537,16 @@ async function fetchCountsAndUpdateUI() {
         });
     }
 
-    // Update the UI with the counts
     document.getElementById('userCount').innerText = userCount;
-    document.getElementById('subscribedUserCount').innerText = subscribedUserCount; // Update subscribed user count
+    document.getElementById('subscribedUserCount').innerText = subscribedUserCount;
     document.getElementById('bookCount').innerText = bookCount;
     document.getElementById('totalGenreCount').innerText = totalGenreCount;
 
-    // Update UI for individual genre counts
     Object.keys(genreCounts).forEach((genre) => {
         document.getElementById(genre.toLowerCase() + 'Count').innerText = genreCounts[genre];
     });
 }
 
-// Call the function initially to fetch and display counts
 fetchCountsAndUpdateUI();
 
 function searchSubscribedUsers() {
@@ -620,15 +562,14 @@ function searchSubscribedUsers() {
         const email = row.cells[2].textContent.trim().toLowerCase();
 
         if (cardHolder.includes(searchTerm) || email.includes(searchTerm)) {
-            row.style.display = ''; // Show the row
-            row.cells[0].textContent = serialNumber++; // Update the serial number
+            row.style.display = '';
+            row.cells[0].textContent = serialNumber++;
             visibleRowCount++;
         } else {
-            row.style.display = 'none'; // Hide the row
+            row.style.display = 'none';
         }
     }
 
-    // Update total count display
     document.getElementById('subscribedUserCount').innerText = visibleRowCount;
 }
 

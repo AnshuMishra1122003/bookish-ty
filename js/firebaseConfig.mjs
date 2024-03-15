@@ -3,7 +3,6 @@ import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-storage.js";
 
-//config code...........
 const firebaseConfig = {
   apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
   authDomain: "bookish-proj.firebaseapp.com",

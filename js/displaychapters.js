@@ -6,7 +6,6 @@ async function displayChapterDetails(bookId, chapterId) {
   const bookDetailsContainer = document.getElementById("bookDetailsContainer");
 
   try {
-    // Fetch chapters and book details for the given book ID
     const [chaptersSnapshot, bookSnapshot] = await Promise.all([
       get(ref(db, `books/${bookId}/chapters`)),
       get(ref(db, `books/${bookId}`))
@@ -16,19 +15,16 @@ async function displayChapterDetails(bookId, chapterId) {
     const bookData = bookSnapshot.val();
 
     if (chaptersData && bookData) {
-      // Index chapters by their IDs
       const chapterIds = Object.keys(chaptersData);
       const chapterIndex = chapterIds.indexOf(chapterId);
 
-      // Clear previous chapter content
       bookDetailsContainer.innerHTML = "";
 
       const bookTitle = document.createElement("h1");
       bookTitle.classList.add("booktitle");
-      bookTitle.textContent = bookData.title; // Accessing the book title from bookData
+      bookTitle.textContent = bookData.title; 
       bookDetailsContainer.appendChild(bookTitle);
 
-      // Add navigation buttons
       const backButton = createButton("float-left", "Previous Chapter", () => navigateChapter(-1, bookId, chapterIds, chapterIndex));
       bookDetailsContainer.appendChild(backButton);
 
@@ -42,10 +38,8 @@ async function displayChapterDetails(bookId, chapterId) {
       chapterTitle.textContent = chaptersData[chapterId].title;
       bookDetailsContainer.appendChild(chapterTitle);
 
-      // Display chapter content
       displayChapterContent(chaptersData[chapterId].content, bookDetailsContainer);
 
-      // Check if the user is subscribed
       const user = auth.currentUser;
       if (user) {
         const userId = user.uid;
@@ -53,13 +47,11 @@ async function displayChapterDetails(bookId, chapterId) {
         const userDetails = userDetailsSnapshot.val();
         const isSubscribed = userDetails && userDetails.subscribeduser === true;
         if (!isSubscribed && chapterIndex >= 2) {
-          // Blur chapters if user is not subscribed and chapter index is 2 or above
           blurChapterContent(bookDetailsContainer);
         } else {
           removeBlurFromChapterContent(bookDetailsContainer);
         }
       } else if (chapterIndex >= 2) {
-        // Blur chapters if user is not logged in and chapter index is 2 or above
         blurChapterContent(bookDetailsContainer);
       } else {
         removeBlurFromChapterContent(bookDetailsContainer);
@@ -73,7 +65,6 @@ async function displayChapterDetails(bookId, chapterId) {
   }
 }
 
-// Function to blur chapter content
 function blurChapterContent(container) {
   const chapterContent = container.querySelector(".chaptercontentdisplay");
   if (chapterContent) {
@@ -81,7 +72,6 @@ function blurChapterContent(container) {
   }
 }
 
-// Function to remove blur from chapter content
 function removeBlurFromChapterContent(container) {
   const chapterContent = container.querySelector(".chaptercontentdisplay");
   if (chapterContent) {
@@ -89,7 +79,6 @@ function removeBlurFromChapterContent(container) {
   }
 }
 
-// Function to create a button
 function createButton(className, text, onClick) {
   const button = document.createElement("button");
   button.textContent = text;
@@ -99,21 +88,19 @@ function createButton(className, text, onClick) {
 }
 
 
-// Function to redirect to index page
 function redirectToIndexPage() {
   const urlParams = new URLSearchParams(window.location.search);
   const bookId = urlParams.get("bookId");
   location.href = `/html/previewpage.html?bookId=${bookId}`;
 }
 
-// Function to navigate to the previous or next chapter
 function navigateChapter(step, bookId, chapterIds, chapterIndex) {
   const newIndex = chapterIndex + step;
   if (newIndex >= 0 && newIndex < chapterIds.length) {
-    const newChapterId = chapterIds[newIndex]; // Get the ID of the new chapter
+    const newChapterId = chapterIds[newIndex]; 
     const urlParams = new URLSearchParams(window.location.search);
     const bookId = urlParams.get("bookId");
-    location.href = `/html/displaychapters.html?bookId=${bookId}&chapterId=${newChapterId}`; // Navigate to the new chapter
+    location.href = `/html/displaychapters.html?bookId=${bookId}&chapterId=${newChapterId}`; 
   }
 }
 
@@ -127,7 +114,6 @@ function displayChapterContent(content, container) {
 
 // Call the displayChapterDetails function when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-  // Extract the book ID and chapter ID from the URL query parameters
   const urlParams = new URLSearchParams(window.location.search);
   const bookId = urlParams.get("bookId");
   const chapterId = urlParams.get("chapterId");
@@ -148,7 +134,6 @@ async function bookmarkBook(bookId) {
   const userId = user.uid;
 
   try {
-    // Fetch book details
     const bookRef = ref(db, `books/${bookId}`);
     const bookSnapshot = await get(bookRef);
     const bookData = bookSnapshot.val();
@@ -158,7 +143,6 @@ async function bookmarkBook(bookId) {
       return;
     }
 
-    // Fetch user details
     const userRef = ref(db, `users/${userId}`);
     const userSnapshot = await get(userRef);
     const userData = userSnapshot.val();
@@ -168,14 +152,11 @@ async function bookmarkBook(bookId) {
       return;
     }
 
-    // Merge book details with existing user data and set it under the books sub-node
     const userBooksRef = ref(db, `users/${userId}/books/${bookId}`);
     await set(userBooksRef, { ...bookData, userDetails: userData });
 
-    // Check if the user is subscribed
     const isSubscribed = userData.subscribed === true;
 
-    // If user is subscribed, also add the book details to the subscribed users' node
     if (isSubscribed) {
       const subscribedBooksRef = ref(db, `subscribedusers/${userId}/books/${bookId}`);
       await set(subscribedBooksRef, { ...bookData, userDetails: userData });
@@ -189,11 +170,11 @@ async function bookmarkBook(bookId) {
 }
 
 document.getElementById("bookmarkchpbtn").addEventListener("click", function (event) {
-  event.preventDefault(); // Prevent default action of the link
+  event.preventDefault(); 
   const urlParams = new URLSearchParams(window.location.search);
-  const bookId = urlParams.get("bookId"); // Extract the bookId from URL parameters
+  const bookId = urlParams.get("bookId"); 
   if (bookId) {
-    bookmarkBook(bookId); // Call the bookmarkBook function with the extracted bookId
+    bookmarkBook(bookId); 
   } else {
     console.error("Book ID not found in URL parameters");
   }
@@ -203,11 +184,9 @@ document.getElementById("bookmarkchpbtn").addEventListener("click", function (ev
 // Function to display chapters
 async function displayChapters(bookId) {
   try {
-    // Get current user
     const user = auth.currentUser;
     let userData;
     if (user) {
-      // Fetch user data using user ID
       const userRef = ref(db, `users/${user.uid}`);
       const userSnapshot = await get(userRef);
       userData = userSnapshot.val();
@@ -218,7 +197,7 @@ async function displayChapters(bookId) {
     const chapters = snapshot.val();
 
     const chapterContentDiv = document.getElementById("chapterContent");
-    chapterContentDiv.innerHTML = ""; // Clear previous chapter details
+    chapterContentDiv.innerHTML = "";
 
     if (chapters) {
       let serialNumber = 1;
@@ -227,10 +206,8 @@ async function displayChapters(bookId) {
         const chapterListItem = document.createElement("div");
         chapterListItem.classList.add("chapter-list-item");
 
-        // Check if the chapter index is less than or equal to 2
         const isAllowedChapter = serialNumber <= 2;
 
-        // Create a link to display the chapter details
         const chapterLink = document.createElement("a");
         chapterLink.href = `displaychapters.html?bookId=${bookId}&chapterId=${chapterId}`;
         chapterLink.textContent = `${serialNumber}. ${chapter.title}`;
@@ -253,7 +230,6 @@ async function displayChapters(bookId) {
 }
 
 
-// Call the displayChapters function with the bookId obtained from URL parameters
 const urlParams = new URLSearchParams(window.location.search);
 const bookId = urlParams.get('bookId');
 displayChapters(bookId);

@@ -1,6 +1,5 @@
-import { db, auth } from "./firebaseConfig.mjs";
-import { ref, update, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
-import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js';
+import { db } from "./firebaseConfig.mjs";
+import { ref, get, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
 
 
 
@@ -8,28 +7,20 @@ import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/fi
 function displayBooks() {
     const bookContainer = document.getElementById('bookContainer');
 
-    // Assume 'books' is the node where your books are stored in Firebase
     const booksRef = ref(db, 'books/');
 
     onValue(booksRef, (snapshot) => {
-        bookContainer.innerHTML = ''; // Clear previous content
+        bookContainer.innerHTML = ''; 
 
         snapshot.forEach((childSnapshot) => {
             const bookData = childSnapshot.val();
             const bookId = childSnapshot.key;
 
-            // Create book element
             const bookElement = createBookElement(bookData, bookId);
             bookContainer.appendChild(bookElement);
         });
     });
 }
-
-// Call the displayBooks function when the page loads
-// document.addEventListener('DOMContentLoaded', () => {
-//     displayBooks();
-// });
-
 
 let genreMenuContainer = document.getElementById("genreMenuContainer");
 
@@ -37,7 +28,6 @@ function toggleDropdown() {
     genreMenuContainer.classList.toggle("show");
 }
 
-// Function to handle book search by selected genres
 function searchBooksByGenre() {
     const selectedGenres = [];
     const genreCheckboxes = document.querySelectorAll('.genre-item input[type="checkbox"]');
@@ -61,7 +51,7 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
 // Function to filter books based on selected genres
 function filterBooks(genres) {
     let bookContainer = document.getElementById('bookContainer');
-    bookContainer.innerHTML = ''; // Clear previous content
+    bookContainer.innerHTML = ''; 
 
     let booksRefPromises = genres.map(genre => {
         if (genre === 'all') {
@@ -89,7 +79,6 @@ function filterBooks(genres) {
         })
         .catch(error => {
             console.error('Error filtering books by genre:', error);
-            // Handle error if needed
         });
 }
 
@@ -103,7 +92,6 @@ function createBookElement(bookData, bookId) {
     const bookElement = document.createElement('div');
     bookElement.classList.add('book');
 
-    // Left side - Cover image
     const coverImg = document.createElement('img');
     coverImg.src = bookData.imageUrl;
     coverImg.alt = 'Cover';
@@ -115,7 +103,6 @@ function createBookElement(bookData, bookId) {
     };
     bookElement.appendChild(coverImg);
 
-    // Center part - Title and Description
     const infoContainer = document.createElement('div');
     infoContainer.classList.add('info-container');
 
@@ -134,14 +121,12 @@ function createBookElement(bookData, bookId) {
     description.textContent = bookData.description;
     infoContainer.appendChild(description);
 
-    // Border line
     const borderLine = document.createElement('div');
     borderLine.classList.add('border-line');
     infoContainer.appendChild(borderLine);
 
     bookElement.appendChild(infoContainer);
 
-    // Right side - Genres and Tags
     const genreTagsContainer = document.createElement('div');
     genreTagsContainer.classList.add('genre-tags-container');
 
@@ -165,10 +150,8 @@ function searchBooks() {
     const searchInput = document.getElementById("search").value.toLowerCase();
     const bookContainer = document.getElementById("bookContainer");
 
-    // Clear previous content
     bookContainer.innerHTML = "";
 
-    // Fetch books from the database
     const booksRef = ref(db, "books/");
     get(booksRef)
         .then((snapshot) => {
@@ -176,7 +159,6 @@ function searchBooks() {
                 const bookData = childSnapshot.val();
                 const bookId = childSnapshot.key;
 
-                // Check if the book title contains the search input
                 if (bookData.title.toLowerCase().includes(searchInput)) {
                     const bookElement = createBookElement(bookData, bookId);
                     bookContainer.appendChild(bookElement);
@@ -185,19 +167,16 @@ function searchBooks() {
         })
         .catch((error) => {
             console.error("Error searching books:", error);
-            // Handle error if needed
         });
 }
 
-// Call the searchBooks function when the page loads
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("search");
     searchInput.addEventListener("input", searchBooks);
 });
 
 
-// Call the filterBooks function when the page loads to display all books initially
 document.addEventListener('DOMContentLoaded', () => {
-    filterBooks(['all']); // Display all books initially
+    filterBooks(['all']); 
 });
 

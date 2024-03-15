@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const bookmarksContainer = document.getElementById('bookmarks-container');
   
   try {
-    // Get the current user
     auth.onAuthStateChanged(async (user) => {
       if (!user) {
         console.log("User not logged in.");
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       const userId = user.uid;
 
-      // Fetch bookmarked books for the logged-in user
       const userBooksRef = ref(db, `users/${userId}/books`);
       const snapshot = await get(userBooksRef);
       const bookmarkedBooks = snapshot.val();
@@ -25,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      // Display bookmarked books
       for (let bookId in bookmarkedBooks) {
         const book = bookmarkedBooks[bookId];
         const bookmark = createBookmark(book, bookId, userId);

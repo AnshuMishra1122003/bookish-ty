@@ -7,7 +7,6 @@ import {
   push,
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
-// Function to extract the book ID from the URL parameter
 function getBookIdFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("bookId");
@@ -28,13 +27,11 @@ async function editBookDetails() {
             const book = snapshot.val();
             console.log("Retrieved book details:", book);
 
-            // Display book details as readonly initially
             document.getElementById("editbookTitle").value = book.title;
             document.getElementById("edittags").value = book.tags.join(", ");
             document.getElementById("editdescription").value = book.description;
             document.getElementById("edituploadedImage").src = book.imageUrl;
 
-            // Add event listener to make fields editable when edit icon is clicked
             const editIcons = document.querySelectorAll('.bx.bxs-edit');
             editIcons.forEach(icon => {
               icon.addEventListener('click', () => {
@@ -43,19 +40,13 @@ async function editBookDetails() {
               });
             });
 
-            // Check checkboxes for selected genres
             const selectedGenres = book.genres;
             const genreCheckboxes = document.querySelectorAll('input[name="genre"]');
             genreCheckboxes.forEach((checkbox) => {
               checkbox.checked = selectedGenres.includes(checkbox.value);
             });
 
-            // Add event listener to make image editable when browse button is clicked
-            document.getElementById('editbrowseButton').addEventListener('click', () => {
-              document.getElementById('editfileInput').click();
-            });
-
-            // Show the form for editing
+          
             document.getElementById("editBookForm").style.display = "block";
           } else {
             console.error("Book not found.");
@@ -67,8 +58,6 @@ async function editBookDetails() {
         }
       } else {
         console.log("User not authenticated.");
-        // Handle the case where the user is not authenticated
-        // For example, show a login prompt or redirect to the login page
       }
     });
   } catch (error) {
@@ -77,26 +66,17 @@ async function editBookDetails() {
   }
 }
 
-// Function to make field editable
 function makeEditable(field) {
   field.removeAttribute('readonly');
   field.focus();
 }
 
-// Call the editBookDetails function when the DOM content is loaded
 document.addEventListener("DOMContentLoaded", editBookDetails);
 
-
-
-
-
-
-// Event listener for submitting edited book details
 document
   .getElementById("saveChangesBookBtn")
   .addEventListener("click", async function (event) {
     event.preventDefault();
-    // Retrieve the book ID from the URL parameter
     const bookId = getBookIdFromURL();
     console.log("Saving changes for book ID:", bookId);
     if (bookId) {
@@ -152,7 +132,6 @@ async function submitEditedBookDetails(bookId) {
 
     const oldBook = snapshot.val();
 
-    // Remove the book from previous genres
     await Promise.all(
       oldBook.genres.map(async (genre) => {
         const genreBookRef = ref(db, `genres/${genre}/books/${bookId}`);
@@ -160,7 +139,6 @@ async function submitEditedBookDetails(bookId) {
       })
     );
 
-    // Remove the book from previous tags
     await Promise.all(
       oldBook.tags.map(async (tag) => {
         const tagBookRef = ref(db, `tags/${tag}/books/${bookId}`);
@@ -168,7 +146,6 @@ async function submitEditedBookDetails(bookId) {
       })
     );
 
-    // Update the book details in the database
     const updatedBook = {
       title: title,
       genres: selectedGenres,
@@ -183,7 +160,6 @@ async function submitEditedBookDetails(bookId) {
 
     console.log("Updated book details:", updatedBook);
 
-    // Update tags under 'tags' node
     await Promise.all(
       tags.map(async (tag) => {
         const tagBookRef = ref(db, `tags/${tag}/books/${bookId}`);
@@ -191,7 +167,6 @@ async function submitEditedBookDetails(bookId) {
       })
     );
 
-    // Update genres under 'genres' node
     await Promise.all(
       selectedGenres.map(async (genre) => {
         const genreBookRef = ref(db, `genres/${genre}/books/${bookId}`);

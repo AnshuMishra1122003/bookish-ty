@@ -2,7 +2,6 @@ import { db, auth } from "./firebaseConfig.mjs";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
-// Function to extract tag name from URL parameter
 function getTagNameFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('tag');
@@ -11,7 +10,6 @@ function getTagNameFromURL() {
 // Function to fetch book details by tag name and book ID
 async function displayBooksByTag(tagName) {
     const tag = document.getElementById('tagname');
-    // Create a heading for the tag name
     const tagNameHeading = document.createElement('h1');
     tagNameHeading.classList.add('tagName-heading');
     tagNameHeading.innerHTML = `#${tagName}`;
@@ -25,14 +23,11 @@ async function displayBooksByTag(tagName) {
         const books = snapshot.val();
 
         if (books) {
-            // Clear previous book details
             bookList.innerHTML = '';
 
-            // Iterate over each book
             Object.keys(books).forEach(bookId => {
                 const bookDetails = books[bookId];
 
-                // Construct HTML for displaying book details
                 const bookContainer = document.createElement('div');
                 bookContainer.classList.add('book-container');
 
@@ -42,7 +37,6 @@ async function displayBooksByTag(tagName) {
                 const book = document.createElement('div');
                 book.classList.add('book');
 
-                // Container for the book image
                 const imageContainer = document.createElement('div');
                 imageContainer.classList.add('book-image-container');
                 const image = document.createElement('img');
@@ -55,7 +49,6 @@ async function displayBooksByTag(tagName) {
                 };
                 imageContainer.appendChild(image);
 
-                // Container for book details (title, description, author)
                 const detailsContainer = document.createElement('div');
                 detailsContainer.classList.add('book-details-container');
 
@@ -75,7 +68,6 @@ async function displayBooksByTag(tagName) {
                 detailsContainer.appendChild(title);
                 detailsContainer.appendChild(author);
 
-                // Append elements to the book container
                 book.appendChild(imageContainer);
                 book.appendChild(detailsContainer);
 
@@ -92,7 +84,6 @@ async function displayBooksByTag(tagName) {
     }
 }
 
-// Call the displayBooksByTag function with the tag from the URL parameter when the page loads
 window.addEventListener('load', () => {
     const tagName = getTagNameFromURL();
     if (tagName) {

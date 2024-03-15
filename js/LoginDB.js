@@ -33,7 +33,7 @@ async function login(event) {
     const user = userCredential.user;
 
     sessionStorage.setItem('user', JSON.stringify(user));
-    window.location.href = `/index.html?userId=${user.uid}`; // Pass user ID as URL parameter
+    window.location.href = `/index.html?userId=${user.uid}`;
   } catch (error) {
     console.error("Login error:", error);
     alert("Login failed. Please check your email and password.");
@@ -51,14 +51,14 @@ function logout() {
 
   auth.signOut().then(() => {
 
-    window.location.href = "/login.html";
+    window.location.href = "/html/Login.html";
   }).catch((error) => {
     console.error("Logout error:", error);
     alert("Logout failed.");
   });
 }
 
-document.querySelector(".sub-icon-link").addEventListener("click", logout);
+document.getElementById("logout-link").addEventListener("click", logout);
 
 
 const currentUser = sessionStorage.getItem('user');
@@ -80,11 +80,9 @@ provider.setCustomParameters({
 async function loginOAuth() {
   signInWithPopup(auth, provider)
     .then(async (authData) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(authData);
       const token = credential.accessToken;
 
-      // The signed-in user info.
       const user = authData.user;
 
       await set(ref(db, `users/${user.uid}`), {
@@ -93,10 +91,9 @@ async function loginOAuth() {
         password: "bookish@123",
       });
       alert("Login successfully");
-      window.location.href = `/index.html?userId=${user.uid}`; // Pass user ID as URL parameter
+      window.location.href = `/index.html?userId=${user.uid}`;
     })
     .catch((error) => {
-      // Handle Errors here.
       console.log({ message: error.message });
       alert(error.code);
     });
@@ -112,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const userLoginForm = document.querySelector(".user-login-form");
   const adminLoginForm = document.querySelector(".admin-login-form");
 
-  // Add event listeners for toggle buttons
   userToggleBtn.addEventListener("click", function () {
     userLoginForm.style.display = "block";
     adminLoginForm.style.display = "none";
@@ -123,17 +119,14 @@ document.addEventListener("DOMContentLoaded", function () {
     adminLoginForm.style.display = "block";
   });
 
-  // Add event listener for admin login button
   document.getElementById("AdminLogin_Btn").addEventListener("click", async function (event) {
     event.preventDefault();
     const secretKey = document.getElementById("AdminSecretKey_TextBox").value;
 
-    // Check if the entered secret key matches the predefined admin secret key
     if (secretKey === "adminkey") {
       const currentUser = JSON.parse(sessionStorage.getItem('user'));
       currentUser.role = "admin";
 
-      // Update user's role to "admin" in the database
       try {
         await update(ref(getDatabase(), `users/${currentUser.uid}`), {
           role: "admin"
@@ -144,13 +137,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Update the session storage
       sessionStorage.setItem('user', JSON.stringify(currentUser));
 
-      // Redirect to homepage with user ID as URL parameter
       window.location.href = `/index.html?userId=${currentUser.uid}&role=admin`;
     } else {
-      // If not matched, display an error message
       alert("Invalid secret key. Please try again.");
     }
   });

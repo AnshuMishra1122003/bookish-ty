@@ -21,7 +21,6 @@ function createBookContainer(book, bookId) {
   const authorbookContainer = document.createElement("div");
   authorbookContainer.classList.add("book");
 
-  // Create cover image container
   const coverImgContainer = document.createElement("div");
   coverImgContainer.classList.add("cover-img-container");
 
@@ -30,15 +29,12 @@ function createBookContainer(book, bookId) {
   coverImg.alt = "Book Cover";
   coverImgContainer.appendChild(coverImg);
 
-  // Add event listener to coverImgContainer
   coverImgContainer.onclick = function () {
-    // Redirect to preview page with book ID as URL parameter
     window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(
       bookId
     )}`;
   };
 
-  // Create title and description container
   const contentContainer = document.createElement("div");
   contentContainer.classList.add("content-container");
 
@@ -52,14 +48,11 @@ function createBookContainer(book, bookId) {
 
   contentContainer.append(titleContainer, descriptionContainer);
 
-  // Add event listener to contentContainer
   contentContainer.onclick = function () {
-    // Redirect to preview page with book ID as URL parameter
     window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(
       bookId
     )}`;
   };
-  // Create buttons container
   const buttonsContainer = document.createElement("div");
   buttonsContainer.classList.add("buttons-container");
 
@@ -67,7 +60,6 @@ function createBookContainer(book, bookId) {
   button1.id = "editBookBtn";
   button1.textContent = "Edit Book";
   button1.addEventListener("click", function () {
-    // Call the editBookDetails function with bookId parameter
     window.location.href = `/html/editbook.html?bookId=${encodeURIComponent(
       bookId
     )}`;
@@ -82,34 +74,16 @@ function createBookContainer(book, bookId) {
     )}`;
   });
 
-  // const button3 = document.createElement("button");
-  // button3.id = "editChaptersBtn";
-  // button3.textContent = "Edit Chapters";
-  // button3.addEventListener("click", function () {
-  //   window.location.href = `/html/editchapters.html?bookId=${encodeURIComponent(
-  //     bookId
-  //   )}`;
-  // });
-
-  // const button4 = document.createElement("button");
-  // button4.id = "deleteChaptersBtn";
-  // button4.textContent = "Delete Chapters";
-  // button4.addEventListener("click", function () {
-  //   toggleButton(button4);
-  //   // Call the function to display the delete chapters form or perform other actions
-  // });
-
   const button5 = document.createElement("button");
   button5.id = "deleteBookBtn";
   button5.textContent = "Delete Book";
   button5.addEventListener("click", function () {
-    toggleButton(button5);
-    // Call the function to display the delete book confirmation or perform other actions
+    const bookId = bookId; 
+    deleteBook(bookId);
   });
 
-  // Function to toggle button display
   function toggleButton(clickedButton) {
-    const buttons = [button1, button2, button3, button4, button5];
+    const buttons = [button1, button2, button5];
     buttons.forEach((button) => {
       if (button === clickedButton) {
         button.classList.toggle("show");
@@ -119,14 +93,10 @@ function createBookContainer(book, bookId) {
     });
   }
 
-  // Append buttons to the container
   buttonsContainer.append(button1);
   buttonsContainer.append(button2);
-  // buttonsContainer.append(button3);
-  // buttonsContainer.append(button4);
   buttonsContainer.append(button5);
 
-  // Append everything to the book container
   bookContainer.appendChild(coverImgContainer);
   bookContainer.appendChild(contentContainer);
   bookContainer.appendChild(buttonsContainer);
@@ -141,10 +111,8 @@ function displayBooksUI(books) {
   content.innerHTML = "";
 
   Object.entries(books).forEach(([bookId, book]) => {
-    // Create book container
     const bookElement = createBookContainer(book, bookId);
 
-    // Append the book container to the content
     content.appendChild(bookElement);
 
     console.log("Books displayed for the user");
@@ -157,7 +125,6 @@ function handleBookDataChange(snapshot) {
     const books = snapshot.val();
     displayBooksUI(books);
   } else {
-    // No books found
     const content = document.getElementById("displayUserBooks");
     content.innerHTML += "<p>No books found.</p>";
   }
@@ -181,36 +148,27 @@ function displayUserBooks() {
     setBooksListener(userEmail);
   } else {
     console.error("User email is not defined.");
-    // Handle the case where userEmail is not defined
-    // For example, show a login prompt or redirect to the login page
   }
 }
 
 // Assume this is called when the page loads or whenever appropriate
 function initialize() {
-  // Attach an observer to watch for changes in authentication state
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // If a user is signed in, set userEmail
       userEmail = user.email;
-      // Display the user's books
       displayUserBooks();
     } else {
-      // If no user is signed in, you can handle it accordingly
       console.log("No user is signed in.");
-      // You might want to clear the book display or show a login prompt
     }
   });
 }
 
-// Call the initialize function to set up the observer
 initialize();
 
-/// Add event listener to displayUserBooks element
 document
   .getElementById("displayUserBooks")
   .addEventListener("click", function () {
-    displayUserBooks(); // Call the function without passing userEmail
+    displayUserBooks(); 
   });
 
 // Function to preview the selected image
@@ -237,16 +195,51 @@ function previewImage(event) {
     imageContainer.style.background = "#fff";
     placeholder.style.display = "block";
     uploadedImage.style.display = "none";
-    uploadedImage.src = "#"; // Reset the image source
+    uploadedImage.src = "#"; 
   }
 }
 
-// Event listener for file input change (image upload)
 document
   .getElementById("fileInput")
   .addEventListener("change", function (event) {
     previewImage(event);
   });
+
+
+// Function to delete a book from Firebase Realtime Database
+async function deleteBook(bookId) {
+  const bookRef = ref(db, `books/${bookId}`);
+
+  try {
+    const bookSnapshot = await get(bookRef);
+    const bookData = bookSnapshot.val();
+    const bookName = bookData.title;
+
+    const confirmation = confirm(`Are you sure you want to delete the book "${bookName}"?`);
+
+    if (confirmation) {
+      await remove(bookRef);
+      console.log(`Book "${bookName}" deleted successfully from "books" node`);
+
+      const genres = bookData.genres || [];
+      for (const genre of genres) {
+        const genreRef = ref(db, `genres/${genre}/books/${bookId}`);
+        await remove(genreRef);
+        console.log(`Book "${bookName}" deleted successfully from "${genre}" genre node`);
+      }
+
+      fetchCountsAndUpdateUI();
+
+      alert(`Book "${bookName}" deleted successfully.`);
+    } else {
+      console.log('Deletion cancelled by admin');
+    }
+  } catch (error) {
+    console.error('Error deleting book:', error.message);
+    alert('Error deleting book. Please try again later.');
+  }
+}
+
 
 // Function to handle addbooks form submission
 async function submitForm(event) {
@@ -258,11 +251,9 @@ async function submitForm(event) {
         const email = user.email;
 
         try {
-          // Fetch user details to get username
           const userSnapshot = await get(ref(db, `users/${user.uid}`));
           const username = userSnapshot.val().username;
 
-          // Get form values
           const bookTitle = document.getElementById("bookTitle").value;
           const selectedGenres = document.querySelectorAll(
             'input[name="genre"]:checked'
@@ -273,7 +264,6 @@ async function submitForm(event) {
             return;
           }
 
-          // Create an array to store selected genres
           const genres = Array.from(selectedGenres).map(
             (checkbox) => checkbox.value
           );
@@ -283,7 +273,6 @@ async function submitForm(event) {
           const imageUrl =
             document.getElementById("uploadedImage").src || "";
 
-          // Create a new book object
           const newBook = {
             email: email,
             username: username,
@@ -294,47 +283,37 @@ async function submitForm(event) {
             imageUrl: imageUrl.toString(),
           };
 
-          // Get a reference to the 'books' node
           const booksRef = ref(db, "books");
 
-          // Generate a unique key for the new book
           const newBookRef = push(booksRef);
 
-          // Store the book details under the 'books' node
           await set(newBookRef, newBook);
 
-          // Store tags under 'tags' node
           tags.forEach(async (tag) => {
             const tagBookRef = ref(db, `tags/${tag}/books/${newBookRef.key}`);
             await set(tagBookRef, newBook);
           });
 
-          // Iterate over selected genres and store book ID under each genre node
           selectedGenres.forEach(async (checkbox) => {
             const genre = checkbox.value;
 
-            // Get a reference to the genre node
             const genreBookRef = ref(
               db,
               `genres/${genre}/books/${newBookRef.key}`
             );
 
-            // Store the book ID under the genre node
             await set(genreBookRef, newBook);
           });
 
-          // Clear form fields after successful submission
           document.getElementById("bookTitle").value = "";
           tagsInput.value = "";
           document.getElementById("description").value = "";
           document.getElementById("uploadedImage").src = "";
 
-          // Uncheck checkboxes after submission
           selectedGenres.forEach((checkbox) => {
             checkbox.checked = false;
           });
 
-          // Display success message or redirect if needed
           alert("Book added successfully!");
           window.location.replace("/html/authordashboard.html");
         } catch (error) {
@@ -350,7 +329,6 @@ async function submitForm(event) {
 }
 
 
-// Event listener for addbooks
 document
   .getElementById("addbooks_btn")
   .addEventListener("click", function (event) {
@@ -372,44 +350,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// // Function to add book details to genres and tags nodes
-// async function addBookDetailsToGenresAndTags(bookId, book) {
-//   // Store book details under 'tags' node
-//   await Promise.all(
-//     book.tags.map(async (tag) => {
-//       const tagBookRef = ref(db, `tags/${tag}/books/${bookId}`);
-//       await set(tagBookRef, book);
-//     })
-//   );
-
-//   // Store book details under 'genres' node
-//   await Promise.all(
-//     book.genres.map(async (genre) => {
-//       const genreBookRef = ref(db, `genres/${genre}/books/${bookId}`);
-//       await set(genreBookRef, book);
-//     })
-//   );
-// }
-
-
 document.addEventListener('DOMContentLoaded', async () => {
-  // Get the currently logged-in user
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       try {
-        const userId = user.uid; // Get the user ID of the logged-in user
+        const userId = user.uid; 
 
-        // Fetch user data from the database
         const userDataSnapshot = await get(ref(db, `users/${userId}`));
         const userData = userDataSnapshot.val();
 
-        // Update profile elements with user data
         document.getElementById('username').textContent = `${userData.username}`;
         document.getElementById('email').textContent = `${userData.email}`;
         document.getElementById('bio').textContent = `${userData.bio}`;
         document.querySelector('.user-image-container img').src = userData.imageUrl;
 
-        // Fetch and display the number of bookmarks (books) for the user
         const userBooksSnapshot = await get(ref(db, `users/${userId}/books`));
         let numBookmarks = 0;
         if (userBooksSnapshot.exists()) {
@@ -420,11 +374,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('bookmarks').textContent = `${numBookmarks}`;
       } catch (error) {
         console.error("Error fetching user data:", error);
-        // Handle the error here, e.g., display an error message to the user
       }
     } else {
-      // User is not logged in
-      // Handle this case if needed
+      console.log("User Not Logged in")
     }
   });
 });

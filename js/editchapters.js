@@ -5,13 +5,11 @@ import {
     set,
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
 
-// Function to extract the book ID from the URL parameter
 function getBookIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get("bookId");
 }
 
-// Function to extract the chapter ID from the URL parameter
 function getChapterIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get("chapterId");
@@ -25,18 +23,15 @@ async function displayChapterDetails(bookId, chapterId) {
         const chapterData = snapshot.val();
 
         if (chapterData) {
-            // Populate form fields with chapter title and content
             const chapterTitleInput = document.getElementById("chapterTitle");
             const chapterContentInput = document.getElementById("chapterContent");
 
             chapterTitleInput.value = chapterData.title;
             chapterContentInput.value = chapterData.content;
 
-            // Make form fields read-only initially
             chapterTitleInput.readOnly = true;
             chapterContentInput.readOnly = true;
 
-            // Create an edit icon for chapter title
             const editIconTitle = document.createElement('i');
             editIconTitle.classList.add('bx', 'bxs-edit', 'edit-icon');
             editIconTitle.setAttribute('title', 'Edit Title');
@@ -45,7 +40,6 @@ async function displayChapterDetails(bookId, chapterId) {
             });
             chapterTitleInput.parentNode.appendChild(editIconTitle);
 
-            // Create an edit icon for chapter content
             const editIconContent = document.createElement('i');
             editIconContent.classList.add('bx', 'bxs-edit', 'edit-icon');
             editIconContent.setAttribute('title', 'Edit Content');
@@ -63,12 +57,10 @@ async function displayChapterDetails(bookId, chapterId) {
     }
 }
 
-// Function to toggle readonly attribute of form fields
 function toggleReadOnly(inputField) {
     inputField.readOnly = !inputField.readOnly;
 }
 
-// Call function to display chapter details when the page loads
 window.onload = function () {
     const bookId = getBookIdFromURL();
     const chapterId = getChapterIdFromURL();
@@ -81,7 +73,6 @@ window.onload = function () {
     }
 };
 
-// Handle form submission
 document.getElementById("addChapterBtn").addEventListener("click", async function (event) {
     event.preventDefault();
 
@@ -112,7 +103,6 @@ document.getElementById("addChapterBtn").addEventListener("click", async functio
             content: updatedContent
         });
 
-        // Inform the user that the chapter has been updated
         alert("Chapter updated successfully!");
     } catch (error) {
         console.error("Error updating chapter details:", error);

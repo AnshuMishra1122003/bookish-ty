@@ -1,7 +1,6 @@
 ﻿//Google Authentication
 import { auth } from "./firebaseConfig.mjs";
 import {
-  GoogleAuthProvider,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 
