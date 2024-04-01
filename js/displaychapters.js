@@ -1,45 +1,34 @@
 import { db, auth } from "./firebaseConfig.mjs";
-import { ref, get, set } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+import { ref, get, set } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 
 // Function to fetch and display chapter details
 async function displayChapterDetails(bookId, chapterId) {
   const bookDetailsContainer = document.getElementById("bookDetailsContainer");
-
   try {
     const [chaptersSnapshot, bookSnapshot] = await Promise.all([
       get(ref(db, `books/${bookId}/chapters`)),
       get(ref(db, `books/${bookId}`))
     ]);
-
     const chaptersData = chaptersSnapshot.val();
     const bookData = bookSnapshot.val();
-
     if (chaptersData && bookData) {
       const chapterIds = Object.keys(chaptersData);
       const chapterIndex = chapterIds.indexOf(chapterId);
-
       bookDetailsContainer.innerHTML = "";
-
       const bookTitle = document.createElement("h1");
       bookTitle.classList.add("booktitle");
       bookTitle.textContent = bookData.title; 
       bookDetailsContainer.appendChild(bookTitle);
-
       const backButton = createButton("float-left", "Previous Chapter", () => navigateChapter(-1, bookId, chapterIds, chapterIndex));
       bookDetailsContainer.appendChild(backButton);
-
       const indexButton = createButton("float-center", "Index", redirectToIndexPage);
       bookDetailsContainer.appendChild(indexButton);
-
       const nextButton = createButton("float-right", "Next Chapter", () => navigateChapter(1, bookId, chapterIds, chapterIndex));
       bookDetailsContainer.appendChild(nextButton);
-
       const chapterTitle = document.createElement("h2");
       chapterTitle.textContent = chaptersData[chapterId].title;
       bookDetailsContainer.appendChild(chapterTitle);
-
       displayChapterContent(chaptersData[chapterId].content, bookDetailsContainer);
-
       const user = auth.currentUser;
       if (user) {
         const userId = user.uid;
@@ -104,7 +93,6 @@ function navigateChapter(step, bookId, chapterIds, chapterIndex) {
   }
 }
 
-// Function to display chapter content
 function displayChapterContent(content, container) {
   const chapterContent = document.createElement("div");
   chapterContent.classList.add('chaptercontentdisplay');
@@ -132,36 +120,28 @@ async function bookmarkBook(bookId) {
     return;
   }
   const userId = user.uid;
-
   try {
     const bookRef = ref(db, `books/${bookId}`);
     const bookSnapshot = await get(bookRef);
     const bookData = bookSnapshot.val();
-
     if (!bookData) {
       console.log("Book details not found.");
       return;
     }
-
     const userRef = ref(db, `users/${userId}`);
     const userSnapshot = await get(userRef);
     const userData = userSnapshot.val();
-
     if (!userData) {
       console.log("User details not found.");
       return;
     }
-
     const userBooksRef = ref(db, `users/${userId}/books/${bookId}`);
     await set(userBooksRef, { ...bookData, userDetails: userData });
-
     const isSubscribed = userData.subscribed === true;
-
     if (isSubscribed) {
       const subscribedBooksRef = ref(db, `subscribedusers/${userId}/books/${bookId}`);
       await set(subscribedBooksRef, { ...bookData, userDetails: userData });
     }
-
     alert("Book bookmarked successfully!");
   } catch (error) {
     console.error("Error bookmarking book:", error);

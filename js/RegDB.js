@@ -3,9 +3,9 @@
 import {
   ref,
   set,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 console.log(db);
 
@@ -13,21 +13,65 @@ async function register(event) {
   const email = document.getElementById("Email_TextBox").value;
   const password = document.getElementById("Password_TextBox").value;
   const username = document.getElementById("Username_TextBox").value;
+  const termsCheckbox = document.querySelector('.TandC input[type="checkbox"]');
+  const errorMessage = document.getElementById("error-message");
   event.preventDefault();
 
-  console.log(email, password, username);
-
+  // Validate email format
   if (!email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) {
     alert("Invalid email format");
     return;
-}
+  }
+
+  // Validate username length
+  if (username.trim().length < 3) {
+    alert("Username must be at least 3 characters long");
+    return;
+  }
+
+  // Validate password format
+  if (!/(?=.*[a-z])/.test(password)) {
+    alert("Password must contain at least 1 lowercase letter");
+    return;
+  }
+
+  if (!/(?=.*[A-Z])/.test(password)) {
+    alert("Password must contain at least 1 uppercase letter");
+    return;
+  }
+
+  if (!/(?=.*\d)/.test(password)) {
+    alert("Password must contain at least 1 number");
+    return;
+  }
+
+  if (!/(?=.*[!@#$%^&*()])/.test(password)) {
+    alert("Password must contain at least 1 symbol");
+    return;
+  }
+
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters long");
+    return;
+  }
+
+
+  const confirmPassword = document.getElementById("Confirm_Password_TextBox").value;
+
+  // Validate confirm password
+  if (password !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  // Validate checkbox
+  if (!termsCheckbox.checked) {
+    alert('Please accept the terms and conditions')
+    return;
+  }
 
   try {
-    const authData = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const authData = await createUserWithEmailAndPassword(auth, email, password);
 
     await set(ref(db, `users/${authData.user.uid}`), {
       username,
@@ -42,6 +86,8 @@ async function register(event) {
     alert(error.code);
   }
 }
+
+
 
 document
   .getElementById("Register_Button")

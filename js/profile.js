@@ -1,6 +1,6 @@
 import { auth, db } from "./firebaseConfig.mjs";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
-import { get, ref } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import { get, ref } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     onAuthStateChanged(auth, async (user) => {

@@ -2,7 +2,7 @@
 import { auth } from "./firebaseConfig.mjs";
 import {
   onAuthStateChanged,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 const user = auth.currentUser;
 

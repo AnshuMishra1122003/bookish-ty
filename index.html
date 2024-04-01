@@ -68,8 +68,8 @@
         }
 
         .img-container {
-            width: 17%;
-            height: 45%;
+            width: 230px;
+            height: 306px;
             background-position: 50% 0%;
             display: block;
             transition: 0.5s;
@@ -252,6 +252,36 @@
             text-decoration: none;
             color: var(--black);
         }
+
+        /* Loader Styles */
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -20px;
+            margin-top: -20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Hide content initially */
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 
@@ -259,7 +289,7 @@
     <!-------------header starts------------------->
     <header id="header" class="header">
         <div class="header-1">
-            <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
+            <a href="/index.html" class="logo"><img src="/assets/book-logo.jpeg"></a>
             <div class="icons">
                 <div id="user-login-btn" class="user-login-btn" onclick="toggleIcon()">
                     <i class='bx bxs-user-circle'></i>
@@ -417,6 +447,28 @@
     </section>
     <!-- -------------------Recently Added Novels close------------------------------ -->
     <!-- Slider -->
+    <!-- <div id="loader" class="loader"></div>
+    <div id="content" class="hidden">
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Simulate an API request or any async operation
+            setTimeout(() => {
+                hideLoader();
+                showContent();
+            }, 3000); // Replace with your actual data loading logic and time
+
+            function hideLoader() {
+                const loader = document.getElementById("loader");
+                loader.style.display = "none";
+            }
+
+            function showContent() {
+                const content = document.getElementById("content");
+                content.style.display = "block";
+            }
+        });
+    </script> -->
 
     <!------------------------Add footer--------------------------------------->
 

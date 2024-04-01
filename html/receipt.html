@@ -111,9 +111,7 @@
         $(document).ready(function () {
             $(document).on('click', '.btn_print', function (event) {
                 event.preventDefault();
-
                 var element = document.getElementById('container_content');
-
                 var opt = {
                     margin: 1,
                     filename: 'pageContent.pdf',
@@ -121,7 +119,6 @@
                     html2canvas: { scale: 2 },
                     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
                 };
-
                 html2pdf().set(opt).from(element).save();
             });
             // Extract URL parameters
@@ -161,7 +158,7 @@
     <div class="container_content" id="container_content">
         <div class="invoice-box">
             <div>
-                <img src="/assets/bk-logo.png">
+                <img src="/assets/book-logo.jpeg">
             </div><br>
             <p id="receipt-text">Receipt</p>
             <p id="subscribe-text">Bookish Subscription</p>

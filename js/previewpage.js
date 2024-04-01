@@ -1,5 +1,5 @@
 import { auth, db } from "./firebaseConfig.mjs";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import {
   ref,
   get,
@@ -7,7 +7,7 @@ import {
   set,
   push,
   remove
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 
 function displayBookDetails(bookId) {
   const bookDetailsContainer = document.getElementById("bookDetailsContainer");
@@ -103,7 +103,7 @@ function displayBookDetails(bookId) {
 
     descriptContainer.appendChild(description);
 
-    bookDetailsContainer.innerHTML = ""; 
+    bookDetailsContainer.innerHTML = "";
     bookDetailsContainer.appendChild(mainbookContainer);
     bookDetailsContainer.appendChild(buttonContainer);
     bookDetailsContainer.appendChild(descriptTextContainer);
@@ -112,7 +112,7 @@ function displayBookDetails(bookId) {
 
     const chaptersContainer = document.createElement("div");
     chaptersContainer.id = "chaptersContainer";
-    chaptersContainer.style.display = "none"; 
+    chaptersContainer.style.display = "none";
 
     bookDetailsContainer.appendChild(chaptersContainer);
 
@@ -144,7 +144,7 @@ function displayBookDetails(bookId) {
         const snapshot = await get(chaptersRef);
         const chapters = snapshot.val();
 
-        chaptersContainer.innerHTML = ""; 
+        chaptersContainer.innerHTML = "";
 
         if (chapters) {
           let serialNumber = 1;
@@ -155,7 +155,7 @@ function displayBookDetails(bookId) {
 
             const chapterLink = document.createElement("a");
             const allowedChapterId = (user && userData && userData.subscribeduser) || serialNumber <= 2 ? chapterId : null;
-            chapterLink.href = `displaychapters.html?bookId=${bookId}&chapterId=${allowedChapterId}`; 
+            chapterLink.href = `displaychapters.html?bookId=${bookId}&chapterId=${allowedChapterId}`;
             chapterLink.textContent = `${serialNumber}. ${chapter.title}`;
 
             if (!user || (user && !(userData && userData.subscribeduser) && serialNumber > 2)) {
@@ -163,7 +163,7 @@ function displayBookDetails(bookId) {
               lockIcon.classList.add("bx", "bxs-lock-alt", "lock-icon");
               chapterLink.appendChild(lockIcon);
               chapterLink.addEventListener("click", (event) => {
-                event.preventDefault(); 
+                event.preventDefault();
                 alert("You need to subscribe to read this chapter.");
               });
             }
@@ -211,67 +211,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 async function writeReview(event) {
-  event.preventDefault(); 
-
+  event.preventDefault();
   const user = auth.currentUser;
   if (!user) {
     console.log("User not logged in.");
     return;
   }
   const userId = user.uid;
-
   try {
     const userDetailsRef = ref(db, `users/${userId}`);
     const userDetailsSnapshot = await get(userDetailsRef);
     const userDetails = userDetailsSnapshot.val();
-
     if (!userDetails) {
       console.log("User details not found.");
       return;
     }
-
     const isSubscribedUser = userDetails.subscribeduser === true;
     if (!isSubscribedUser) {
       alert("You need to be a subscribed user to write a review.");
       return;
     }
-
     const reviewTitle = document.getElementById("reviewTitle").value;
     const reviewContent = document.getElementById("reviewContent").value;
-
     if (!reviewTitle || !reviewContent) {
       alert("Please fill out all review fields.");
       return;
     }
-
     const urlParams = new URLSearchParams(window.location.search);
     const bookId = urlParams.get("bookId");
     const userReviewRef = ref(db, `books/${bookId}/reviews`);
     const userReviewSnapshot = await get(userReviewRef);
     const userReviews = userReviewSnapshot.val();
-
     if (userReviews && Object.keys(userReviews).some(reviewId => userReviews[reviewId].userId === userId)) {
       alert("You have already written a review for this book.");
       return;
     }
-
     try {
       await push(ref(db, `books/${bookId}/reviews`), {
         title: reviewTitle,
         content: reviewContent,
         userId: userId,
-        username: userDetails.username 
+        username: userDetails.username
       });
       alert("Review submitted successfully!");
       document.getElementById("reviewTitle").value = "";
       document.getElementById("reviewContent").value = "";
-
       displayReviews(bookId);
     } catch (error) {
       console.error("Error writing review:", error);
       alert("An error occurred while submitting the review. Please try again.");
     }
-
   } catch (error) {
     console.error("Error fetching user details:", error);
     alert("An error occurred while fetching user details. Please try again.");
@@ -282,7 +271,7 @@ async function writeReview(event) {
 
 async function displayReviews(bookId) {
   const reviewsContainer = document.getElementById("reviewsContainer");
-  reviewsContainer.innerHTML = ""; 
+  reviewsContainer.innerHTML = "";
 
   try {
     const reviewsRef = ref(db, `books/${bookId}/reviews`);

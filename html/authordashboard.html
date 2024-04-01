@@ -127,16 +127,17 @@
             color: #000;
         }
 
-        /* Add a class to hide the submenu content */
         .submenu-content {
             display: none;
         }
 
-        /* Add a class to show the submenu content */
         .submenu-content.show {
             display: block;
         }
 
+        #displayUserBooks p {
+            font-size: 20px;
+        }
 
         /* **********Add Books************ */
         .add_books {
@@ -242,7 +243,7 @@
             background: white;
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 40px;
-            font-size: 18px;
+            font-size: 20px;
             color: black;
             padding: 20px 45px 20px 20px;
         }
@@ -399,7 +400,7 @@
     <!-------------header starts------------------->
     <header id="header" class="header">
         <div class="header-1">
-            <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
+            <a href="/index.html" class="logo"><img src="/assets/book-logo.jpeg"></a>
             <div class="icons">
                 <div id="user-login-btn" class="user-login-btn" onclick="toggleIcon()">
                     <i class='bx bxs-user-circle'></i>
@@ -547,7 +548,7 @@
 
             <label class="addbook_label" for="description">Book Description:</label>
             <div class="description-textarea">
-                <textarea id="description" name="description" rows="10" cols="80" required></textarea>
+                <textarea id="description" name="description" rows="10" cols="100" required></textarea>
             </div>
             <button id="addbooks_btn" type="submit" class="add_books_btn">
                 Add Book

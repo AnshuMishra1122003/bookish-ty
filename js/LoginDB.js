@@ -4,12 +4,12 @@ import {
   ref,
   update,
   getDatabase,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 function updateUserDisplayName(user) {
   const userNameElement = document.getElementById("user-name");
@@ -39,6 +39,7 @@ async function login(event) {
     alert("Login failed. Please check your email and password.");
   }
 }
+
 document.getElementById("Login_Btn").addEventListener("click", function (event) {
   login(event);
 });

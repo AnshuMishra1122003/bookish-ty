@@ -1,7 +1,15 @@
 import { db } from "./firebaseConfig.mjs";
-import { ref, update, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
+import { ref, update, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js';
 
 
+let genreMenuContainer = document.getElementById("genreMenuContainer");
+document.querySelectorAll('.genre-item input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', searchBooksByGenre);
+});
+
+document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', handleDropdownSelection);
+});
 // Function to fetch and display books
 function displayBooks() {
     const bookContainer = document.getElementById('bookContainer');
@@ -21,13 +29,11 @@ function displayBooks() {
     });
 }
 
-let genreMenuContainer = document.getElementById("genreMenuContainer");
 
 function toggleDropdown() {
     genreMenuContainer.classList.toggle("show");
 }
 
-// Function to handle book search by selected genres
 function searchBooksByGenre() {
     const selectedGenres = [];
     const genreCheckboxes = document.querySelectorAll('.genre-item input[type="checkbox"]');
@@ -39,15 +45,7 @@ function searchBooksByGenre() {
     filterBooks(selectedGenres);
 }
 
-document.querySelectorAll('.genre-item input[type="checkbox"]').forEach(checkbox => {
-    checkbox.addEventListener('change', searchBooksByGenre);
-});
 
-document.querySelectorAll('.dropdown-item').forEach(item => {
-    item.addEventListener('click', handleDropdownSelection);
-});
-
-// Function to filter books based on selected genres
 function filterBooks(genres) {
     let bookContainer = document.getElementById('bookContainer');
     bookContainer.innerHTML = '';
@@ -81,9 +79,6 @@ function filterBooks(genres) {
         });
 }
 
-
-
-// Function to create a book element
 function createBookElement(bookData, bookId) {
     const containerCard = document.createElement('div');
     containerCard.classList.add('container-card');
@@ -152,6 +147,18 @@ function createBookElement(bookData, bookId) {
     return containerCard;
 }
 
+// Call the searchBooks function when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("search");
+    searchInput.addEventListener("input", searchBooks);
+});
+
+
+// Call the filterBooks function when the page loads to display all books initially
+document.addEventListener('DOMContentLoaded', () => {
+    filterBooks(['all']);
+});
+
 // Function to search books by title
 function searchBooks() {
     const searchInput = document.getElementById("search").value.toLowerCase();
@@ -166,7 +173,6 @@ function searchBooks() {
                 const bookData = childSnapshot.val();
                 const bookId = childSnapshot.key;
 
-                // Check if the book title contains the search input
                 if (bookData.title.toLowerCase().includes(searchInput)) {
                     const bookElement = createBookElement(bookData, bookId);
                     bookContainer.appendChild(bookElement);
@@ -178,19 +184,6 @@ function searchBooks() {
         });
 }
 
-// Call the searchBooks function when the page loads
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("search");
-    searchInput.addEventListener("input", searchBooks);
-});
-
-
-// Call the filterBooks function when the page loads to display all books initially
-document.addEventListener('DOMContentLoaded', () => {
-    filterBooks(['all']);
-});
-
-// Function to delete a book from Firebase Realtime Database
 async function deleteBook(bookId) {
     const bookRef = ref(db, `books/${bookId}`);
 
@@ -224,70 +217,53 @@ async function deleteBook(bookId) {
     }
 }
 
-
 // Function to fetch users from Firebase Realtime Database
 var tableBody = document.getElementById('tableBody');
+
 function fetchUsers() {
     while (tableBody.firstChild) {
         tableBody.removeChild(tableBody.firstChild);
     }
-
     const usersRef = ref(db, 'users');
-
     get(usersRef).then((snapshot) => {
         let serialNumber = 1;
-
         snapshot.forEach((userSnapshot) => {
             const userData = userSnapshot.val();
-
             const username = userData.username;
             const email = userData.email;
-
             const row = document.createElement('tr');
-
             const cellSerialNumber = document.createElement('td');
             cellSerialNumber.textContent = serialNumber++;
-
             const cellUsername = document.createElement('td');
             cellUsername.textContent = username;
-
             const cellEmail = document.createElement('td');
             cellEmail.textContent = email;
-
             const cellActions = document.createElement('td');
-
             const editButton = document.createElement('button');
             editButton.textContent = 'Edit';
             editButton.addEventListener('click', function () {
                 editUser(userSnapshot.key);
             });
-
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';
             deleteButton.addEventListener('click', function () {
                 deleteUser(userSnapshot.key);
             });
-
             const space = document.createElement('span');
             space.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
-
             cellActions.appendChild(editButton);
             cellActions.appendChild(space); // Add space between buttons
             cellActions.appendChild(deleteButton);
-
             row.appendChild(cellSerialNumber);
             row.appendChild(cellUsername);
             row.appendChild(cellEmail);
             row.appendChild(cellActions);
-
             tableBody.appendChild(row);
         });
     });
 }
-
 fetchUsers();
 
-// Define the searchUsers function
 function searchUsers() {
     const searchInput = document.getElementById('searchInput');
     const searchTerm = searchInput.value.trim().toLowerCase();
@@ -341,22 +317,12 @@ function searchUsers() {
                 row.appendChild(cellUsername);
                 row.appendChild(cellEmail);
                 row.appendChild(cellActions);
-
+                
                 tableBody.appendChild(row);
             }
         });
     });
 }
-
-// Add an event listener after the function definition
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', searchUsers);
-    } else {
-        console.error("Search input element not found");
-    }
-});
 
 function editUser(userId) {
     const userRef = ref(db, `users/${userId}`);
@@ -413,55 +379,50 @@ function deleteUser(userId) {
             alert('Error fetching user data. Please try again later.');
         });
 }
+// Add an event listener after the function definition
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', searchUsers);
+    } else {
+        console.error("Search input element not found");
+    }
+});
+
 async function fetchSubscribedUsers() {
     while (subscriptionsTableBody.firstChild) {
         subscriptionsTableBody.removeChild(subscriptionsTableBody.firstChild);
     }
-
     const usersRef = ref(db, 'users');
-
     const snapshot = await get(usersRef);
-
     let serialNumber = 1;
-
     snapshot.forEach(userSnapshot => {
         const userData = userSnapshot.val();
-
         if (userData.subscribeduser) {
             const subscribedUsersRef = ref(db, `users/${userSnapshot.key}/subscribedusers`);
-
             get(subscribedUsersRef).then(async subscribedUserSnapshot => {
                 const subscribedUserDetails = subscribedUserSnapshot.val();
-
                 if (subscribedUserDetails) { // Check if subscribedUserDetails is not undefined
                     const cardHolder = subscribedUserDetails.cardholder ? subscribedUserDetails.cardholder.toLowerCase() : '';
                     const email = subscribedUserDetails.email ? subscribedUserDetails.email.toLowerCase() : '';
                     const dataPrice = subscribedUserDetails.dataPrice ? subscribedUserDetails.dataPrice.toLowerCase() : '';
                     const country = subscribedUserDetails.country ? subscribedUserDetails.country.toLowerCase() : '';
-
                     const row = document.createElement('tr');
-
                     const cellSerialNumber = document.createElement('td');
                     cellSerialNumber.textContent = serialNumber++;
-
                     const cellCardHolder = document.createElement('td');
                     cellCardHolder.textContent = cardHolder;
-
                     const cellEmail = document.createElement('td');
                     cellEmail.textContent = email;
-
                     const cellSubscriptionAmount = document.createElement('td');
                     cellSubscriptionAmount.textContent = dataPrice ? `₹${dataPrice}/-` : '';
-
                     const cellCountry = document.createElement('td');
                     cellCountry.textContent = country;
-
                     row.appendChild(cellSerialNumber);
                     row.appendChild(cellCardHolder);
                     row.appendChild(cellEmail);
                     row.appendChild(cellSubscriptionAmount);
                     row.appendChild(cellCountry);
-
                     subscriptionsTableBody.appendChild(row);
                 }
             }).catch(error => {
@@ -470,7 +431,6 @@ async function fetchSubscribedUsers() {
         }
     });
 }
-
 fetchSubscribedUsers();
 
 
@@ -479,41 +439,34 @@ async function fetchCountsAndUpdateUI() {
     const usersRef = ref(db, 'users/');
     const booksRef = ref(db, 'books/');
     const genresRef = ref(db, 'genres/');
-
     const usersSnapshot = await get(usersRef);
     const booksSnapshot = await get(booksRef);
     const genresSnapshot = await get(genresRef);
-
     let userCount = 0;
     let subscribedUserCount = 0;
     let bookCount = 0;
     let totalGenreCount = 0;
-
     if (usersSnapshot.exists()) {
         usersSnapshot.forEach(() => {
             userCount++;
         });
     }
-
     usersSnapshot.forEach(userSnapshot => {
         const userData = userSnapshot.val();
         if (userData.subscribeduser) {
             subscribedUserCount++;
         }
     });
-
     if (booksSnapshot.exists()) {
         booksSnapshot.forEach(() => {
             bookCount++;
         });
     }
-
     if (genresSnapshot.exists()) {
         genresSnapshot.forEach(() => {
             totalGenreCount++;
         });
     }
-
     let genreCounts = {
         'Action': 0,
         'Adventure': 0,
@@ -522,7 +475,6 @@ async function fetchCountsAndUpdateUI() {
         'Romance': 0,
         'Urban': 0
     };
-
     if (genresSnapshot.exists()) {
         genresSnapshot.forEach((genreSnapshot) => {
             const genre = genreSnapshot.key;
@@ -536,17 +488,14 @@ async function fetchCountsAndUpdateUI() {
             genreCounts[genre] = count;
         });
     }
-
     document.getElementById('userCount').innerText = userCount;
     document.getElementById('subscribedUserCount').innerText = subscribedUserCount;
     document.getElementById('bookCount').innerText = bookCount;
     document.getElementById('totalGenreCount').innerText = totalGenreCount;
-
     Object.keys(genreCounts).forEach((genre) => {
         document.getElementById(genre.toLowerCase() + 'Count').innerText = genreCounts[genre];
     });
 }
-
 fetchCountsAndUpdateUI();
 
 function searchSubscribedUsers() {

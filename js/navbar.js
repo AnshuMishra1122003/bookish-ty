@@ -1,6 +1,6 @@
 import { db, auth } from "./firebaseConfig.mjs";
-import { ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+import { ref, get } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const profileLink = document.getElementById('profile-link');

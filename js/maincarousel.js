@@ -6,8 +6,8 @@ import {
   limitToLast,
   orderByKey,
   set,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 let slideIndex = 0;
 let timer;

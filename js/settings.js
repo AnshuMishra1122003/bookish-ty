@@ -4,8 +4,8 @@ import {
     onValue,
     set,
     get
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,22 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
     imageUpload.addEventListener('change', (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
-
         reader.onload = (e) => {
             const imageUrl = e.target.result; 
-
             editProfileImageContainer.style.backgroundImage = `url('${imageUrl}')`;
             editProfilePlaceholder.style.display = 'none';
             editProfileUploadedImage.style.display = 'block';
-
             const userId = auth.currentUser.uid;
             const userRef = ref(db, `users/${userId}`);
-
             onValue(userRef, (snapshot) => {
                 const userData = snapshot.val();
                 if (userData) {
                     userData.imageUrl = imageUrl;
-
                     set(userRef, userData)
                         .then(() => {
                             console.log("User image updated successfully.");
@@ -67,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         };
-
         reader.readAsDataURL(file);
     });
 

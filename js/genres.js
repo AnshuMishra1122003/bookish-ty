@@ -1,33 +1,23 @@
 import { db } from "./firebaseConfig.mjs";
-import { ref, get, onValue } from 'https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js';
+import { ref, get, onValue } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js';
 
 
+let genreMenuContainer = document.getElementById("genreMenuContainer");
 
 // Function to fetch and display books
 function displayBooks() {
     const bookContainer = document.getElementById('bookContainer');
-
     const booksRef = ref(db, 'books/');
-
     onValue(booksRef, (snapshot) => {
-        bookContainer.innerHTML = ''; 
-
+        bookContainer.innerHTML = '';
         snapshot.forEach((childSnapshot) => {
             const bookData = childSnapshot.val();
             const bookId = childSnapshot.key;
-
             const bookElement = createBookElement(bookData, bookId);
             bookContainer.appendChild(bookElement);
         });
     });
 }
-
-let genreMenuContainer = document.getElementById("genreMenuContainer");
-
-function toggleDropdown() {
-    genreMenuContainer.classList.toggle("show");
-}
-
 function searchBooksByGenre() {
     const selectedGenres = [];
     const genreCheckboxes = document.querySelectorAll('.genre-item input[type="checkbox"]');
@@ -39,20 +29,9 @@ function searchBooksByGenre() {
     filterBooks(selectedGenres);
 }
 
-document.querySelectorAll('.genre-item input[type="checkbox"]').forEach(checkbox => {
-    checkbox.addEventListener('change', searchBooksByGenre);
-});
-
-
-document.querySelectorAll('.dropdown-item').forEach(item => {
-    item.addEventListener('click', handleDropdownSelection);
-});
-
-// Function to filter books based on selected genres
 function filterBooks(genres) {
     let bookContainer = document.getElementById('bookContainer');
-    bookContainer.innerHTML = ''; 
-
+    bookContainer.innerHTML = '';
     let booksRefPromises = genres.map(genre => {
         if (genre === 'all') {
             return get(ref(db, 'books/'));
@@ -60,7 +39,6 @@ function filterBooks(genres) {
             return get(ref(db, `genres/${genre}/books`));
         }
     });
-
     Promise.all(booksRefPromises)
         .then(snapshots => {
             let books = {};
@@ -82,6 +60,20 @@ function filterBooks(genres) {
         });
 }
 
+document.querySelectorAll('.genre-item input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', searchBooksByGenre);
+});
+
+
+document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', handleDropdownSelection);
+});
+
+function toggleDropdown() {
+    genreMenuContainer.classList.toggle("show");
+}
+
+// Function to filter books based on selected genres
 
 
 // Function to create a book element
@@ -177,6 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    filterBooks(['all']); 
+    filterBooks(['all']);
 });
 

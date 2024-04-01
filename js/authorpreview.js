@@ -1,5 +1,5 @@
 import { auth, db } from "./firebaseConfig.mjs";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import {
     ref,
     get,
@@ -7,7 +7,7 @@ import {
     set,
     push,
     remove
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 
 function displayBookDetails(bookId) {
     const bookDetailsContainer = document.getElementById("bookDetailsContainer");

@@ -3,7 +3,7 @@ import {
     ref,
     get,
     set,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 
 function getBookIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -15,23 +15,19 @@ function getChapterIdFromURL() {
     return urlParams.get("chapterId");
 }
 
-// Function to fetch chapter details and populate the form fields
+// Function to fetch editchapter details and populate the form fields
 async function displayChapterDetails(bookId, chapterId) {
     try {
         const chapterRef = ref(db, `books/${bookId}/chapters/${chapterId}`);
         const snapshot = await get(chapterRef);
         const chapterData = snapshot.val();
-
         if (chapterData) {
             const chapterTitleInput = document.getElementById("chapterTitle");
             const chapterContentInput = document.getElementById("chapterContent");
-
             chapterTitleInput.value = chapterData.title;
             chapterContentInput.value = chapterData.content;
-
             chapterTitleInput.readOnly = true;
             chapterContentInput.readOnly = true;
-
             const editIconTitle = document.createElement('i');
             editIconTitle.classList.add('bx', 'bxs-edit', 'edit-icon');
             editIconTitle.setAttribute('title', 'Edit Title');
@@ -39,7 +35,6 @@ async function displayChapterDetails(bookId, chapterId) {
                 toggleReadOnly(chapterTitleInput);
             });
             chapterTitleInput.parentNode.appendChild(editIconTitle);
-
             const editIconContent = document.createElement('i');
             editIconContent.classList.add('bx', 'bxs-edit', 'edit-icon');
             editIconContent.setAttribute('title', 'Edit Content');

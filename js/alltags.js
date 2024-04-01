@@ -1,6 +1,6 @@
 import { db, auth } from "./firebaseConfig.mjs";
-import { ref, get } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+import { ref, get } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 const tagsRef = ref(db, 'tags');
 

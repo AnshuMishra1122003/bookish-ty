@@ -1,11 +1,11 @@
 import { auth, db } from "./firebaseConfig.mjs";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import {
   set,
   ref,
   get,
   push,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 
 function getBookIdFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -22,16 +22,13 @@ async function editBookDetails() {
         if (bookId) {
           const bookRef = ref(db, `books/${bookId}`);
           const snapshot = await get(bookRef);
-
           if (snapshot.exists()) {
             const book = snapshot.val();
             console.log("Retrieved book details:", book);
-
             document.getElementById("editbookTitle").value = book.title;
             document.getElementById("edittags").value = book.tags.join(", ");
             document.getElementById("editdescription").value = book.description;
             document.getElementById("edituploadedImage").src = book.imageUrl;
-
             const editIcons = document.querySelectorAll('.bx.bxs-edit');
             editIcons.forEach(icon => {
               icon.addEventListener('click', () => {
@@ -39,14 +36,11 @@ async function editBookDetails() {
                 makeEditable(field);
               });
             });
-
             const selectedGenres = book.genres;
             const genreCheckboxes = document.querySelectorAll('input[name="genre"]');
             genreCheckboxes.forEach((checkbox) => {
               checkbox.checked = selectedGenres.includes(checkbox.value);
             });
-
-          
             document.getElementById("editBookForm").style.display = "block";
           } else {
             console.error("Book not found.");

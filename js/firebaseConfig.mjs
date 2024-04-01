@@ -1,17 +1,15 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-storage.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCiNLLV_8GXpvSD7IeVUfp4dbq-_pcvn7w",
-  authDomain: "bookish-proj.firebaseapp.com",
-  databaseURL: "https://bookish-proj-default-rtdb.firebaseio.com",
-  projectId: "bookish-proj",
-  storageBucket: "bookish-proj.appspot.com",
-  messagingSenderId: "351432216616",
-  appId: "1:351432216616:web:59c46450f373a82ad9251d",
-  measurementId: "G-DH4RJ9TML1",
+  apiKey: "AIzaSyBJzVIIEFRHw1WTAKn7ZZO4YsMkwwtga0M",
+  authDomain: "bookish-real.firebaseapp.com",
+  projectId: "bookish-real",
+  storageBucket: "bookish-real.appspot.com",
+  messagingSenderId: "908005148397",
+  appId: "1:908005148397:web:d6d0e6973043459f15aee4"
 };
 
 const app = initializeApp(firebaseConfig);

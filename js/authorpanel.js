@@ -9,8 +9,8 @@ import {
   set,
   push,
   get,
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 let userEmail;
 // Function to create a book container for displaying on UI
@@ -109,17 +109,12 @@ function createBookContainer(book, bookId) {
 function displayBooksUI(books) {
   const content = document.getElementById("displayUserBooks");
   content.innerHTML = "";
-
   Object.entries(books).forEach(([bookId, book]) => {
     const bookElement = createBookContainer(book, bookId);
-
     content.appendChild(bookElement);
-
     console.log("Books displayed for the user");
   });
 }
-
-// Function to handle changes in book data
 function handleBookDataChange(snapshot) {
   if (snapshot.exists()) {
     const books = snapshot.val();
@@ -129,8 +124,6 @@ function handleBookDataChange(snapshot) {
     content.innerHTML += "<p>No books found.</p>";
   }
 }
-
-// Function to set up the onValue listener
 function setBooksListener(userEmail) {
   const booksRef = ref(db, "books");
   const userBooksQuery = query(
@@ -138,11 +131,8 @@ function setBooksListener(userEmail) {
     orderByChild("email"),
     equalTo(userEmail)
   );
-
   onValue(userBooksQuery, handleBookDataChange);
 }
-
-/// Function to display user books
 function displayUserBooks() {
   if (userEmail) {
     setBooksListener(userEmail);
@@ -150,8 +140,6 @@ function displayUserBooks() {
     console.error("User email is not defined.");
   }
 }
-
-// Assume this is called when the page loads or whenever appropriate
 function initialize() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -162,7 +150,6 @@ function initialize() {
     }
   });
 }
-
 initialize();
 
 document
@@ -244,26 +231,21 @@ async function deleteBook(bookId) {
 // Function to handle addbooks form submission
 async function submitForm(event) {
   event.preventDefault();
-
   try {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const email = user.email;
-
         try {
           const userSnapshot = await get(ref(db, `users/${user.uid}`));
           const username = userSnapshot.val().username;
-
           const bookTitle = document.getElementById("bookTitle").value;
           const selectedGenres = document.querySelectorAll(
             'input[name="genre"]:checked'
           );
-
           if (selectedGenres.length > 3) {
             alert("Please select up to three genres.");
             return;
           }
-
           const genres = Array.from(selectedGenres).map(
             (checkbox) => checkbox.value
           );
@@ -272,7 +254,6 @@ async function submitForm(event) {
           const description = document.getElementById("description").value;
           const imageUrl =
             document.getElementById("uploadedImage").src || "";
-
           const newBook = {
             email: email,
             username: username,
@@ -282,38 +263,26 @@ async function submitForm(event) {
             description: description,
             imageUrl: imageUrl.toString(),
           };
-
           const booksRef = ref(db, "books");
-
           const newBookRef = push(booksRef);
-
           await set(newBookRef, newBook);
-
           tags.forEach(async (tag) => {
             const tagBookRef = ref(db, `tags/${tag}/books/${newBookRef.key}`);
             await set(tagBookRef, newBook);
           });
-
           selectedGenres.forEach(async (checkbox) => {
             const genre = checkbox.value;
-
-            const genreBookRef = ref(
-              db,
-              `genres/${genre}/books/${newBookRef.key}`
+            const genreBookRef = ref(db,`genres/${genre}/books/${newBookRef.key}`
             );
-
             await set(genreBookRef, newBook);
           });
-
           document.getElementById("bookTitle").value = "";
           tagsInput.value = "";
           document.getElementById("description").value = "";
           document.getElementById("uploadedImage").src = "";
-
           selectedGenres.forEach((checkbox) => {
             checkbox.checked = false;
           });
-
           alert("Book added successfully!");
           window.location.replace("/html/authordashboard.html");
         } catch (error) {
