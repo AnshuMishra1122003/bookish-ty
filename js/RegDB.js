@@ -17,6 +17,12 @@ async function register(event) {
   const errorMessage = document.getElementById("error-message");
   event.preventDefault();
 
+  // Check if any required field is empty
+  if (email.trim() === '' || password.trim() === '' || username.trim() === '') {
+    alert("Please fill in all required fields");
+    return;
+  }
+
   // Validate email format
   if (!email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) {
     alert("Invalid email format");
@@ -83,7 +89,7 @@ async function register(event) {
     window.location.href = "/html/Login.html";
   } catch (error) {
     console.error("Error during registration:", error.message);
-    alert(error.code);
+    alert('Fill all Required Fields');
   }
 }
 

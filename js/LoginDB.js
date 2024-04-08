@@ -23,11 +23,6 @@ async function login(event) {
   const email = document.getElementById("Email_TextBox").value;
   const password = document.getElementById("Password_TextBox").value;
 
-  if (!email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) {
-    alert("Invalid email format");
-    return;
-  }
-
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
@@ -104,47 +99,73 @@ document
   .getElementById("google-login-btn")
   .addEventListener("click", loginOAuth);
 
-document.addEventListener("DOMContentLoaded", function () {
-  const userToggleBtn = document.getElementById("user-toggle-btn");
-  const adminToggleBtn = document.getElementById("admin-toggle-btn");
-  const userLoginForm = document.querySelector(".user-login-form");
-  const adminLoginForm = document.querySelector(".admin-login-form");
-
-  userToggleBtn.addEventListener("click", function () {
-    userLoginForm.style.display = "block";
-    adminLoginForm.style.display = "none";
-  });
-
-  adminToggleBtn.addEventListener("click", function () {
-    userLoginForm.style.display = "none";
-    adminLoginForm.style.display = "block";
-  });
-
-  document.getElementById("AdminLogin_Btn").addEventListener("click", async function (event) {
-    event.preventDefault();
-    const secretKey = document.getElementById("AdminSecretKey_TextBox").value;
-
-    if (secretKey === "adminkey") {
-      const currentUser = JSON.parse(sessionStorage.getItem('user'));
-      currentUser.role = "admin";
-
-      try {
-        await update(ref(getDatabase(), `users/${currentUser.uid}`), {
-          role: "admin"
-        });
-      } catch (error) {
-        console.error("Error updating user role:", error);
-        alert("Failed to update user role. Please try again.");
-        return;
+  document.addEventListener("DOMContentLoaded", function () {
+    const userToggleBtn = document.getElementById("user-toggle-btn");
+    const adminToggleBtn = document.getElementById("admin-toggle-btn");
+    const userLoginForm = document.querySelector(".user-login-form");
+    const adminLoginForm = document.querySelector(".admin-login-form");
+  
+    userToggleBtn.addEventListener("click", function () {
+      userLoginForm.style.display = "block";
+      adminLoginForm.style.display = "none";
+    });
+  
+    adminToggleBtn.addEventListener("click", function () {
+      userLoginForm.style.display = "none";
+      adminLoginForm.style.display = "block";
+    });
+  
+    document.getElementById("AdminLogin_Btn").addEventListener("click", async function (event) {
+      event.preventDefault();
+      const secretKey = document.getElementById("AdminSecretKey_TextBox").value;
+  
+      if (secretKey === "adminkey") {
+        const currentUser = JSON.parse(sessionStorage.getItem('user'));
+        
+        // Check if currentUser is not null before accessing its properties
+        if (currentUser && currentUser.uid) {
+          currentUser.role = "admin";
+  
+          try {
+            await update(ref(getDatabase(), `users/${currentUser.uid}`), {
+              role: "admin"
+            });
+          } catch (error) {
+            console.error("Error updating user role:", error);
+            alert("Failed to update user role. Please try again.");
+            return;
+          }
+  
+          sessionStorage.setItem('user', JSON.stringify(currentUser));
+  
+          window.location.href = `/index.html?userId=${currentUser.uid}&role=admin`;
+        } else {
+          alert("User not authenticated. Please log in again.");
+        }
+      } else {
+        alert("Invalid secret key. Please try again.");
       }
-
-      sessionStorage.setItem('user', JSON.stringify(currentUser));
-
-      window.location.href = `/index.html?userId=${currentUser.uid}&role=admin`;
-    } else {
-      alert("Invalid secret key. Please try again.");
-    }
+    });
   });
-});
-
-
+  
+  const rmCheck = document.getElementById("remember_me"),
+      emailInput = document.getElementById("Email_TextBox");
+  
+  if (localStorage.checkbox && localStorage.checkbox !== "") {
+    rmCheck.setAttribute("checked", "checked");
+    emailInput.value = localStorage.username;
+  } else {
+    rmCheck.removeAttribute("checked");
+    emailInput.value = "";
+  }
+  
+  function lsRememberMe() {
+    if (rmCheck.checked && emailInput.value !== "") {
+      localStorage.username = emailInput.value;
+      localStorage.checkbox = rmCheck.value;
+    } else {
+      localStorage.username = "";
+      localStorage.checkbox = "";
+    }
+  }
+  

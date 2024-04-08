@@ -67,7 +67,7 @@
         .login_Form_Box .remember_forgot {
             display: flex;
             justify-content: space-between;
-            font-size: 14.5px;
+            font-size: 15px;
             margin: -15px 0 15px;
         }
 
@@ -88,7 +88,7 @@
         /****************terms and condition***************/
 
         .login_Form_Box .TandC {
-            font-size: 14.5px;
+            font-size: 15px;
             margin: -15px 0 15px;
             text-align: center;
         }
@@ -118,7 +118,7 @@
             border-radius: 40px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             cursor: pointer;
-            font-size: 16px;
+            font-size: 20px;
             color: #ffffff;
             font-weight: 600;
             padding: 10px;
@@ -168,6 +168,12 @@
             padding: 10px;
         }
 
+        .social_media .google_btn:hover {
+            background-color: var(--green);
+            color: #000;
+
+        }
+
         .social_media .google_btn i {
             display: inline;
             align-items: center;
@@ -189,6 +195,7 @@
             padding: 20px;
             border-radius: 20px;
             font-size: 20px;
+            font-weight: 600;
             margin-right: 2%;
             color: #fff;
             background-color: #000;
@@ -204,6 +211,7 @@
             padding: 20px;
             border-radius: 20px;
             font-size: 20px;
+            font-weight: 600;
             margin-right: 2%;
             color: #fff;
             background-color: #000;
@@ -364,7 +372,7 @@
 
 
             <div class="remember_forgot">
-                <label><input type="checkbox" />Remember me</label>
+                <label><input id="remember_me" type="checkbox" />Remember me</label>
                 <a href="/html/ForgotPass.html">Forgot Password?</a>
             </div>
 
