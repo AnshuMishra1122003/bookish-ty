@@ -352,8 +352,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('username').textContent = `${userData.username}`;
         document.getElementById('email').textContent = `${userData.email}`;
-        document.getElementById('bio').textContent = `${userData.bio}`;
-        document.querySelector('.user-image-container img').src = userData.imageUrl;
+
+        // Display bio if available, otherwise display nothing
+        if (userData.bio) {
+          document.getElementById('bio').textContent = `${userData.bio}`;
+        } else {
+          document.getElementById('bio').textContent = '';
+        }
+
+        // Display user image if available, otherwise display default image
+        const userImageSrc = userData.imageUrl ? userData.imageUrl : '/assets/profile-user.png';
+        document.querySelector('.user-image-container img').src = userImageSrc;
 
         const userBooksSnapshot = await get(ref(db, `users/${userId}/books`));
         let numBookmarks = 0;
@@ -371,6 +380,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 });
+
 
 
 // Function to validate the form fields
@@ -416,7 +426,7 @@ function validateForm() {
   if (description.length > 5000) {
     alert("Chapter description should not exceed 5000 characters.");
     return false;
-}
+  }
 
 
   return true; // All fields are valid

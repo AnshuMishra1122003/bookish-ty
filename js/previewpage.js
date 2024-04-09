@@ -61,9 +61,15 @@ function displayBookDetails(bookId) {
       tagsContainer.appendChild(tagLink);
     }
 
+    const authorname = document.createElement("div");
+    authorname.classList.add("authorname");
+    authorname.innerHTML = `<strong>Author:</strong> ${bookData.username}`;
+    
+    
     titleContainer.appendChild(title);
     titleContainer.appendChild(genresContainer);
     titleContainer.appendChild(tagsContainer);
+    titleContainer.appendChild(authorname)
 
     mainbookContainer.appendChild(coverImg);
     mainbookContainer.appendChild(titleContainer);
@@ -73,9 +79,19 @@ function displayBookDetails(bookId) {
 
     const readNowButton = document.createElement("button");
     readNowButton.textContent = "Read Now";
-    readNowButton.addEventListener("click", () => {
-      window.location.href = `displaychapters.html?bookId=${bookId}`;
+    readNowButton.addEventListener("click", async () => {
+      try {
+        const chaptersRef = ref(db, `books/${bookId}/chapters`);
+        const snapshot = await get(chaptersRef);
+        const chaptersData = snapshot.val();
+        const firstChapterId = Object.keys(chaptersData)[0];
+        window.location.href = `displaychapters.html?bookId=${bookId}&chapterId=${firstChapterId}`;
+      } catch (error) {
+        console.error("Error getting chapters data:", error);
+        alert("An error occurred while getting chapters data. Please try again.");
+      }
     });
+
 
     const bookmarkButton = document.createElement("button");
     bookmarkButton.innerHTML = '<i class="bx bxs-bookmark"></i>';

@@ -73,8 +73,17 @@ function displayBookDetails(bookId) {
 
         const readNowButton = document.createElement("button");
         readNowButton.textContent = "Read Now";
-        readNowButton.addEventListener("click", () => {
-            window.location.href = `displaychapters.html?bookId=${bookId}`;
+        readNowButton.addEventListener("click", async () => {
+            try {
+                const chaptersRef = ref(db, `books/${bookId}/chapters`);
+                const snapshot = await get(chaptersRef);
+                const chaptersData = snapshot.val();
+                const firstChapterId = Object.keys(chaptersData)[0];
+                window.location.href = `displaychapters.html?bookId=${bookId}&chapterId=${firstChapterId}`;
+            } catch (error) {
+                console.error("Error getting chapters data:", error);
+                alert("An error occurred while getting chapters data. Please try again.");
+            }
         });
 
         const bookmarkButton = document.createElement("button");
@@ -103,7 +112,7 @@ function displayBookDetails(bookId) {
 
         descriptContainer.appendChild(description);
 
-        bookDetailsContainer.innerHTML = ""; 
+        bookDetailsContainer.innerHTML = "";
         bookDetailsContainer.appendChild(mainbookContainer);
         bookDetailsContainer.appendChild(buttonContainer);
         bookDetailsContainer.appendChild(descriptTextContainer);
@@ -112,7 +121,7 @@ function displayBookDetails(bookId) {
 
         const chaptersContainer = document.createElement("div");
         chaptersContainer.id = "chaptersContainer";
-        chaptersContainer.style.display = "none"; 
+        chaptersContainer.style.display = "none";
 
         bookDetailsContainer.appendChild(chaptersContainer);
 
@@ -137,7 +146,7 @@ function displayBookDetails(bookId) {
                 const snapshot = await get(chaptersRef);
                 const chapters = snapshot.val();
 
-                chaptersContainer.innerHTML = ""; 
+                chaptersContainer.innerHTML = "";
 
                 if (chapters) {
                     let serialNumber = 1;
@@ -147,7 +156,7 @@ function displayBookDetails(bookId) {
                         chapterListItem.classList.add("chapter-list-item");
 
                         const chapterLink = document.createElement("a");
-                        chapterLink.href = `displaychapters.html?bookId=${bookId}&chapterId=${chapterId}`; 
+                        chapterLink.href = `displaychapters.html?bookId=${bookId}&chapterId=${chapterId}`;
                         chapterLink.textContent = `${serialNumber}. ${chapter.title}`;
                         chapterListItem.appendChild(chapterLink);
 
@@ -199,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Function to handle writing a review
 async function writeReview(event) {
-    event.preventDefault(); 
+    event.preventDefault();
 
     const user = auth.currentUser;
     if (!user) {
@@ -222,7 +231,7 @@ async function writeReview(event) {
     try {
         const userSnapshot = await get(ref(db, `users/${userId}`));
         const userData = userSnapshot.val();
-        const username = userData.username; 
+        const username = userData.username;
         const reviewRef = ref(db, `books/${bookId}/reviews`);
         await set(push(reviewRef), {
             title: reviewTitle,
@@ -246,7 +255,7 @@ async function writeReview(event) {
 // Function to display reviews for a book
 async function displayReviews(bookId) {
     const reviewsContainer = document.getElementById("reviewsContainer");
-    reviewsContainer.innerHTML = ""; 
+    reviewsContainer.innerHTML = "";
 
     try {
         const reviewsRef = ref(db, `books/${bookId}/reviews`);

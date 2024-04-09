@@ -4,100 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/style.css" rel="stylesheet" />
-    <title>User Profile</title>
+    <title>Terms and Conditions</title>
+    <link rel="stylesheet" href="/style.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-image: url(/assets/765105-technology-background-images-1920x1080-free-download.jpg);
-            object-fit: cover;
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 50px;
+            text-align: justify;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
 
-        .main-container {
-            margin-top: 10px;
+        .container h1 {
             text-align: center;
-        }
-
-        .profile-container {
-            height: 500px;
-            width: 100%;
-            margin-top: 20%;
-            margin-bottom: -10%;
-            padding: 20px;
-            border: 1px solid #ccc;
-            background-color: #bebebe;
-            position: relative;
-        }
-
-        .user-image-container {
-            position: absolute;
-            top: -100px;
-            left: 50%;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            overflow: hidden;
-        }
-
-        .user-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-container #username {
-            margin-top: 8%;
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .profile-container #email {
-            margin-top: 1%;
-            font-size: 20px;
-            font-weight: 500;
-        }
-
-        .profile-container #profile-details {
-            display: inline-flex;
-            justify-content: space-evenly;
-            margin-top: 5%;
-            width: 100%;
-            height: 50%;
-        }
-
-        #profile-details p {
-            font-size: 30px;
-            font-weight: 700;
-        }
-
-        #profile-details #biodisplay #bio {
-            display: block;
-            margin-right: 1%;
-            width: 100%;
-            height: 200px;
-            padding: 20px;
-            border-radius: 20px;
-            text-align: left;
             font-size: 25px;
-            font-weight: 500;
         }
 
-        #profile-details #bkmkdisplay #bookmarks {
-            display: block;
-            margin-right: 3%;
-            margin-right: 1%;
-            width: 100%;
-            height: 200px;
-            padding: 20px;
-            border-radius: 20px;
-            text-align: left;
-            font-size: 50px;
-            font-weight: 500;
+        .container p {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 20px;
         }
     </style>
 </head>
@@ -106,7 +33,7 @@
     <!-------------header starts------------------->
     <header id="header" class="header">
         <div class="header-1">
-            <a href="/index.html" class="logo"><img src="/assets/book-logo.jpeg"></a>
+            <a href="/index.html" class="logo"><img src="/assets/bk-logo.png"></a>
             <div class="icons">
                 <div id="user-login-btn" class="user-login-btn" onclick="toggleIcon()">
                     <i class='bx bxs-user-circle'></i>
@@ -201,30 +128,36 @@
         </script>
     </header>
     <!---------------------Header close---------------------->
-    <div class="main-container">
-        <div class="profile-container">
-            <div class="user-image-container">
-                <!-- User image will be displayed here -->
-                <img src="#">
-            </div>
-            <div id="username"></div>
-            <div id="email"></div>
-            <div id="profile-details">
-                <div id="biodisplay">
-                    <p>BIO</p>
-                    <div id="bio"></div>
-                </div>
-                <div id="bkmkdisplay">
-                    <p>Bookmarks</p>
-                    <div id="bookmarks"></div>
-                </div>
-            </div>
-        </div>
+    <div class="container">
+        <h1>Terms and Conditions</h1>
+        <p>By accessing or using Bookish!!!, you agree to be bound by these Terms and Conditions, as well as all
+            applicable laws and regulations. Bookish!!! grants you a limited, non-exclusive, and non-transferable
+            license to access and use the platform for personal and commercial purposes only. All content available on
+            the platform, including text, graphics, logos, images, and software, is the property of Bookish!!! or its
+            licensors and is protected by copyright and other intellectual property laws. You agree not to modify,
+            reproduce, distribute, or create derivative works based on our content without prior written consent.</p>
+        <p>In order to access certain features of the platform, you may be required to create a user account. You are
+            responsible for maintaining the confidentiality of your account information and for all activities that
+            occur under your account. Bookish!!! reserves the right to suspend or terminate your account at any time for
+            any reason. Your use of the platform is also governed by our Privacy Policy, which outlines how we collect,
+            use, and disclose your personal information. By using Bookish!!!, you consent to the terms of our Privacy
+            Policy.</p>
+        <p>By submitting content to the platform, including stories, reviews, and comments, you grant Bookish!!! a
+            worldwide, non-exclusive license to use, reproduce, modify, adapt, publish, translate, distribute, and
+            display such content in any medium. Our platform may contain links to third-party websites or services that
+            are not owned or controlled by Bookish!!!. We are not responsible for the content, privacy policies, or
+            practices of any third-party websites or services.</p>
+        <p>Bookish!!! provides the platform on an "as is" and "as available" basis, without any warranties of any kind,
+            either express or implied. We do not warrant that the platform will be uninterrupted or error-free, or that
+            any defects will be corrected. In no event shall Bookish!!! or its affiliates be liable for any indirect,
+            incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data,
+            or goodwill, arising out of or in connection with your use of the platform.</p>
+        <p>These Terms and Conditions shall be governed by and construed in accordance with the laws of [Your
+            Jurisdiction], without regard to its conflict of law provisions. Any dispute arising out of or relating to
+            these terms shall be subject to the exclusive jurisdiction of the courts in [Your Jurisdiction].</p>
+        <p>By using Bookish!!!, you acknowledge that you have read, understood, and agree to be bound by these Terms and
+            Conditions.</p>
     </div>
-
-    <script src="/js/profile.js" type="module"></script>
-    <!------------------------Add footer--------------------------------------->
-
     <section class="footer">
 
         <div class="footer-container">

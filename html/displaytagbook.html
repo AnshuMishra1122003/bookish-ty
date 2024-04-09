@@ -5,10 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Books with Tag</title>
+    <link href="/style.css" rel="stylesheet">
     <style>
         #alltagscontainer {
             width: 100%;
             height: auto;
+            margin-left: 2%;
+            margin-top: 5%;
         }
 
         .tagName-heading {
@@ -36,6 +39,7 @@
             height: 100%;
             object-fit: cover;
             border-radius: 5px;
+            cursor: pointer;
         }
 
         /* Container for book details (title, description, author) */
@@ -49,11 +53,13 @@
         .book-title {
             font-size: 20px;
             margin-bottom: 10px;
+            cursor: pointer;
         }
 
         /* Author of the book */
         .book-author {
             margin-bottom: 10px;
+            font-size: 15px;
         }
     </style>
 </head>
@@ -82,7 +88,7 @@
                             <i class='bx bxs-cog'></i>
                             <p>Settings</p>
                         </a>
-                        <a href="#" class="sub-icon-link" id="helps-services-link">
+                        <a href="/html/contactus.html" class="sub-icon-link" id="helps-services-link">
                             <i class="bi bi-question-circle-fill"></i>
                             <p>Helps & Services</p>
                         </a>
@@ -162,6 +168,31 @@
         <div id="bookList" class="book-container"></div>
     </div>
     <script src="/js/displaytagbook.js" type="module"></script> <!-- Script for fetching and displaying books -->
+    <section class="footer">
+
+        <div class="footer-container">
+
+            <div class="row">
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="/html/alltags.html"></i>All Tags</a>
+                    </li>
+                    <li>
+                        <a href="/html/profile.html"></i>Profile Info</a>
+                    </li>
+                    <li>
+                        <a href="/html/t&c.html"></i>Terms and Condition</a>
+                    </li>
+                    <li style="border-right: none">
+                        <a href="/html/contactus.html"></i>Contact Us</a>
+                    </li>
+                </ul>
+                <div class="credit"> <span> Bookish </span>copyright ©2023 all rights reserved! </div>
+
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>

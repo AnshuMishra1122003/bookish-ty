@@ -322,7 +322,7 @@
                             <i class='bx bxs-cog'></i>
                             <p>Settings</p>
                         </a>
-                        <a href="#" class="sub-icon-link" id="helps-services-link">
+                        <a href="/html/contactus.html" class="sub-icon-link" id="helps-services-link">
                             <i class="bi bi-question-circle-fill"></i>
                             <p>Helps & Services</p>
                         </a>
@@ -357,7 +357,7 @@
                             { text: 'User Settings', href: '/html/usersettings.html', onclick: 'showMenu(4)' },
                             { text: 'About Us', href: '/html/aboutus.html', onclick: 'showMenu(5)' }
                         ];
-                        
+
                         menuItems.forEach(item => {
                             const link = document.createElement('a');
                             link.textContent = item.text;
@@ -379,7 +379,7 @@
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const menuLinks = document.querySelectorAll(".menu a");
-                
+
                 menuLinks.forEach(function (link, index) {
                     link.addEventListener("click", function () {
                         // Remove 'active' class from all links
@@ -388,13 +388,13 @@
                         });
                         // Add 'active' class to the clicked link
                         link.classList.add("active")
-                        
+
                         // Show the selected link
                         showMenu(index);
                     });
                 });
             });
-            </script>
+        </script>
     </header>
     <!---------------------Header close---------------------->
     <!-- Main carousel -->
@@ -402,11 +402,11 @@
         <div class="slideshow-container" id="slideshow-container">
             <!-- Slides will be dynamically added here -->
         </div>
-        
+
         <!-- Add navigation dots here -->
         <div class="slider-dots"></div>
-        
-        
+
+
         <script src="/js/maincarousel.js" type="module">
         </script>
     </section>
@@ -428,20 +428,20 @@
         </div>
         <br><br>
         <div id="books-container" class="books-container-recent-added"></div>
-        
+
         <script src="/js/maincarousel.js" type="module"></script>
-        
+
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const paginationLinks = document.querySelectorAll(".pagination a");
-                
+
                 paginationLinks.forEach(function (link) {
                     link.addEventListener("click", function () {
                         // Remove 'active' class from all links
                         paginationLinks.forEach(function (paginationLink) {
                             paginationLink.classList.remove("active");
                         });
-                        
+
                         // Add 'active' class to the clicked link
                         link.classList.add("active");
 
@@ -456,17 +456,17 @@
             });
 
 
-            </script>
+        </script>
     </section>
-</div>
+    </div>
     <!-- -------------------Recently Added Novels close------------------------------ -->
 
     <!------------------------Add footer--------------------------------------->
 
     <section class="footer">
-        
+
         <div class="footer-container">
-            
+
             <div class="row">
 
                 <ul class="footer-links">
@@ -474,13 +474,13 @@
                         <a href="/html/alltags.html"></i>All Tags</a>
                     </li>
                     <li>
-                        <a href="#"></i>Account Info</a>
+                        <a href="/html/profile.html"></i>Profile Info</a>
                     </li>
                     <li>
-                        <a href="#"></i>Terms and Condition</a>
+                        <a href="/html/t&c.html"></i>Terms and Condition</a>
                     </li>
                     <li style="border-right: none">
-                        <a href="#"></i>Contact Us</a>
+                        <a href="/html/contactus.html"></i>Contact Us</a>
                     </li>
                 </ul>
                 <div class="credit"> <span> Bookish </span>copyright ©2023 all rights reserved! </div>

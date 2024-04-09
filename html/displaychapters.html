@@ -28,7 +28,7 @@
             padding: 10px;
             text-align: center;
             margin-bottom: 10%;
-            font-size: x-large;
+            font-size: 30px;
         }
 
         h2 {
@@ -38,7 +38,7 @@
         }
 
         h3 {
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 50px;
             text-align: center;
 
@@ -53,6 +53,8 @@
 
         button {
             margin-bottom: 50px;
+            font-size: 20px;
+            font-weight: 800;
         }
 
         .blur {
@@ -102,7 +104,7 @@
             width: auto;
             background-color: #515050;
             backdrop-filter: blur(10px);
-            text-align: center;
+            text-align: end;
         }
 
         .menu-chapters a {
@@ -112,6 +114,7 @@
             font-size: 20px;
             color: rgb(254, 254, 255);
             margin-left: 2px;
+            margin-right: 2px;
         }
 
         .menu-chapters a:hover {
@@ -134,6 +137,7 @@
             z-index: 1;
             border-radius: 5px;
             margin-top: 40px;
+            margin-left: -460px;
         }
 
         .dropdown-content h3 {
@@ -173,7 +177,6 @@
             background-color: var(--green);
         }
 
-        .dropdown-content input[type="color"]:hover {}
 
         .dropdown-content input[type="color"] {
             padding: 0;
@@ -243,7 +246,7 @@
                             <i class='bx bxs-cog'></i>
                             <p>Settings</p>
                         </a>
-                        <a href="#" class="sub-icon-link" id="helps-services-link">
+                        <a href="/html/contactus.html" class="sub-icon-link" id="helps-services-link">
                             <i class="bi bi-question-circle-fill"></i>
                             <p>Helps & Services</p>
                         </a>
@@ -320,13 +323,13 @@
     <!---------------------Header close---------------------->
     <div class="menu-chapters">
         <!-- Updated Menu Links with dropdowns -->
-        <div class="dropdown">
+        <!-- <div class="dropdown">
             <a href="#" onclick="toggleDropdown('reportDropdown', 0)"><i class='bx bx-error-circle'></i>Report</a>
             <div class="dropdown-content" id="reportDropdown">
                 <input type="text" placeholder="Enter your report...">
                 <button type="submit">Submit</button>
             </div>
-        </div>
+        </div> -->
 
         <a id="bookmarkchpbtn" href="#"><i class="bx bxs-bookmark"></i></a>
 
@@ -339,7 +342,7 @@
             </div>
         </div>
 
-        <div class="dropdown">
+        <!-- <div class="dropdown">
             <a href="#" onclick="toggleDropdown('settingsDropdown')"><i class='bx bxs-cog'></i></a>
             <div class="dropdown-content" id="settingsDropdown" style="width: 450px;">
                 <h3>Chapter Settings</h3>
@@ -362,7 +365,7 @@
                     <button onclick="changeBgColor()">Change Background Color</button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <div id="bookDetailsContainer" class="container">
         <!-- Book details will be dynamically added here -->
@@ -389,6 +392,31 @@
         }
 
     </script>
+     <section class="footer">
+        
+        <div class="footer-container">
+            
+            <div class="row">
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="/html/alltags.html"></i>All Tags</a>
+                    </li>
+                    <li>
+                        <a href="/html/profile.html"></i>Profile Info</a>
+                    </li>
+                    <li>
+                        <a href="/html/t&c.html"></i>Terms and Condition</a>
+                    </li>
+                    <li style="border-right: none">
+                        <a href="/html/contactus.html"></i>Contact Us</a>
+                    </li>
+                </ul>
+                <div class="credit"> <span> Bookish </span>copyright ©2023 all rights reserved! </div>
+
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>
