@@ -67,19 +67,26 @@ function makeEditable(field) {
 
 document.addEventListener("DOMContentLoaded", editBookDetails);
 
-document
-  .getElementById("saveChangesBookBtn")
-  .addEventListener("click", async function (event) {
-    event.preventDefault();
-    const bookId = getBookIdFromURL();
-    console.log("Saving changes for book ID:", bookId);
-    if (bookId) {
-      await submitEditedBookDetails(bookId);
-    } else {
-      console.error("No book ID found in URL parameter.");
-      alert("No book ID found in URL parameter.");
-    }
-  });
+document.getElementById("saveChangesBookBtn").addEventListener("click", async function (event) {
+  event.preventDefault();
+
+  // Check form validation before submitting
+  if (!validateForm()) {
+    // If form is not valid, return without submitting the form
+    return;
+  }
+
+  // Form is valid, continue with form submission
+  const bookId = getBookIdFromURL();
+  console.log("Saving changes for book ID:", bookId);
+  if (bookId) {
+    await submitEditedBookDetails(bookId);
+  } else {
+    console.error("No book ID found in URL parameter.");
+    alert("No book ID found in URL parameter.");
+  }
+});
+
 
 async function submitEditedBookDetails(bookId) {
   try {
@@ -178,3 +185,48 @@ async function submitEditedBookDetails(bookId) {
   }
 }
 
+// Function to validate the form fields
+function validateForm() {
+  // Get form input values
+  const bookTitle = document.getElementById("editbookTitle").value;
+  const selectedGenres = document.querySelectorAll('input[name="genre"]:checked');
+  const tags = document.getElementById("edittags").value;
+  const description = document.getElementById("editdescription").value;
+  const imageInput = document.getElementById("editfileInput");
+  const uploadedImage = document.getElementById("edituploadedImage");
+
+  if (!uploadedImage.src || uploadedImage.src === "" || (imageInput.files && imageInput.files.length > 0)) {
+    alert("Please upload an image for the book cover.");
+    return false;
+  }
+
+  // Remove existing details if the respective field is left empty
+  if (bookTitle === "") {
+    alert("Please enter a book title.");
+    return false;
+  }
+
+  if (selectedGenres.length === 0) {
+    alert("Please select at least one genre.");
+    return false;
+  }
+
+  if (tags === "") {
+    alert("Please enter at least one tag.");
+    return false;
+  }
+
+  if (description === "") {
+    alert("Please enter a book description.");
+    return false;
+  }
+
+  // Content length validation (optional)
+  if (description.length > 5000) {
+    alert("Chapter description should not exceed 5000 characters.");
+    return false;
+  }
+
+
+  return true; // All fields are valid
+}

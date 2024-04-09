@@ -345,9 +345,9 @@
                 <h3>Chapter Settings</h3>
                 <div>
                     <label>Font Type</label>
-                    <button onclick="changeFont('Arial, sans-serif')">Arial</button>
-                    <button onclick="changeFont('Times New Roman, serif')">Times New Roman</button>
-                    <button onclick="changeFont('Verdana, sans-serif')">Verdana</button>
+                    <button onclick="changeFontStyle('Arial')">Arial</button>
+                    <button onclick="changeFontStyle('Times New Roman')">Times New Roman</button>
+                    <button onclick="changeFontStyle('Verdana')">Verdana</button>
                 </div>
                 <div>
                     <label>Font Size</label>
@@ -383,32 +383,9 @@
             });
         }
 
-        // Function to change font
-        function changeFont(fontFamily) {
-            const chapterContent = document.getElementById('chapterContent');
-            chapterContent.style.fontFamily = fontFamily;
-        }
-
-        // Function to change font size
-        function changeFontSize(fontSize) {
-            const chapterContent = document.getElementById('chapterContent');
-            chapterContent.style.fontSize = fontSize;
-        }
-
-        // Function to change font color
-        function changeFontColor() {
-            const fontColorPicker = document.getElementById('fontColorPicker');
-            const chapterContent = document.getElementById('chapterContent');
-            const color = fontColorPicker.value;
-            chapterContent.style.color = color;
-        }
-
-        // Function to change background color
-        function changeBgColor() {
-            const bgColorPicker = document.getElementById('bgColorPicker');
-            const chapterContent = document.getElementById('chapterContent');
-            const color = bgColorPicker.value;
-            chapterContent.style.backgroundColor = color;
+        function changeFontStyle(fontStyle) {
+            const chapterContent = document.getElementById("chapterContent");
+            chapterContent.style.fontFamily = fontStyle;
         }
 
     </script>

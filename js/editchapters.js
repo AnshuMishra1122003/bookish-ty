@@ -71,6 +71,11 @@ window.onload = function () {
 document.getElementById("addChapterBtn").addEventListener("click", async function (event) {
     event.preventDefault();
 
+    // Validate form before submission
+    if (!validateForm()) {
+        return; // Exit if form is not valid
+    }
+
     const bookId = getBookIdFromURL();
     const chapterId = getChapterIdFromURL();
 
@@ -86,11 +91,6 @@ document.getElementById("addChapterBtn").addEventListener("click", async functio
     const updatedTitle = chapterTitleInput.value.trim();
     const updatedContent = chapterContentInput.value.trim();
 
-    if (!updatedTitle || !updatedContent) {
-        alert("Please provide both a title and content for the chapter.");
-        return;
-    }
-
     try {
         const chapterRef = ref(db, `books/${bookId}/chapters/${chapterId}`);
         await set(chapterRef, {
@@ -105,3 +105,56 @@ document.getElementById("addChapterBtn").addEventListener("click", async functio
     }
 });
 
+// Function to validate the form fields
+function validateForm() {
+    const chapterTitle = document.getElementById("chapterTitle").value;
+    const chapterContent = document.getElementById("chapterContent").value;
+
+    // Required fields validation
+    if (!chapterTitle.trim() || !chapterContent.trim()) {
+        alert("Please fill in all required fields.");
+        return false;
+    }
+
+    // Chapter content non-empty validation
+    if (!chapterTitle.trim()) {
+        alert("Please enter chapter title.");
+        return false;
+    }
+
+    // Title length validation (optional)
+    if (chapterTitle.length < 20) {
+        alert("Chapter title should exceed 20 characters.");
+        return false;
+    }
+
+    // Title length validation (optional)
+    if (chapterTitle.length > 100) {
+        alert("Chapter title should not exceed 100 characters.");
+        return false;
+    }
+
+    // Content length validation (optional)
+    if (chapterContent.length < 500) {
+        alert("Chapter content should exceed 5000 characters.");
+        return false;
+    }
+
+    // Content length validation (optional)
+    if (chapterContent.length > 50000) {
+        alert("Chapter content should not exceed 50000 characters.");
+        return false;
+    }
+
+
+    // Chapter content non-empty validation
+    if (!chapterContent.trim()) {
+        alert("Please enter chapter content.");
+        return false;
+    }
+
+    // Additional validations (optional)
+    // You can add more validations here, such as checking for special characters, input format, etc.
+
+    return true; // All fields are valid
+}

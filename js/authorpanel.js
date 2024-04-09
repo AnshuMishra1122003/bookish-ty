@@ -1,4 +1,5 @@
 // Import necessary functions from Firebase SDK
+// Import necessary functions from Firebase SDK
 import { auth, db } from "./firebaseConfig.mjs";
 import {
   query,
@@ -9,10 +10,12 @@ import {
   set,
   push,
   get,
+  remove, // Adding remove function import
 } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 let userEmail;
+
 // Function to create a book container for displaying on UI
 function createBookContainer(book, bookId) {
   const bookContainer = document.createElement("div");
@@ -78,8 +81,8 @@ function createBookContainer(book, bookId) {
   button5.id = "deleteBookBtn";
   button5.textContent = "Delete Book";
   button5.addEventListener("click", function () {
-    const bookId = bookId; 
-    deleteBook(bookId);
+    const clickedBookId = bookId; // Renaming the variable
+    deleteBook(clickedBookId);
   });
 
   function toggleButton(clickedButton) {
@@ -155,7 +158,7 @@ initialize();
 document
   .getElementById("displayUserBooks")
   .addEventListener("click", function () {
-    displayUserBooks(); 
+    displayUserBooks();
   });
 
 // Function to preview the selected image
@@ -182,7 +185,7 @@ function previewImage(event) {
     imageContainer.style.background = "#fff";
     placeholder.style.display = "block";
     uploadedImage.style.display = "none";
-    uploadedImage.src = "#"; 
+    uploadedImage.src = "#";
   }
 }
 
@@ -205,17 +208,25 @@ async function deleteBook(bookId) {
     const confirmation = confirm(`Are you sure you want to delete the book "${bookName}"?`);
 
     if (confirmation) {
+      // Delete the book from the 'books' node
       await remove(bookRef);
       console.log(`Book "${bookName}" deleted successfully from "books" node`);
 
+      // Delete the book from each genre node it belongs to
       const genres = bookData.genres || [];
       for (const genre of genres) {
-        const genreRef = ref(db, `genres/${genre}/books/${bookId}`);
-        await remove(genreRef);
+        const genreBookRef = ref(db, `genres/${genre}/books/${bookId}`);
+        await remove(genreBookRef);
         console.log(`Book "${bookName}" deleted successfully from "${genre}" genre node`);
       }
 
-      fetchCountsAndUpdateUI();
+      // Delete the book from each tag node it belongs to
+      const tags = bookData.tags || [];
+      for (const tag of tags) {
+        const tagBookRef = ref(db, `tags/${tag}/books/${bookId}`);
+        await remove(tagBookRef);
+        console.log(`Book "${bookName}" deleted successfully from "${tag}" tag node`);
+      }
 
       alert(`Book "${bookName}" deleted successfully.`);
     } else {
@@ -228,9 +239,12 @@ async function deleteBook(bookId) {
 }
 
 
+
+
 // Function to handle addbooks form submission
 async function submitForm(event) {
   event.preventDefault();
+
   try {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -272,7 +286,7 @@ async function submitForm(event) {
           });
           selectedGenres.forEach(async (checkbox) => {
             const genre = checkbox.value;
-            const genreBookRef = ref(db,`genres/${genre}/books/${newBookRef.key}`
+            const genreBookRef = ref(db, `genres/${genre}/books/${newBookRef.key}`
             );
             await set(genreBookRef, newBook);
           });
@@ -301,6 +315,14 @@ async function submitForm(event) {
 document
   .getElementById("addbooks_btn")
   .addEventListener("click", function (event) {
+    // Check form validation before submitting
+    if (!validateForm()) {
+      // If form is not valid, prevent the default behavior of the submit button
+      event.preventDefault();
+      return;
+    }
+
+    // If form is valid, submit the form
     submitForm(event);
   });
 
@@ -323,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       try {
-        const userId = user.uid; 
+        const userId = user.uid;
 
         const userDataSnapshot = await get(ref(db, `users/${userId}`));
         const userData = userDataSnapshot.val();
@@ -349,3 +371,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 });
+
+
+// Function to validate the form fields
+function validateForm() {
+  // Get form input values
+  const bookTitle = document.getElementById("bookTitle").value;
+  const selectedGenres = document.querySelectorAll('input[name="genre"]:checked');
+  const tags = document.getElementById("tags").value;
+  const description = document.getElementById("description").value;
+  const imageInput = document.getElementById("fileInput");
+
+  // Validate image upload
+  if (!imageInput.files || imageInput.files.length === 0) {
+    alert("Please upload an image for the book cover.");
+    return false;
+  }
+
+  // Validate book title
+  if (bookTitle.trim() === "") {
+    alert("Please enter a book title.");
+    return false;
+  }
+
+  // Validate selected genres
+  if (selectedGenres.length === 0) {
+    alert("Please select at least one genre.");
+    return false;
+  }
+
+  // Validate tags
+  if (tags.trim() === "") {
+    alert("Please enter at least one tag.");
+    return false;
+  }
+
+  // Validate description
+  if (description.trim() === "") {
+    alert("Please enter a book description.");
+    return false;
+  }
+
+  // Content length validation (optional)
+  if (description.length > 5000) {
+    alert("Chapter description should not exceed 5000 characters.");
+    return false;
+}
+
+
+  return true; // All fields are valid
+}

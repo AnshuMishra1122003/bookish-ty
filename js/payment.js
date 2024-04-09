@@ -18,13 +18,51 @@ onAuthStateChanged(auth, (user) => {
                 priceLabel.textContent = `Pay: Rs.${dataPrice}`;
             }
         }
+
+        // Check subscription status when user logs in
+        checkSubscriptionStatus(user.uid);
     } else {
         console.log("User not logged in.");
     }
 });
 
+async function checkSubscriptionStatus(userId) {
+    try {
+        const userDetails = await getUserDetails(userId);
+        if (userDetails) {
+            const { subscribeduser, subscriptionType, subscriptionStart } = userDetails;
+            if (subscribeduser) {
+                const expirationDate = calculateSubscriptionExpiration(subscriptionType, subscriptionStart);
+                const currentDate = new Date();
+                if (currentDate > expirationDate) {
+                    // Subscription expired, update subscribeduser to false
+                    await set(ref(db, `users/${userId}/subscribeduser`), false);
+                    console.log("Subscription expired. Set subscribeduser to false.");
+                }
+            }
+        } else {
+            console.log("User details not found.");
+        }
+    } catch (error) {
+        console.error("Error checking subscription status:", error);
+    }
+}
+
+function calculateSubscriptionExpiration(subscriptionType, subscriptionStart) {
+    const currentDate = new Date(subscriptionStart);
+    if (subscriptionType === 'monthly') {
+        // Add 1 month to the current date
+        currentDate.setMonth(currentDate.getMonth() + 1);
+    } else if (subscriptionType === 'yearly') {
+        // Add 1 year to the current date
+        currentDate.setFullYear(currentDate.getFullYear() + 1);
+    }
+    return currentDate;
+}
+
+
 async function handlePayment(event) {
-    event.preventDefault(); 
+    event.preventDefault();
     const user = auth.currentUser;
     if (!user) {
         console.log("User not logged in.");
@@ -45,6 +83,44 @@ async function handlePayment(event) {
         const cardholder = document.getElementById("s-cardholder").value;
         const expMonth = document.getElementById("s-expmonth").value;
         const cvv = document.getElementById("s-cvv").value;
+
+        // Validation for email
+        if (!email || !isValidEmail(email)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+
+        // Validation for country
+        if (!country) {
+            alert("Please select a country.");
+            return;
+        }
+
+        // Validation for card number
+        if (!cardNumber || !isValidCardNumber(cardNumber)) {
+            alert("Please enter a valid card number.");
+            return;
+        }
+
+        // Validation for cardholder name
+        if (!cardholder) {
+            alert("Please enter the cardholder's name.");
+            return;
+        }
+
+        // Validation for expiry month
+        if (!expMonth || !isValidExpiryMonth(expMonth)) {
+            alert("Please enter a valid expiry month (MM/YY).");
+            return;
+        }
+
+        // Validation for CVV
+        if (!cvv || !isValidCVV(cvv)) {
+            alert("Please enter a valid CVV.");
+            return;
+        }
+
+
         console.log("Form Data:", { email, country, cardNumber, cardholder, expMonth, cvv });
         const urlParams = new URLSearchParams(window.location.search);
         const dataPrice = urlParams.get('price');
@@ -85,4 +161,74 @@ async function getUserDetails(userId) {
     }
 }
 
+// Email validation function
+function isValidEmail(email) {
+    // Use a regular expression to validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
 
+// Function to format card number with spaces after every 4 characters
+function formatCardNumber(input) {
+    // Remove any existing spaces and non-numeric characters
+    const cardNumber = input.value.replace(/\D/g, '');
+
+    // Insert a space after every 4 characters
+    const formattedCardNumber = cardNumber.replace(/(.{4})/g, '$1 ').trim();
+
+    // Update the input value with the formatted card number
+    input.value = formattedCardNumber;
+}
+
+// Add event listener to the card number input for input event
+document.getElementById('s-cardnumber').addEventListener('input', function (event) {
+    formatCardNumber(event.target);
+});
+
+// Function to validate card number length
+function isValidCardNumber(cardNumber) {
+    // Remove any spaces from the card number
+    const trimmedCardNumber = cardNumber.replace(/\s/g, '');
+
+    // Check if the length is exactly 16 characters
+    return trimmedCardNumber.length === 16;
+}
+
+
+function isValidExpiryMonth(expMonth) {
+    // Check if the format is valid (MM/YY)
+    if (!/^(0[1-9]|1[0-2])\/(\d{2})$/.test(expMonth)) {
+        return false; // Invalid format
+    }
+
+    // Extract the month and year parts from the input
+    const [inputMonth, inputYear] = expMonth.split('/').map(part => parseInt(part, 10));
+
+    // Get the current date
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear() % 100; // Get last two digits of the year
+    const currentMonth = currentDate.getMonth() + 1; // Month is zero-based, so add 1
+
+    // Check if the entered year is in the past
+    if (inputYear < currentYear) {
+        return false;
+    }
+
+    // If the entered year is the current year, check if the month is in the past
+    if (inputYear === currentYear && inputMonth < currentMonth) {
+        return false;
+    }
+
+    // Expiry month and year are valid
+    return true;
+}
+
+
+
+
+// CVV validation function
+function isValidCVV(cvv) {
+    // Perform validation logic for CVV format (e.g., length, digits only, etc.)
+    // Example: Check if the CVV is 3 digits long
+    return cvv.length === 3 && /^\d+$/.test(cvv);
+}

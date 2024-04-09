@@ -26,13 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
         username.textContent = userData.username;
         email.textContent = userData.email;
         publicName.value = userData.username;
-        bio.value = userData.bio;
+        bio.value = userData.bio || '';
         if (userData.imageUrl) {
             editProfileImageContainer.style.backgroundImage = `url('${userData.imageUrl}')`;
+            editProfileImageContainer.style.backgroundSize = '200px 200px';
             editProfilePlaceholder.style.display = 'none';
             editProfileUploadedImage.style.display = 'block';
         } else {
-            editProfileImageContainer.style.backgroundImage = ``;
+            editProfileImageContainer.style.backgroundImage = `url('/assets/profile-user.png')`;
+            editProfileImageContainer.style.backgroundSize = '200px 200px';
             editProfilePlaceholder.style.display = 'block';
             editProfileUploadedImage.style.display = 'none';
         }
@@ -40,10 +42,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     imageUpload.addEventListener('change', (event) => {
         const file = event.target.files[0];
+
+        if (!file) {
+            // If no file is selected, remove the image data from the database
+            const userId = auth.currentUser.uid;
+            const userRef = ref(db, `users/${userId}`);
+            onValue(userRef, (snapshot) => {
+                const userData = snapshot.val();
+                if (userData && userData.imageUrl) {
+                    delete userData.imageUrl; // Remove the image URL from user data
+                    set(userRef, userData)
+                        .then(() => console.log("User image removed successfully."))
+                        .catch((error) => console.error("Error removing user image:", error));
+                }
+            });
+            // Reset image container to display placeholder
+            editProfileImageContainer.style.backgroundImage = `url('/assets/profile-user.png')`;
+            editProfileImageContainer.style.backgroundSize = '200px 200px';
+            editProfilePlaceholder.style.display = 'block';
+            editProfileUploadedImage.style.display = 'none';
+            return; // Exit the function
+        }
+
         const reader = new FileReader();
         reader.onload = (e) => {
-            const imageUrl = e.target.result; 
+            const imageUrl = e.target.result;
+
+            if (!isValidImageFile(file)) {
+                alert("Please upload a valid image file (PNG, JPG, or SVG).");
+                return;
+            }
+            if (!isValidImageSize(file)) {
+                alert("Please upload an image file less than 5MB in size.");
+                return;
+            }
+
             editProfileImageContainer.style.backgroundImage = `url('${imageUrl}')`;
+            editProfileImageContainer.style.backgroundSize = '200px 200px';
             editProfilePlaceholder.style.display = 'none';
             editProfileUploadedImage.style.display = 'block';
             const userId = auth.currentUser.uid;
@@ -53,17 +88,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (userData) {
                     userData.imageUrl = imageUrl;
                     set(userRef, userData)
-                        .then(() => {
-                            console.log("User image updated successfully.");
-                        })
-                        .catch((error) => {
-                            console.error("Error updating user image:", error);
-                        });
+                        .then(() => console.log("User image updated successfully."))
+                        .catch((error) => console.error("Error updating user image:", error));
                 }
             });
         };
         reader.readAsDataURL(file);
     });
+
+    function isValidImageFile(file) {
+        const acceptedTypes = ['image/png', 'image/jpeg', 'image/svg+xml'];
+        return acceptedTypes.includes(file.type);
+    }
+
+    function isValidImageSize(file) {
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        return file.size <= maxSize;
+    }
 
     editPublicNameBtn.addEventListener('click', () => {
         makeEditable(publicName);
@@ -74,8 +115,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     saveChangesBtn.addEventListener('click', () => {
-        const updatedPublicName = publicName.value;
-        const updatedBio = bio.value;
+        const updatedPublicName = publicName.value.trim();
+        const updatedBio = bio.value.trim();
+
+        if (!updatedPublicName) {
+            alert("Please enter a public name.");
+            return;
+        }
+        if (updatedPublicName.length > 50) {
+            alert("Public name should not exceed 50 characters.");
+            return;
+        }
+
+        if (updatedBio.length > 500) {
+            alert("Bio should not exceed 500 characters.");
+            return;
+        }
 
         const userId = auth.currentUser.uid;
         const userRef = ref(db, `users/${userId}`);
@@ -145,27 +200,74 @@ document.getElementById('manageBookmarksBtn').addEventListener('click', function
 });
 
 function getUserDataFromDatabase() {
-    const userId = auth.currentUser.uid;
+    const user = auth.currentUser;
+    if (!user) {
+        // Handle the case where there is no authenticated user
+        console.error("No authenticated user found.");
+        return Promise.reject("No authenticated user found.");
+    }
+    
+    const userId = user.uid;
     const usersRef = ref(db, 'users/' + userId);
 
     return get(usersRef).then(snapshot => {
         return snapshot.val();
+    }).catch(error => {
+        console.error("Error fetching user data:", error);
+        return Promise.reject(error);
     });
 }
 
+
 function displayUserData(userData) {
     const currentPasswordElement = document.getElementById("currentPassword");
-    const newPasswordInput = document.getElementById("newPassword");
-    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const newPasswordInput = document.getElementById("newpassword");
+    const confirmPasswordInput = document.getElementById("confirmpassword");
 
-    currentPasswordElement.textContent = userData.password; 
+    currentPasswordElement.textContent = userData.password;
 
     document.getElementById("savePassword").addEventListener("click", function () {
-        const newPassword = newPasswordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
+        const currentPassword = currentPasswordElement.textContent.trim();
+        const newPassword = newPasswordInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value.trim();
+
+        if (!currentPassword) {
+            alert("Please enter your current password.");
+            return;
+        }
+
+        if (!newPassword || !confirmPassword) {
+            alert("Please enter both new and confirm passwords.");
+            return;
+        }
 
         if (newPassword !== confirmPassword) {
             alert("New password and confirm password do not match.");
+            return;
+        }
+
+        if (!/(?=.*[a-z])/.test(newPassword)) {
+            alert("Password must contain at least 1 lowercase letter");
+            return;
+        }
+
+        if (!/(?=.*[A-Z])/.test(newPassword)) {
+            alert("Password must contain at least 1 uppercase letter");
+            return;
+        }
+
+        if (!/(?=.*\d)/.test(newPassword)) {
+            alert("Password must contain at least 1 number");
+            return;
+        }
+
+        if (!/(?=.*[!@#$%^&*()])/.test(newPassword)) {
+            alert("Password must contain at least 1 symbol");
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            alert("Password must be at least 6 characters long");
             return;
         }
 
@@ -174,6 +276,12 @@ function displayUserData(userData) {
         onValue(userRef, (snapshot) => {
             const existingUserData = snapshot.val();
             if (existingUserData) {
+                // Check if the current password matches the one in the database
+                if (currentPassword !== existingUserData.password) {
+                    alert("Current password is incorrect.");
+                    return;
+                }
+
                 const updatedUserData = {
                     ...existingUserData,
                     password: newPassword
@@ -195,6 +303,7 @@ function displayUserData(userData) {
         });
     });
 }
+
 
 function fetchUserData() {
     const userId = auth.currentUser.uid;
@@ -287,7 +396,7 @@ function createBookmark(book, bookId, userId) {
     anchor.appendChild(img);
     anchor.appendChild(title);
     bookmark.appendChild(anchor);
-    bookmark.appendChild(deleteButton); 
+    bookmark.appendChild(deleteButton);
 
     return bookmark;
 }

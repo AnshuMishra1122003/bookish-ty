@@ -237,6 +237,13 @@ async function writeReview(event) {
       alert("Please fill out all review fields.");
       return;
     }
+
+    // Combine title length validation into a single if statement
+    if (reviewTitle.length > 30 || reviewContent.length < 20 || reviewContent.length > 1000) {
+      alert("Review title should not exceed 30 characters, and content should be between 20 and 1000 characters.");
+      return;
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const bookId = urlParams.get("bookId");
     const userReviewRef = ref(db, `books/${bookId}/reviews`);

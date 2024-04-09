@@ -89,7 +89,7 @@ async function register(event) {
     window.location.href = "/html/Login.html";
   } catch (error) {
     console.error("Error during registration:", error.message);
-    alert('Fill all Required Fields');
+    alert('User not Registered. Please Enter Valid Information');
   }
 }
 

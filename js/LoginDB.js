@@ -23,6 +23,12 @@ async function login(event) {
   const email = document.getElementById("Email_TextBox").value;
   const password = document.getElementById("Password_TextBox").value;
 
+  // Check if email or password is empty
+  if (!email || !password) {
+    alert("Please enter both email and password.");
+    return;
+  }
+
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
@@ -35,18 +41,11 @@ async function login(event) {
   }
 }
 
-document.getElementById("Login_Btn").addEventListener("click", function (event) {
-  login(event);
-});
-
-
+document.getElementById("Login_Btn").addEventListener("click", login);
 
 function logout() {
-
   sessionStorage.removeItem('user');
-
   auth.signOut().then(() => {
-
     window.location.href = "/html/Login.html";
   }).catch((error) => {
     console.error("Logout error:", error);
@@ -56,116 +55,121 @@ function logout() {
 
 document.getElementById("logout-link").addEventListener("click", logout);
 
-
 const currentUser = sessionStorage.getItem('user');
 if (currentUser) {
   const user = JSON.parse(currentUser);
   updateUserDisplayName(user);
 }
 
-document.getElementById("Login_Btn").addEventListener("click", function (event) {
-  login(event);
-});
+document.getElementById("Login_Btn").addEventListener("click", login);
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
   login_hint: "user@example.com",
 });
 
-
 async function loginOAuth() {
-  signInWithPopup(auth, provider)
-    .then(async (authData) => {
-      const credential = GoogleAuthProvider.credentialFromResult(authData);
-      const token = credential.accessToken;
+  try {
+    const authData = await signInWithPopup(auth, provider);
+    const credential = GoogleAuthProvider.credentialFromResult(authData);
+    const token = credential.accessToken;
+    const user = authData.user;
 
-      const user = authData.user;
-
-      await set(ref(db, `users/${user.uid}`), {
-        username: user?.displayName ?? "google",
-        email: user?.email,
-        password: "bookish@123",
-      });
-      alert("Login successfully");
-      window.location.href = `/index.html?userId=${user.uid}`;
-    })
-    .catch((error) => {
-      console.log({ message: error.message });
-      alert(error.code);
+    await set(ref(db, `users/${user.uid}`), {
+      username: user?.displayName ?? "google",
+      email: user?.email,
+      password: "bookish@123",
     });
+
+    alert("Login successfully");
+    window.location.href = `/index.html?userId=${user.uid}`;
+  } catch (error) {
+    console.error("OAuth login error:", error);
+    alert(error.code);
+  }
 }
 
-document
-  .getElementById("google-login-btn")
-  .addEventListener("click", loginOAuth);
+document.getElementById("google-login-btn").addEventListener("click", loginOAuth);
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const userToggleBtn = document.getElementById("user-toggle-btn");
-    const adminToggleBtn = document.getElementById("admin-toggle-btn");
-    const userLoginForm = document.querySelector(".user-login-form");
-    const adminLoginForm = document.querySelector(".admin-login-form");
-  
-    userToggleBtn.addEventListener("click", function () {
-      userLoginForm.style.display = "block";
-      adminLoginForm.style.display = "none";
-    });
-  
-    adminToggleBtn.addEventListener("click", function () {
-      userLoginForm.style.display = "none";
-      adminLoginForm.style.display = "block";
-    });
-  
-    document.getElementById("AdminLogin_Btn").addEventListener("click", async function (event) {
-      event.preventDefault();
-      const secretKey = document.getElementById("AdminSecretKey_TextBox").value;
-  
+document.addEventListener("DOMContentLoaded", function () {
+  const userToggleBtn = document.getElementById("user-toggle-btn");
+  const adminToggleBtn = document.getElementById("admin-toggle-btn");
+  const userLoginForm = document.querySelector(".user-login-form");
+  const adminLoginForm = document.querySelector(".admin-login-form");
+
+  // Function to toggle between user and admin login forms
+  function toggleForms(isAdmin) {
+    userLoginForm.style.display = isAdmin ? "none" : "block";
+    adminLoginForm.style.display = isAdmin ? "block" : "none";
+  }
+
+  // Event listener for user toggle button
+  userToggleBtn.addEventListener("click", function () {
+    toggleForms(false); // Show user login form
+  });
+
+  // Event listener for admin toggle button
+  adminToggleBtn.addEventListener("click", function () {
+    toggleForms(true); // Show admin login form
+  });
+
+  // Event listener for admin login button
+  document.getElementById("AdminLogin_Btn").addEventListener("click", async function (event) {
+    event.preventDefault();
+    const secretKey = document.getElementById("AdminSecretKey_TextBox").value;
+
+    // Authenticate with Firebase using email and password
+    const email = document.getElementById("AdminEmail_TextBox").value;
+    const password = document.getElementById("AdminPassword_TextBox").value;
+
+    // Check if email or password is empty
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // If authentication is successful, proceed to check the secret key
       if (secretKey === "adminkey") {
-        const currentUser = JSON.parse(sessionStorage.getItem('user'));
-        
-        // Check if currentUser is not null before accessing its properties
-        if (currentUser && currentUser.uid) {
-          currentUser.role = "admin";
-  
-          try {
-            await update(ref(getDatabase(), `users/${currentUser.uid}`), {
-              role: "admin"
-            });
-          } catch (error) {
-            console.error("Error updating user role:", error);
-            alert("Failed to update user role. Please try again.");
-            return;
-          }
-  
-          sessionStorage.setItem('user', JSON.stringify(currentUser));
-  
-          window.location.href = `/index.html?userId=${currentUser.uid}&role=admin`;
-        } else {
-          alert("User not authenticated. Please log in again.");
-        }
+        // Update user role to admin
+        await update(ref(getDatabase(), `users/${user.uid}`), { role: "admin" });
+        sessionStorage.setItem('user', JSON.stringify(user));
+        window.location.href = `/index.html?userId=${user.uid}&role=admin`;
       } else {
         alert("Invalid secret key. Please try again.");
       }
-    });
-  });
-  
-  const rmCheck = document.getElementById("remember_me"),
-      emailInput = document.getElementById("Email_TextBox");
-  
-  if (localStorage.checkbox && localStorage.checkbox !== "") {
-    rmCheck.setAttribute("checked", "checked");
-    emailInput.value = localStorage.username;
-  } else {
-    rmCheck.removeAttribute("checked");
-    emailInput.value = "";
-  }
-  
-  function lsRememberMe() {
-    if (rmCheck.checked && emailInput.value !== "") {
-      localStorage.username = emailInput.value;
-      localStorage.checkbox = rmCheck.value;
-    } else {
-      localStorage.username = "";
-      localStorage.checkbox = "";
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please check your email and password.");
     }
+  });
+});
+
+
+const rmCheck = document.getElementById("remember_me");
+const emailInput = document.getElementById("Email_TextBox");
+
+if (localStorage.checkbox && localStorage.checkbox !== "") {
+  rmCheck.setAttribute("checked", "checked");
+  emailInput.value = localStorage.username;
+} else {
+  rmCheck.removeAttribute("checked");
+  emailInput.value = "";
+}
+
+function lsRememberMe() {
+  if (rmCheck.checked && emailInput.value !== "") {
+    localStorage.username = emailInput.value;
+    localStorage.checkbox = "checked";
+  } else {
+    localStorage.username = "";
+    localStorage.checkbox = "";
   }
-  
+}
+// Define lsRememberMe function and variables rmCheck, emailInput
+
+rmCheck.addEventListener("change", lsRememberMe);
+

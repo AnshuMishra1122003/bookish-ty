@@ -35,11 +35,32 @@ async function submitForm(event, bookId) {
         if (!chapterContent) {
           alert("Please enter chapter content.");
           return;
-        } else if (chapterContent.length < 5000) {
-          alert("Chapter content must contain a minimum of 5,000 characters.");
-          return;
         }
 
+        // Title length validation (optional)
+        if (chapterTitle.length < 20) {
+          alert("Chapter title should exceed 20 characters.");
+          return false;
+        }
+
+        // Title length validation (optional)
+        if (chapterTitle.length > 100) {
+          alert("Chapter title should not exceed 100 characters.");
+          return false;
+        }
+
+        // Content length validation (optional)
+        if (chapterContent.length < 500) {
+          alert("Chapter content should exceed 5000 characters.");
+          return false;
+        }
+
+        // Content length validation (optional)
+        if (chapterContent.length > 50000) {
+          alert("Chapter content should not exceed 50000 characters.");
+          return false;
+        }
+        
         const chapterRef = push(ref(db, `books/${bookId}/chapters`), {
           username: email,
           email: email,
