@@ -80,7 +80,7 @@
     .genre-tags-container {
       padding-left: 10px;
       width: 250px;
-      height: 180px;
+      height: 200px;
       overflow: hidden;
       position: relative;
       white-space: pre-wrap;
@@ -121,20 +121,41 @@
       border-radius: 4px;
     }
 
+    .search-bar button {
+      height: 100%;
+      width: 8%;
+      background-color: #000000;
+      margin-left: 0.1%;
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      /* Rounded border on the right side */
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 800;
+      transition: background-color 0.3s;
+    }
+
+    .search-bar button:hover {
+      background-color: var(--green);
+      color: #000;
+      /* Adjust button background color on hover */
+    }
+
     .genre-container {
       position: relative;
       margin-left: 2%;
     }
 
     #genreDropdown {
-      height: 100%;
+      height: 50px;
       width: 100%;
-      padding: 10px;
+      padding: 0 20px 0 20px;
       background-color: #000000;
       color: #ffffff;
-      font-size: 25px;
+      font-size: 20px;
       border-radius: 4px;
-      font-weight: 900;
+      font-weight: 800;
     }
 
     #genreDropdown:hover {
@@ -153,6 +174,7 @@
       background-color: #ffffff;
       border: 1px solid rgba(0, 0, 0, 0.15);
       border-radius: 2.5px;
+      margin-left: -100px;
     }
 
     .genre-menu-container.show {
@@ -300,6 +322,7 @@
   <!---------------------Header close---------------------->
   <div class="search-bar">
     <input type="text" id="search" placeholder="Search Books...">
+    <button id="searchButton">Search</button>
 
 
     <!-- Modified genre container -->

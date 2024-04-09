@@ -110,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     displayChapterDetails(bookId, chapterId);
   } else {
     console.error("Book ID or Chapter ID not found in URL parameters");
+    alert('User not Registered. Please Register First!')
   }
 });
 

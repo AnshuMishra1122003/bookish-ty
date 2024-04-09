@@ -33,6 +33,7 @@ async function login(event) {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
+    alert("Login successfully");
     sessionStorage.setItem('user', JSON.stringify(user));
     window.location.href = `/index.html?userId=${user.uid}`;
   } catch (error) {
@@ -137,6 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Update user role to admin
         await update(ref(getDatabase(), `users/${user.uid}`), { role: "admin" });
         sessionStorage.setItem('user', JSON.stringify(user));
+        alert("Login successfully");
         window.location.href = `/index.html?userId=${user.uid}&role=admin`;
       } else {
         alert("Invalid secret key. Please try again.");

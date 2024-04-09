@@ -51,7 +51,7 @@ async function submitForm(event, bookId) {
 
         // Content length validation (optional)
         if (chapterContent.length < 500) {
-          alert("Chapter content should exceed 5000 characters.");
+          alert("Chapter content should exceed 500 characters.");
           return false;
         }
 

@@ -147,13 +147,6 @@ function createBookElement(bookData, bookId) {
     return containerCard;
 }
 
-// Call the searchBooks function when the page loads
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("search");
-    searchInput.addEventListener("input", searchBooks);
-});
-
-
 // Call the filterBooks function when the page loads to display all books initially
 document.addEventListener('DOMContentLoaded', () => {
     filterBooks(['all']);
@@ -161,9 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to search books by title
 function searchBooks() {
-    const searchInput = document.getElementById("search").value.toLowerCase();
+    const searchInput = document.getElementById("search").value.trim().toLowerCase();
+    console.log("Search Input:", searchInput); // Log the search input value
     const bookContainer = document.getElementById("bookContainer");
 
+    // Empty the previous search results
     bookContainer.innerHTML = "";
 
     const booksRef = ref(db, "books/");
@@ -173,9 +168,11 @@ function searchBooks() {
                 const bookData = childSnapshot.val();
                 const bookId = childSnapshot.key;
 
+                console.log("Book Title:", bookData.title); // Log the title of each book
                 if (bookData.title.toLowerCase().includes(searchInput)) {
                     const bookElement = createBookElement(bookData, bookId);
                     bookContainer.appendChild(bookElement);
+                    console.log("Book added to container:", bookData.title); // Log when a book is added to the container
                 }
             });
         })
@@ -183,6 +180,19 @@ function searchBooks() {
             console.error("Error searching books:", error);
         });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Add event listener for the search button
+    const searchButton = document.getElementById("searchButton");
+    searchButton.addEventListener("click", searchBooks);
+
+    // Add event listener for input change to clear previous search results
+    const searchInput = document.getElementById("search");
+    searchInput.addEventListener("input", () => {
+        const bookContainer = document.getElementById("bookContainer");
+    });
+});
+
 
 async function deleteBook(bookId) {
     const bookRef = ref(db, `books/${bookId}`);

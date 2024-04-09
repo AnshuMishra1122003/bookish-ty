@@ -1,7 +1,6 @@
 import { db } from "./firebaseConfig.mjs";
 import { ref, get, onValue } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js';
 
-
 let genreMenuContainer = document.getElementById("genreMenuContainer");
 
 // Function to fetch and display books
@@ -18,6 +17,7 @@ function displayBooks() {
         });
     });
 }
+
 function searchBooksByGenre() {
     const selectedGenres = [];
     const genreCheckboxes = document.querySelectorAll('.genre-item input[type="checkbox"]');
@@ -64,18 +64,6 @@ document.querySelectorAll('.genre-item input[type="checkbox"]').forEach(checkbox
     checkbox.addEventListener('change', searchBooksByGenre);
 });
 
-
-document.querySelectorAll('.dropdown-item').forEach(item => {
-    item.addEventListener('click', handleDropdownSelection);
-});
-
-function toggleDropdown() {
-    genreMenuContainer.classList.toggle("show");
-}
-
-// Function to filter books based on selected genres
-
-
 // Function to create a book element
 function createBookElement(bookData, bookId) {
     const containerCard = document.createElement('div');
@@ -89,9 +77,7 @@ function createBookElement(bookData, bookId) {
     coverImg.alt = 'Cover';
     coverImg.classList.add('cover-img');
     coverImg.onclick = function () {
-        window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(
-            bookId
-        )}`;
+        window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(bookId)}`;
     };
     bookElement.appendChild(coverImg);
 
@@ -102,9 +88,7 @@ function createBookElement(bookData, bookId) {
     title.classList.add('title');
     title.textContent = bookData.title;
     title.onclick = function () {
-        window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(
-            bookId
-        )}`;
+        window.location.href = `/html/previewpage.html?bookId=${encodeURIComponent(bookId)}`;
     };
     infoContainer.appendChild(title);
 
@@ -139,9 +123,11 @@ function createBookElement(bookData, bookId) {
 
 // Function to search books by title
 function searchBooks() {
-    const searchInput = document.getElementById("search").value.toLowerCase();
+    const searchInput = document.getElementById("search").value.trim().toLowerCase();
+    console.log("Search Input:", searchInput); // Log the search input value
     const bookContainer = document.getElementById("bookContainer");
 
+    // Empty the previous search results
     bookContainer.innerHTML = "";
 
     const booksRef = ref(db, "books/");
@@ -151,9 +137,11 @@ function searchBooks() {
                 const bookData = childSnapshot.val();
                 const bookId = childSnapshot.key;
 
+                console.log("Book Title:", bookData.title); // Log the title of each book
                 if (bookData.title.toLowerCase().includes(searchInput)) {
                     const bookElement = createBookElement(bookData, bookId);
                     bookContainer.appendChild(bookElement);
+                    console.log("Book added to container:", bookData.title); // Log when a book is added to the container
                 }
             });
         })
@@ -163,12 +151,19 @@ function searchBooks() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Add event listener for the search button
+    const searchButton = document.getElementById("searchButton");
+    searchButton.addEventListener("click", searchBooks);
+
+    // Add event listener for input change to clear previous search results
     const searchInput = document.getElementById("search");
-    searchInput.addEventListener("input", searchBooks);
+    searchInput.addEventListener("input", () => {
+        const bookContainer = document.getElementById("bookContainer");
+    });
 });
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
     filterBooks(['all']);
 });
-
